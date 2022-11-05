@@ -1,7 +1,13 @@
 import express from 'express';
-import {getLogin, postLogin} from '../Controller/userController';
-import {checkNotLoginMiddleware} from '../middlewares';
-
+import {
+	getLogin, 
+	postLogin, 
+	getLogout
+} from '../Controller/userController';
+import {
+	checkLoginMiddleware,
+	checkNotLoginMiddleware,
+	localMiddleware} from '../middlewares';
 const rootRouter = express.Router();
 
 //application이 /로 들어오는 요청에 대해 콜백함수들을 사용하게된다.
@@ -22,5 +28,13 @@ rootRouter
 	.all(checkNotLoginMiddleware)
 	.get(getLogin) //GET /login
 	.post(postLogin) //Post /login login page에서 DB연결 및 Form전송
+
+
+//logout
+rootRouter
+	.route('/logout')
+	.all(checkLoginMiddleware)
+	.get(getLogout);
+
 
 export default rootRouter;

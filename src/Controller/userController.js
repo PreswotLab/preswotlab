@@ -26,6 +26,20 @@ export const postLogin = async (req, res) => {
 	}
 
 	console.log('로그인성공!')
-	//세션정보 저장하기
+	//브라우저측에 세션정보 저장하기
+	req.session.loggedIn = true;
+	req.session.loginInfo = {
+		dbUser : dbConfig.user,
+		dbName : dbConfig.database,
+		dbHostIp : dbConfig.server,
+		dbPort : dbConfig.port,
+		dbKind : req.body.dbkind
+	}
+	//local middleware에서 local에 저장하게됨
 	res.redirect('/');
+}
+
+export const getLogout = (req, res) => {
+	req.session.destroy();
+	return res.redirect("/");
 }

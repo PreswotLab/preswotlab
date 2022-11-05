@@ -2,7 +2,6 @@ import express from 'express';
 import morgan from 'morgan';
 import rootRouter from './routers/rootRouter';
 import flash from 'express-flash'
-
 import "dotenv/config"
 import {urlencoded} from 'body-parser';
 import session from 'express-session';
@@ -36,9 +35,11 @@ app.use(
 	session({
 		secret: COOKIE_SECRET,
 		resave: false,
-		saveUninitialized: false
+		saveUninitialized: false,
+		//store : 쿠키 저장할 서버DB
 	})
 )
+
 
 //세션 정보 로컬 저장 미들웨어, 로그인 정보(ip, port, dbname, username 저장)
 app.use(localMiddleware);
