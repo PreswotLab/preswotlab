@@ -65,6 +65,29 @@ mssql 라이브러리의 특징은 connection pooling을 사용하는건데, 1�
 <br><br>
 
 
+# mariadb
+
+[npm mariadb](https://www.npmjs.com/package/mariadb)  
+
+- 프로젝트에서 DB서버 구축에 사용될 db.
+- 3306번 포트를 기본적으로 사용한다.
+
+
+[ref](https://emunhi.com/view/201812/02154627862?menuNo=10031)
+[DB접속오류해결](https://csksoft.tistory.com/69)
+
+<br><br>
+
+# mysql
+
+[npm mysql](https://www.npmjs.com/package/mysql)
+[도커 이용해 Mysql 다운하기](https://poiemaweb.com/docker-mysql)
+
+
+
+
+<br><br>
+
 # 앱 설계
 
 ## login

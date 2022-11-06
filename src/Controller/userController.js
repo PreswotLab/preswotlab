@@ -15,9 +15,7 @@ export const postLogin = async (req, res) => {
 	const dbConfig = getDbConfig(req.body);
 
 	try {
-		console.log("asdf");
 		await userDbConnect(req.body.dbkind, dbConfig);
-		console.log("asdf")
 	} catch (e) {
 		console.log(e.message);
 		return (res.status(400).render('login', { 
@@ -31,7 +29,7 @@ export const postLogin = async (req, res) => {
 	req.session.loginInfo = {
 		dbUser : dbConfig.user,
 		dbName : dbConfig.database,
-		dbHostIp : dbConfig.server,
+		dbHostIp : dbConfig.server || dbConfig.host,
 		dbPort : dbConfig.port,
 		dbKind : req.body.dbkind
 	}

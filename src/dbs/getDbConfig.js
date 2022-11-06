@@ -26,7 +26,14 @@ const getMysqlConfig = (body) => {
 }
 
 const getMariadbConfig = (body) => {
-
+	const config = {
+		host : body.dbhostip,
+		user : body.dbusername,
+		password : body.dbpassword,
+		database : body.dbname,
+		port : parseInt(body.dbport) || 3306
+	}
+	return (config);
 }
 
 
@@ -36,4 +43,6 @@ export const getDbConfig = (body) => {
 
 	if (dbkind == 'MSSQL')
 		return (getMssqlConfig(body));
+	else if (dbkind == 'MARIADB')
+		return (getMariadbConfig(body));
 }
