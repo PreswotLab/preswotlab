@@ -1,0 +1,21 @@
+header 
+    a(href="/").header__logo
+    nav
+        ul
+            li 
+                a(href="/") HOME
+            if loggedIn 
+                a(href="/logout") Log Out
+                li
+                    span=loginInfo.dbUser
+                li
+                    span=loginInfo.dbName
+                li
+                    span=loginInfo.dbHostIp  
+                li
+                    span=loginInfo.dbPort
+                li
+                    span=loginInfo.dbKind
+            else
+                li
+                    a(href="/login") Login
