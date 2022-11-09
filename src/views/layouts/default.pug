@@ -11,7 +11,8 @@ html(lang="ko")
         if messages.error 
             +message("error", messages.error)
 
-        include ../includes/header.pug                
+        include ../includes/header.pug
+        include ../includes/navigator.pug
         main
             block content
         include ../includes/footer.pug

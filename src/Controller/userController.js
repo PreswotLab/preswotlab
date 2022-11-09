@@ -31,7 +31,8 @@ export const postLogin = async (req, res) => {
 		dbName : dbConfig.database,
 		dbHostIp : dbConfig.server || dbConfig.host,
 		dbPort : dbConfig.port,
-		dbKind : req.body.dbkind
+		dbKind : req.body.dbkind,
+		dbPassword : req.body.dbpassword //나중에 암호화해서 저장..
 	}
 	//local middleware에서 local에 저장하게됨
 	res.redirect('/');

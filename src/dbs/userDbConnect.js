@@ -15,4 +15,3 @@ export default async function userDbConnect(dbkind, dbconfig) {
 		throw(e)
 	}
 }
-

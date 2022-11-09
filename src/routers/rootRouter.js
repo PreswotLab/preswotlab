@@ -1,4 +1,5 @@
 import express from 'express';
+import {getUpload, postUpload} from '../Controller/uploadController';
 import {
 	getLogin, 
 	postLogin, 
@@ -7,6 +8,7 @@ import {
 import {
 	checkLoginMiddleware,
 	checkNotLoginMiddleware,
+	csvUpload,
 	localMiddleware} from '../middlewares';
 
 const rootRouter = express.Router();
@@ -30,12 +32,22 @@ rootRouter
 	.get(getLogin) //GET /login
 	.post(postLogin) //Post /login login page에서 DB연결 및 Form전송
 
-
 //logout
 rootRouter
 	.route('/logout')
 	.all(checkLoginMiddleware)
 	.get(getLogout);
 
+//upload
+rootRouter
+	.route('/upload')
+	.all(checkLoginMiddleware)
+	.get(getUpload) //GET /upload 업로드페이지
+	.post(csvUpload.single("csv_file"), postUpload) //POST /uplaod 업로드데이터 
 
-export default rootRouter;
+//domain scan
+rootRouter
+	.route('/domainscan')
+	.all(checkLoginMiddleware)
+	.get()
+	.post();

@@ -27,9 +27,6 @@ app.use(urlencoded({ extended : true }));
 //string middleware
 app.use(express.json());
 
-//플래시메시지
-app.use(flash());
-
 //세션 미들웨어
 app.use(
 	session({
@@ -41,9 +38,13 @@ app.use(
 )
 
 
+//플래시메시지
+app.use(flash());
 //세션 정보 로컬 저장 미들웨어, 로그인 정보(ip, port, dbname, username 저장)
 app.use(localMiddleware);
 
+//client단에서 사용될 정적파일들
+//app.use("/assets", express.static())
 
 //root router에서 페이지 이동처리
 app.use("/", rootRouter);
