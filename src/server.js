@@ -8,7 +8,6 @@ import session from 'express-session';
 const { COOKIE_SECRET } = process.env;
 import { localMiddleware } from './middlewares';
 
-
 const app = express();
 
 
@@ -44,11 +43,10 @@ app.use(flash());
 app.use(localMiddleware);
 
 //client단에서 사용될 정적파일들
-//app.use("/assets", express.static())
+app.use("/assets", express.static("public"));
 
 //root router에서 페이지 이동처리
 app.use("/", rootRouter);
-
 
 //server 3000번 port사용, Listening 핸들러 호출
 const PORT = 3000;

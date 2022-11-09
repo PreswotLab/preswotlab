@@ -1,5 +1,6 @@
 import { getDbConfig } from "../dbs/getDbConfig";
 import userDbConnect from "../dbs/userDbConnect";
+import fs from 'fs';
 
 //GET /login
 export const getLogin = (req, res) => {
@@ -34,11 +35,29 @@ export const postLogin = async (req, res) => {
 		dbKind : req.body.dbkind,
 		dbPassword : req.body.dbpassword //나중에 암호화해서 저장..
 	}
+	req.session.filePaths = [];
 	//local middleware에서 local에 저장하게됨
 	res.redirect('/');
 }
 
 export const getLogout = (req, res) => {
+	const filePaths = req.session.filePaths;
+
+	console.log(filePaths)
+
+	filePaths.forEach
+	(
+		elem => {
+			fs.unlinkSync(
+					elem,
+					function (e)
+					{
+						console.log(e);
+						throw(e)
+					}
+				)
+		}
+	);
 	req.session.destroy();
 	return res.redirect("/");
 }

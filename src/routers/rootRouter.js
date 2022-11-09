@@ -30,7 +30,7 @@ rootRouter
 	.route("/login")
 	.all(checkNotLoginMiddleware)
 	.get(getLogin) //GET /login
-	.post(postLogin) //Post /login login page에서 DB연결 및 Form전송
+	.post(postLogin); //Post /login login page에서 DB연결 및 Form전송
 
 //logout
 rootRouter
@@ -43,7 +43,7 @@ rootRouter
 	.route('/upload')
 	.all(checkLoginMiddleware)
 	.get(getUpload) //GET /upload 업로드페이지
-	.post(csvUpload.single("csv_file"), postUpload) //POST /uplaod 업로드데이터 
+	.post(csvUpload.single("csv_file"), postUpload); //POST /uplaod 업로드데이터 
 
 //domain scan
 rootRouter
@@ -51,3 +51,5 @@ rootRouter
 	.all(checkLoginMiddleware)
 	.get()
 	.post();
+
+export default rootRouter;
