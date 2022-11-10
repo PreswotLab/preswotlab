@@ -1,13 +1,8 @@
 const maria = require('mariadb');
 
-export default async function MariaLogin(config, query) {
+export default async function MariaMyLogin(config, query) {
 	try {
-	const conn = await maria.createConnection({
-		host : config.server,
-		user : config.user,
-		password : config.password,
-		port : config.port
-	})
+	const conn = await maria.createConnection(config);
 		if (query)
 		{
 			const result = await conn.query(query);

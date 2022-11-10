@@ -1,3 +1,16 @@
+# aws mariadb server 생성
+
+- aws 인스턴스 생성
+
+- 보안그룹 설정
+
+
+- 접속
+	- `ssh -i key.pem ubuntu@ec2-35-78-76-16.ap-northeast-1.compute.amazonaws.com`  
+
+[AWS 원격접속 허용](https://programist.tistory.com/entry/MySQL-MariaDB-%EC%99%B8%EB%B6%80-%EC%A0%91%EC%86%8D-%ED%97%88%EC%9A%A9-%EB%B0%A9%EB%B2%95)
+
+
 # mssql 연동
 
 

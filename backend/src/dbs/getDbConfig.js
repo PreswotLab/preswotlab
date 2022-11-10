@@ -21,21 +21,17 @@ const getMssqlConfig = (body) => {
 }
 
 //저희 다른 DB도 지원하나요...?
-const getMysqlConfig = (body) => {
 
-}
-
-const getMariadbConfig = (body) => {
+const getMariaMyDbConfig = (body) => {
 	const config = {
-		host : body.dbhostip,
 		user : body.dbusername,
 		password : body.dbpassword,
 		database : body.dbname,
-		port : parseInt(body.dbport) || 3306
+		host : body.dbhostip,
+		port : body.dbport
 	}
 	return (config);
 }
-
 
 export const getDbConfig = (body) => {
 
@@ -43,6 +39,6 @@ export const getDbConfig = (body) => {
 
 	if (dbkind == 'MSSQL')
 		return (getMssqlConfig(body));
-	else if (dbkind == 'MARIADB')
-		return (getMariadbConfig(body));
+	else if (dbkind == 'MARIADB' || dbkind == 'MYSQL')
+		return (getMariaMyDbConfig(body));
 }
