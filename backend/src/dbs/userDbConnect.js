@@ -5,12 +5,12 @@
 import MariaMyLogin from "./dblogin/MariaLogin";
 import MssqlLogin from "./dblogin/MssqlLogin"
 
-export default async function userDbConnect(dbkind, dbconfig) {
+export default async function userDbConnectQuery(dbkind, dbconfig, query) {
 	try {
 		if (dbkind == 'MSSQL')
-			await MssqlLogin(dbconfig, null);
+			await MssqlLogin(dbconfig, query);
 		else if (dbkind == 'MARIADB' || dbkind == 'MYSQL')
-			await MariaMyLogin(dbconfig, null);
+			await MariaMyLogin(dbconfig, query);
 	} catch (e) {
 		throw(e)
 	}

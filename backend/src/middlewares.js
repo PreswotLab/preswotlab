@@ -13,7 +13,7 @@ export const checkLoginMiddleware = (req, res, next) => {
 	if (req.session.loggedIn) //로그인 되어있나?
 		next();
 	else //로그인 안되어있음
-		return res.redirect("/");
+		return res.redirect("/login");
 }
 
 export const checkNotLoginMiddleware = (req, res, next) => {

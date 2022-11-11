@@ -1,4 +1,5 @@
-import { DBConnectionBySession } from "../dbs/DbConnectBySession"; 
+import fs from 'fs';
+import csv from 'fast-csv'
 
 export const getUpload = (req, res) => {
 	return res.render('upload', {title : 'upload'});
@@ -7,11 +8,23 @@ export const getUpload = (req, res) => {
 export const postUpload = async (req, res) => {
 	//사용자 DB에 저장함.
 	try {
-		let conn = new DBConnectionBySession(req.session.loginInfo);
-		conn = await conn.connect();
-		//csv 파싱해서 유저 DB에 넣는 로직
+		//연결확인
+		const loginInfo = req.session.loginInfo;
+		if (loginInfo.dbKind == 'MARIADB' || loginInfo.dbKind == 'MYSQL')
+		{}
+		else
+		{}
+		//
+		console.log(req.body);
+		console.log(req.file);
 		req.session.filePaths.push(req.file.path);
+		/*
+		 * const tableName = req.file.originalname;
+		 *
+		 * */
+
 	} catch (e) {
+		console.log(e);
 		return (res.redirect("/logout"));
 	}
 	return (res.redirect("/"));

@@ -1,5 +1,5 @@
-import { getDbConfig } from "../dbs/getDbConfig";
-import userDbConnect from "../dbs/userDbConnect";
+import { getDbConfigByForm } from "../dbs/getDbConfigByForm";
+import userDbConnectQuery from "../dbs/userDbConnect";
 import fs from 'fs';
 
 //GET /login
@@ -13,10 +13,10 @@ export const postLogin = async (req, res) => {
 	//dbconnection 만들기 여기서 해야함.
 
 	//config파일 만들어오기
-	const dbConfig = getDbConfig(req.body);
+	const dbConfig = getDbConfigByForm(req.body);
 
 	try {
-		await userDbConnect(req.body.dbkind, dbConfig);
+		await userDbConnectQuery(req.body.dbkind, dbConfig, null);
 	} catch (e) {
 		console.log(e.message);
 		return (res.status(400).render('login', { 

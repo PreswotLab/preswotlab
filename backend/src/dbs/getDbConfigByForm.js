@@ -1,6 +1,6 @@
 //db에따라 다른 config 만들어서 리턴
 const getMssqlConfig = (body) => {
-
+	console.log('getting mssql config')
 	const sqlConfig = {
 		user : body.dbusername,//이 4개 문자열은 login form의 것들로 치환되어야한다
 		password : body.dbpassword,//
@@ -23,22 +23,23 @@ const getMssqlConfig = (body) => {
 //저희 다른 DB도 지원하나요...?
 
 const getMariaMyDbConfig = (body) => {
+	console.log('getting maria, mysql config')
 	const config = {
 		user : body.dbusername,
 		password : body.dbpassword,
 		database : body.dbname,
 		host : body.dbhostip,
-		port : body.dbport
+		port : parseInt(body.dbport) || 3306
 	}
 	return (config);
 }
 
-export const getDbConfig = (body) => {
+export const getDbConfigByForm = (body) => {
 
 	const dbkind = body.dbkind;
 
 	if (dbkind == 'MSSQL')
 		return (getMssqlConfig(body));
-	else if (dbkind == 'MARIADB' || dbkind == 'MYSQL')
+	else
 		return (getMariaMyDbConfig(body));
 }
