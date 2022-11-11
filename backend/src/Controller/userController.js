@@ -14,7 +14,7 @@ export const postLogin = async (req, res) => {
 
 	//config파일 만들어오기
 	const dbConfig = getDbConfigByForm(req.body);
-
+	console.log(dbConfig);
 	try {
 		await userDbConnectQuery(req.body.dbkind, dbConfig, null);
 	} catch (e) {

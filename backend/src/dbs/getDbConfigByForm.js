@@ -2,21 +2,12 @@
 const getMssqlConfig = (body) => {
 	console.log('getting mssql config')
 	const sqlConfig = {
-		user : body.dbusername,//이 4개 문자열은 login form의 것들로 치환되어야한다
-		password : body.dbpassword,//
-		database : body.dbname,//
-		server : body.dbhostip,//
-		port : parseInt(body.dbport) || 1433,//port도 default값은 1433
-		pool: {
-		max: 10,
-		min: 0,
-		idleTimeoutMillis: 30000
-		},
-		options: {
-		encrypt: true, // for azure
-		trustServerCertificate: true // change to true for local dev / self-signed certs
+		user : body.dbusername,
+		password : body.dbpassword,
+		database : body.dbname,
+		server : body.dbhostip,
+		port : parseInt(body.dbport) || 1433
 		}
-	}
 	return (sqlConfig)
 }
 
