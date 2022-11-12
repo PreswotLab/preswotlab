@@ -1,5 +1,6 @@
 import fs from 'fs';
-import csv from 'fast-csv'
+import csv from 'fast-csv';
+import getDbConfigBySession from '../dbs/getDbConfigBySession';
 
 //csv파일 명을 입력받아서
 //파일명, 칼럼개수, 각 칼럼 속성을 저장하는 클래스

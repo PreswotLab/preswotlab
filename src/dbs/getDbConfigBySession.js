@@ -1,4 +1,5 @@
-export default getDbConfigBySession = (loginInfo) => {
+export default function getDbConfigBySession (loginInfo) {
+
 	if (loginInfo.dbKind == 'MSSQL')
 	{
 		return ({

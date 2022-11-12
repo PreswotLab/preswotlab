@@ -44,7 +44,6 @@ export const getLogout = (req, res) => {
 	const filePaths = req.session.filePaths;
 
 	console.log(filePaths)
-
 	filePaths.forEach
 	(
 		elem => {
