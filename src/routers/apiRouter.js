@@ -1,5 +1,6 @@
 import express from 'express';
 import {getMulti, getScanned, getSingle} from '../api/download';
+import { addRepresentAttr, addRepresentKey } from '../api/addRepresent';
 import {checkLoginMiddleware} from '../middlewares';
 
 const apiRouter = express.Router();
