@@ -41,7 +41,7 @@ app.use(flash());
 app.use(localMiddleware);
 
 //client단에서 사용될 정적파일들
-app.use("/assets", express.static("public"));
+app.use('/static',express.static('assets'));
 
 app.use("/", rootRouter);
 app.use(uploadRouter);

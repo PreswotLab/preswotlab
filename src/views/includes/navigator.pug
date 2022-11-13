@@ -1,20 +1,30 @@
-#nav_list_main
-    ul
-        li
-            #nav_list.item1
+.nav_wrapper
+    .sidebar-header
+        a(href="/") PRESWOT LAB
+    nav
+        ul
+            li
                 a(href="/upload") 테이블 추가하기
-        li
-            #nav_list.item2
-                a(href="/domainscan") 속성 도메인 스캔
-        li
-            #nav_list.item3
-                a(href="/keyedit") 결합키 속성 편집
-        li
-            #nav_list.item4
+            li
+                a(href="/domain-scan") 속성 도메인 스캔
+            li
+                a(href="/edit-table") 결합키 속성 편집
+            li
                 a(href="/single-join") 단일 테이블 결합
-        li
-            #nav_list.item5
+            li
                 a(href="/multi-join") 다중 테이블 결합
-        li
-            #nav_list.item6
-                a(href="/results") 결합결과조회
+            li
+                    a(href="/result") 결과조회
+            if loggedIn
+                li
+                    a(href="/logout") Log Out
+            else
+                li
+                    a(href="/login") Login
+        if loggedIn
+                #userinfo
+                    div=loginInfo.dbUser
+                    div=loginInfo.dbName
+                    div=loginInfo.dbHostIp  
+                    div=loginInfo.dbPort
+                    div=loginInfo.dbKind
