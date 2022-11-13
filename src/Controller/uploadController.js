@@ -19,7 +19,6 @@ export const getUpload = (req, res) => {
 	return res.render('upload', {title : 'upload'});
 }
 
-
 /*
  * POST /upload
  * file명의 table을 세션에 연결된 DB에 저장.
@@ -28,6 +27,7 @@ export const getUpload = (req, res) => {
  * */
 export const postUpload = async (req, res) => {
 	//사용자 DB에 저장함.
+	console.log('postUpload controller');
 	try {
 		//연결확인
 		const loginInfo = req.session.loginInfo;

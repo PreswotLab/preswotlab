@@ -1,5 +1,4 @@
 import express from 'express';
-import {getUpload, postUpload} from '../Controller/uploadController';
 import {
 	getLogin, 
 	postLogin, 
@@ -8,14 +7,21 @@ import {
 import {
 	checkLoginMiddleware,
 	checkNotLoginMiddleware,
-	csvUpload,
-	localMiddleware} from '../middlewares';
+	csvUpload
+} from '../middlewares';
+import {
+	getUpload,
+	postUpload
+} from '../Controller/uploadController';
+import uploadRouter from './uploadRouter';
+
 
 const rootRouter = express.Router();
 
 //application이 /로 들어오는 요청에 대해 콜백함수들을 사용하게된다.
 //이 콜백함수들을 모두 middleware라고 부르며, 중간에 있는 미들웨어는 next()로 제어권을 다음 미들웨어로 위임.
-const handleHome = async (req, res) => {
+const handleHome = (req, res) => {
+	console.log('routing home');
 	res.render('home', { title : "PRESWOT LAB"});
 }
 
@@ -34,19 +40,5 @@ rootRouter
 	.route('/logout')
 	.all(checkLoginMiddleware)
 	.get(getLogout);
-
-//upload
-rootRouter
-	.route('/upload')
-	.all(checkLoginMiddleware)
-	.get(getUpload) //GET /upload 업로드페이지
-	.post(csvUpload.single("csv_file"), postUpload); //POST /uplaod 업로드데이터 
-
-//domain scan
-rootRouter
-	.route('/domainscan')
-	.all(checkLoginMiddleware)
-	.get()
-	.post();
 
 export default rootRouter;

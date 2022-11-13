@@ -10,8 +10,11 @@ export const localMiddleware = (req, res, next) => {
 }
 
 export const checkLoginMiddleware = (req, res, next) => {
-	if (req.session.loggedIn) //로그인 되어있나?
+	if (req.session.loggedIn == true) //로그인 되어있나?
+	{
+		console.log(req.session.loggedIn);
 		next();
+	}
 	else //로그인 안되어있음
 		return res.redirect("/login");
 }
