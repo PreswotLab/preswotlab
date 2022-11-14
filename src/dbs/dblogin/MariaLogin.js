@@ -6,9 +6,8 @@ export default async function MariaMyLogin(config, query) {
 	if (query)
 	{
 		try {
-		const res = await conn.query(query)
-		console.log(res);
-		return (res);
+			const res = await conn.query(query);
+			return (res);
 		} catch(e){
 			console.log(e)
 			throw(e);

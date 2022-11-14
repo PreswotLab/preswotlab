@@ -1,20 +1,25 @@
 import express from 'express';
 import {checkLoginMiddleware} from '../middlewares';
+import {
+	getDomainScan,
+	getDomainScanResult,
+	saveRepresentAttrKey
+	} from '../Controller/domainScanController';
 
 const domainScanRouter = express.Router();
 
 domainScanRouter
 	.route('/')
 	.all(checkLoginMiddleware)
-	.get(getDomainScan)
+	.get(getDomainScan);
 
 domainScanRouter
-	.route('/:tableId[0-9]')
+	.route('/:tableName[ㄱ-ㅎ]')
 	.all(checkLoginMiddleware)
-	.get(getDomainScanResult)
+	.get(getDomainScanResult);
 
 domainScanRouter
-	.route('/:tableId[0-9]/save')
+	.route('/:tableName[ㄱ-ㅎ]/save')
 	.all(checkLoginMiddleware)
 	.put(saveRepresentAttrKey);
 

@@ -6,15 +6,8 @@ import {
 } from '../Controller/userController';
 import {
 	checkLoginMiddleware,
-	checkNotLoginMiddleware,
-	csvUpload
+	checkNotLoginMiddleware
 } from '../middlewares';
-import {
-	getUpload,
-	postUpload
-} from '../Controller/uploadController';
-import uploadRouter from './uploadRouter';
-
 
 const rootRouter = express.Router();
 
