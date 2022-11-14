@@ -1,19 +1,4 @@
-import fs from 'fs';
-import csv from 'fast-csv';
 import getDbConfigBySession from '../dbs/getDbConfigBySession';
-
-//csv파일 명을 입력받아서
-//파일명, 칼럼개수, 각 칼럼 속성을 저장하는 클래스
-class examinCsv
-{
-	#fileName;
-	#columnNum;
-	constructor() {
-		const colNameArray = [];
-		const colAttrArray = [];
-		
-	}
-};
 
 export const getUpload = (req, res) => {
 	return res.render('upload', {title : 'upload'});
@@ -43,7 +28,7 @@ export const postUpload = async (req, res) => {
 		req.session.filePaths.push(req.file.path);
 		/*
 		 * const tableName = req.file.originalname;
-		 *
+		 * csv-parser 사용
 		 * */
 
 	} catch (e) {
