@@ -23,8 +23,18 @@
                     a(href="/login") Login
         if loggedIn
                 #userinfo
-                    div=loginInfo.dbUser
-                    div=loginInfo.dbName
-                    div=loginInfo.dbHostIp  
-                    div=loginInfo.dbPort
-                    div=loginInfo.dbKind
+                    span 사용자명: 
+                    span=loginInfo.dbUser
+                    br
+                    span 데이터베이스명: 
+                    span=loginInfo.dbName
+                    br
+                    span 호스트 IP: 
+                    span=loginInfo.dbHostIp  
+                    br
+                    span 포트번호: 
+                    span=loginInfo.dbPort
+                    br
+                    span DB종류: 
+                    span=loginInfo.dbKind
+                    br
