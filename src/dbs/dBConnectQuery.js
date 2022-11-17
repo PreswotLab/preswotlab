@@ -10,7 +10,6 @@ const dbConnectQuery = async(loginInfo, query) => {
 	let result;
 
 	const dbconfig = getDbConfigByLoginInfo(loginInfo);
-	console.log(loginInfo, dbconfig, query)
 	try {
 		if (loginInfo.dbKind == 'MSSQL')
 			result = await MssqlLogin(dbconfig, query);
