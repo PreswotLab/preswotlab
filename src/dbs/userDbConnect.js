@@ -4,9 +4,8 @@
 
 import MariaMyLogin from "./dblogin/MariaLogin";
 import MssqlLogin from "./dblogin/MssqlLogin"
-import clone from "lodash.clone";
 
-export default async function userDbConnectQuery(dbkind, dbconfig, query) {
+const dbConnectQuery = async(dbkind, dbconfig, query) => {
 	let result;
 
 	try {
@@ -20,3 +19,5 @@ export default async function userDbConnectQuery(dbkind, dbconfig, query) {
 		throw(e)
 	}
 }
+
+export default dbConnectQuery;

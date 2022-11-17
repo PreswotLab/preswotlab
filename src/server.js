@@ -1,7 +1,6 @@
 import express from 'express';
 import morgan from 'morgan';
 import rootRouter from './routers/rootRouter';
-import flash from 'express-flash'
 import "dotenv/config"
 import {urlencoded} from 'body-parser';
 import session from 'express-session';
@@ -32,7 +31,6 @@ app.use(
 		secret: COOKIE_SECRET,
 		resave: false,
 		saveUninitialized: false,
-		//store : 쿠키 저장할 서버DB
 	})
 );
 

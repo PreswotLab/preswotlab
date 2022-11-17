@@ -1,4 +1,8 @@
 import getDbConfigBySession from '../dbs/getDbConfigBySession';
+const csv = require('csv-parser');
+import fs from 'fs';
+import dbConnectQuery from '../dbs/userDbConnect';
+import getCreateTableQuery from './tools/getCreateTableQuery';
 
 export const getUpload = (req, res) => {
 	return res.render('upload', {title : 'upload'});
@@ -11,29 +15,31 @@ export const getUpload = (req, res) => {
  * 두번째 줄의 각 변수를 숫자로 변환할 수 있는지 없는지에따라 
  * */
 export const postUpload = async (req, res) => {
+
+	const loginInfo = req.session.loginInfo;
 	//사용자 DB에 저장함.
 	console.log('postUpload controller');
-	try {
-		//연결확인
-		const loginInfo = req.session.loginInfo;
-		const config = getDbConfigBySession(loginInfo);
-		if (loginInfo.dbKind == 'MARIADB' || loginInfo.dbKind == 'MYSQL')
-		{
-		}
-		else
-		{
-		}
-		console.log(req.body);
-		console.log(req.file);
-		req.session.filePaths.push(req.file.path);
-		/*
-		 * const tableName = req.file.originalname;
-		 * csv-parser 사용
-		 * */
-
-	} catch (e) {
-		console.log(e);
-		return (res.redirect("/logout"));//세션 종료시키려 logout으로 리다이렉트
-	}
+   /*  try { */
+	/*     //연결확인 */
+	/*     if (!req.session.loginInfo) */
+	/*         throw(e); */
+	/*     const config = getDbConfigBySession(loginInfo); */
+    /*  */
+	/*     // */
+	/*     const path = req.file.path; */
+	/*     req.session.filePaths.push(path); */
+	/*     const results = []; */
+	/*     fs.createReadStream(path) */
+	/*         .pipe(csv()) */
+	/*         .on('data', (data) => results.push(data)) */
+	/*         .on('end', () => { */
+	/*             const tableName = req.file.originalname; */
+	/*             const query = getCreateTableQuery(tableName, results); */
+	/*             dbConnectQuery(req.session.dbKind, config, query); */
+	/*         }); */
+	/* } catch (e) { */
+	/*     console.log(e); */
+	/*     return (res.redirect("/logout"));//세션 종료시키려 logout으로 리다이렉트 */
+	/* } */
 	return (res.redirect("/"));
 }

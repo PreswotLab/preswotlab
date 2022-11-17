@@ -1,5 +1,5 @@
 import { getDbConfigByForm } from "../dbs/getDbConfigByForm";
-import userDbConnectQuery from "../dbs/userDbConnect";
+import dbConnectQuery from "../dbs/userDbConnect";
 import fs from 'fs';
 
 //GET /login
@@ -16,7 +16,7 @@ export const postLogin = async (req, res) => {
 	const dbConfig = getDbConfigByForm(req.body);
 	console.log(dbConfig);
 	try {
-		await userDbConnectQuery(req.body.dbkind, dbConfig, null);
+		await dbConnectQuery(req.body.dbkind, dbConfig, null);
 	} catch (e) {
 		console.log(e.message);
 		return (res.status(400).render('login', { 
