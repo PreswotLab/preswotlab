@@ -10,15 +10,20 @@
  *		]
  * ];
  * */
-const getTableNames = (result) => {
+
+import dbConnectQuery from "../../dbs/userDbConnect";
+
+const getTableNames = async (loginInfo) => {
 	let tableNames = [];
 	let i;
 
+	const result = await dbConnectQuery(loginInfo, 'SHOW tables;');
+	console.log(result)
 	i = 0;
 	while (true)
 	{
 		if (typeof(result[i]) == 'object')
-			tableNames.push(result[i]['Tables_in_dbserver'])
+			tableNames.push(result[i][`Tables_in_${loginInfo.dbName}`])
 		else
 			break;
 		i++;

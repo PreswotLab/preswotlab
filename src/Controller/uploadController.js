@@ -1,8 +1,4 @@
-import getDbConfigBySession from '../dbs/getDbConfigBySession';
 const csv = require('csv-parser');
-import fs from 'fs';
-import dbConnectQuery from '../dbs/userDbConnect';
-import getCreateTableQuery from './tools/getCreateTableQuery';
 
 export const getUpload = (req, res) => {
 	return res.render('upload', {title : 'upload'});
@@ -16,7 +12,6 @@ export const getUpload = (req, res) => {
  * */
 export const postUpload = async (req, res) => {
 
-	const loginInfo = req.session.loginInfo;
 	//사용자 DB에 저장함.
 	console.log('postUpload controller');
    /*  try { */

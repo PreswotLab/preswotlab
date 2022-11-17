@@ -4,14 +4,17 @@
 
 import MariaMyLogin from "./dblogin/MariaLogin";
 import MssqlLogin from "./dblogin/MssqlLogin"
+import getDbConfigBySession from "./getDbConfigBySession";
 
-const dbConnectQuery = async(dbkind, dbconfig, query) => {
+const dbConnectQuery = async(loginInfo, query) => {
 	let result;
 
+	const dbconfig = getDbConfigBySession(loginInfo);
+	console.log(loginInfo, dbconfig, query)
 	try {
-		if (dbkind == 'MSSQL')
+		if (loginInfo.dbKind == 'MSSQL')
 			result = await MssqlLogin(dbconfig, query);
-		else if (dbkind == 'MARIADB' || dbkind == 'MYSQL')
+		else if (loginInfo.dbKind == 'MARIADB' || loginInfo.dbKind == 'MYSQL')
 			result = await MariaMyLogin(dbconfig, query);
 		if (query)
 			return (result);

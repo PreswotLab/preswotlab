@@ -1,11 +1,13 @@
 const mariadb = require('mariadb');
 
-export default async function MariaMyLogin(config, query) {
+const MariaMyLogin = async (config, query) => {
 	const conn = await mariadb.createConnection(config);
+	console.log("maria connected");
 	if (query)
 	{
 		try {
 			const res = await conn.query(query);
+			console.log("current user config:", config);
 			console.log("get a result in query:", query, "res: ", res);
 			return (res);
 		} catch(e){
@@ -16,3 +18,5 @@ export default async function MariaMyLogin(config, query) {
 		}
 	}
 };
+
+export default MariaMyLogin;

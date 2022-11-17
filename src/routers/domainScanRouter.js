@@ -14,12 +14,12 @@ domainScanRouter
 	.get(getDomainScan);
 
 domainScanRouter
-	.route('/:tableName[ㄱ-ㅎ]')
+	.route('/:tableName[A-Za-zㄱ-ㅎ]')
 	.all(checkLoginMiddleware)
 	.get(getDomainScanResult);
 
 domainScanRouter
-	.route('/:tableName[ㄱ-ㅎ]/save')
+	.route('/:tableName[A-Za-zㄱ-ㅎ]/save')
 	.all(checkLoginMiddleware)
 	.put(saveRepresentAttrKey);
 

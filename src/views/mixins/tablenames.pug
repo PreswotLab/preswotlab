@@ -1,3 +1,4 @@
 mixin tableNames(tableName)
-    a(href=`/domain-scan/${tableName}`).tableName_mixin
+    .tableName_wrapper
+        a(href=`/domain-scan/${tableName}`).tableName_mixin=tableName
         

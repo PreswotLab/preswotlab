@@ -1,4 +1,4 @@
-export default function getDbConfigBySession (loginInfo) {
+const getDbConfigBySession = (loginInfo) => {
 
 	if (loginInfo.dbKind == 'MSSQL')
 	{
@@ -21,3 +21,5 @@ export default function getDbConfigBySession (loginInfo) {
 		})
 	}
 }
+
+export default getDbConfigBySession;
