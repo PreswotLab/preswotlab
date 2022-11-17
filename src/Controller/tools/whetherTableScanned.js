@@ -1,6 +1,6 @@
 import dbConnectQuery from "../../dbs/userDbConnect";
 
-const whetherTableScanned = async (tableNames) => {
+const whetherTableScanned = async (loginInfo) => {
 	const result = await dbConnectQuery(loginInfo, 
 		`
 		SELECT table_name, scan_yn
@@ -9,7 +9,8 @@ const whetherTableScanned = async (tableNames) => {
 		U.db_type = ${loginInfo.dbKind} AND
 		U.host = ${loginInfo.dbHostIp} AND
 		U.user_id = ${loginInfo.dbUser} AND
-		U.db_name = ${loginInfo.dbName}`);
+		U.db_name = ${loginInfo.dbName}`
+	);
 
 
 	return (result)

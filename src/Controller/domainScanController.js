@@ -5,7 +5,7 @@ export const getDomainScan = async (req, res) => {
 	try {
 		let tableNames = await getTableNames(loginInfo);
 		console.log(tableNames);
-		//let scanWhether = await whetherTableScanned();
+		//let scanWhether = await whetherTableScanned(loginInfo);
 		res.render('domain-scan', { title : "PRESWOT LAB" , tableNames : tableNames});
 	} catch (e) {
 		console.log(e);

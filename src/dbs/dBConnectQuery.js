@@ -4,12 +4,12 @@
 
 import MariaMyLogin from "./dblogin/MariaLogin";
 import MssqlLogin from "./dblogin/MssqlLogin"
-import getDbConfigBySession from "./getDbConfigBySession";
+import getDbConfigByLoginInfo from "./getDbConfigByLoginInfo";
 
 const dbConnectQuery = async(loginInfo, query) => {
 	let result;
 
-	const dbconfig = getDbConfigBySession(loginInfo);
+	const dbconfig = getDbConfigByLoginInfo(loginInfo);
 	console.log(loginInfo, dbconfig, query)
 	try {
 		if (loginInfo.dbKind == 'MSSQL')

@@ -1,6 +1,6 @@
 -- 사용자
 CREATE TABLE tb_user (
-	user_seq INT NOT NULL, 
+	user_seq INT NOT NULL AUTO_INCREMENT, 
 	db_type VARCHAR(10) NOT NULL, 
 	host VARCHAR(15) NOT NULL, 
 	port VARCHAR(5) NOT NULL,
@@ -10,6 +10,13 @@ CREATE TABLE tb_user (
 
 ALTER TABLE tb_user ADD CONSTRAINT PK_TB_USER PRIMARY KEY (
 	user_seq
+);
+
+ALTER TABLE tb_user ADD CONSTRAINT UNIQUE_TB_USER UNIQUE(
+	db_type,
+	host,
+	user_id,
+	db_name
 );
 
 -- 스캔 테이블

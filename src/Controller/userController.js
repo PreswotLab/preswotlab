@@ -1,6 +1,7 @@
-import fs from 'fs';
-import dbConnectQuery from "../dbs/userDbConnect";
+import dbConnectQuery from "../dbs/dbConnectQuery";
 import getLoginInfoByForm from "../dbs/getLoginInfoByForm";
+import getServerLoginInfo from '../dbs/getServerLoginInfo';
+import getUserSeq from "../dbs/getUserSeq";
 
 //GET /login
 export const getLogin = (req, res) => {
@@ -23,12 +24,15 @@ export const postLogin = async (req, res) => {
 			errorMessage : e.message}))
 	}
 
-	console.log('로그인성공!')
+	console.log('로그인성공!');
+
+	//db에 사용자 있는지 없는지 확인하고, 없으면 생성
+	req.session.user_seq = getUserSeq(fakeLoginInfo);
+
 	//브라우저측에 세션정보 저장하기
 	req.session.loggedIn = true;
 	req.session.loginInfo = {...fakeLoginInfo};
 	req.session.filePaths = [];
-	//local middleware에서 local에 저장하게됨
 	res.redirect('/');
 }
 

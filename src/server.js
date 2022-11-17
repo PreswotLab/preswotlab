@@ -1,10 +1,9 @@
+import "./env";
 import express from 'express';
 import morgan from 'morgan';
 import rootRouter from './routers/rootRouter';
-import "dotenv/config"
 import {urlencoded} from 'body-parser';
 import session from 'express-session';
-const { COOKIE_SECRET } = process.env;
 import { localMiddleware } from './middlewares';
 import uploadRouter from './routers/uploadRouter';
 import apiRouter from './routers/apiRouter';
@@ -26,6 +25,7 @@ app.use(urlencoded({ extended : true }));
 app.use(express.json());
 
 //세션 미들웨어
+const { COOKIE_SECRET } = process.env;
 app.use(
 	session({
 		secret: COOKIE_SECRET,

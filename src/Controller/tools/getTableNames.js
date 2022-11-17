@@ -11,7 +11,7 @@
  * ];
  * */
 
-import dbConnectQuery from "../../dbs/userDbConnect";
+import dbConnectQuery from "../../dbs/dbConnectQuery";
 
 const getTableNames = async (loginInfo) => {
 	let tableNames = [];
