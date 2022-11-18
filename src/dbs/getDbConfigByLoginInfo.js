@@ -10,7 +10,7 @@ const getDbConfigByLoginInfo = (loginInfo) => {
 			port : parseInt(loginInfo.dbPort) || 1433
 		})
 	}
-	else
+	else //mariadb, mysql용
 	{
 		return ({
 			user : loginInfo.dbUser,

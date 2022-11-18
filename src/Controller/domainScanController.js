@@ -14,7 +14,9 @@ export const getDomainScan = async (req, res) => {
 };
 
 export const getDomainScanResult = async (req, res) => {
-	res.end();
+	console.log("routing domain-test")
+	console.log(req.params);
+	res.render("domain-scan-result",  { title : "PRESWOT LAB" });
 }
 
 export const saveRepresentAttrKey = async (req, res) => {

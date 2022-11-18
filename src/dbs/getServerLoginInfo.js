@@ -8,8 +8,6 @@ const {
 } = process.env;
 
 const getServerLoginInfo = () => {
-	console.log("=-============================")
-	console.log("DBNAME ::", process.env.DBNAME);
 	const config = {
 		dbUser : DBUSER,
 		dbName : DBNAME,

@@ -42,7 +42,7 @@ app.use('/static', express.static('assets'));
 
 app.use("/", rootRouter);
 app.use(uploadRouter);
-app.use('/domain-scan', domainScanRouter);
+app.use("/domain-scan", domainScanRouter);
 //app.use('/edit-table', editTableRouter);
 //app.use(singleJoinRouter);
 //app.use(multiJoinRouter);
