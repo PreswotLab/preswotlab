@@ -7,8 +7,6 @@ const MariaMyLogin = async (config, query) => {
 	{
 		try {
 			const res = await conn.query(query);
-			console.log("current user config:", config);
-			console.log("get a result in query:", query, "res: ", res);
 			return (res);
 		} catch(e){
 			console.log(e)
