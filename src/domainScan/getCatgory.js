@@ -11,6 +11,16 @@ const result = await dbConnectQuery(loginInfo,
 	OR TYPE LIKE 'binary'
 	OR TYPE LIKE 'enum';
 	`);
+
+	/*
+	 * const rtn = [];
+	 * for (let i = 0; i < result.length; i++)
+	 * {
+	 * 		rtn.push(getCategoryScanObject(result[i]));
+	 * }
+	 * 
+	 * */
+
 return (result);
 };
 

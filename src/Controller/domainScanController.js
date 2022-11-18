@@ -21,8 +21,6 @@ export const getDomainScanResult = async (req, res) => {
 	try {
 		const numericFields = getNumeric(id, loginInfo);
 		const categoryFields = getCategory(id, loginInfo);
-		console.log(numericFields);
-		console.log(categoryFields);
 		res.render("domain-scan-result",  { title : "PRESWOT LAB" });
 	} catch (e) {
 		console.log(e);

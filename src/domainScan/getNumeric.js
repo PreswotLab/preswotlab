@@ -11,6 +11,16 @@ const getNumeric = async (id, loginInfo) => {
 		OR TYPE LIKE 'bit'
 		OR TYPE LIKE 'decimal';
 		`);
+
+	console.log(result);
+	/*
+	 * const rtn = [];
+	 * for (let i = 0; i < result.length; i++)
+	 * {
+	 * 		rtn.push(getNumericScanObject(result[i]));
+	 * }
+	 * 
+	 * */
 	return (result);
 };
 
