@@ -1,9 +1,18 @@
 extends default
 
 block content
-    div.table-grid
-        
-
+    #tableName 테이블이름
+    form(method="POST" action="./save")
+        #table-wrapper.category_domain
+            .category_name 범주 속성 도메인 스캔 결과
+            .category_table
+                .table 범주속성 테이블
+        #table-wrapper.numeric_domain
+            .numeric_name 수치 속성 도메인 스캔 결과
+            .numeric_table
+                .table 수치속성 테이블
+        #save
+            input(type="submit" value="저장")
 
 block scripts
     script(src='static/js/domain-scan-result.js')

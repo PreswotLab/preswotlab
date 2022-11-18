@@ -5,9 +5,9 @@ block content
         div 
             form(method="POST")
                 select(name="dbkind")
-                    option(value="MSSQL") MSSQL
                     option(value="MYSQL") MYSQL
                     option(value="MARIADB") MARIADB
+                    option(value="MSSQL") MSSQL
                 input(type="text" name='dbhostip' required placeholder="Database Host/Ip")
                 input(type="text" name="dbport" required placeholder="Database Port")
                 input(type="text" name="dbusername" required placeholder="Username")
