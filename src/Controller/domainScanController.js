@@ -1,12 +1,11 @@
-import getTableNames from "./tools/getTableNames";
-import getNumeric from "../domainScan/getNumeric";
-import getCategory from "../domainScan/getCatgory";
+import getTableNames from "./tools/domainScan/getTableNames";
+import getNumeric from "./tools/domainScan/getNumeric";
+import getCategory from "./tools/domainScan/getCatgory";
 
 export const getDomainScan = async (req, res) => {
 	const loginInfo = req.session.loginInfo;
 	try {
 		let tableNames = await getTableNames(loginInfo);
-		console.log(tableNames);
 		res.render('domain-scan', { title : "PRESWOT LAB" , tableNames : tableNames});
 	} catch (e) {
 		console.log(e);

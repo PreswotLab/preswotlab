@@ -1,4 +1,4 @@
-import dbConnectQuery from "../dbs/dbConnectQuery";
+import dbConnectQuery from "../user/dBConnectQuery";
 
 const getCategory = async (id, loginInfo) => {
 const result = await dbConnectQuery(loginInfo, 

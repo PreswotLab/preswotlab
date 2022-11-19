@@ -11,14 +11,13 @@
  * ];
  * */
 
-import dbConnectQuery from "../../dbs/dbConnectQuery";
+import dbConnectQuery from "../user/dBConnectQuery";
 
 const getTableNames = async (loginInfo) => {
 	let tableNames = [];
 	let i;
 
 	const result = await dbConnectQuery(loginInfo, 'SHOW tables;');
-	console.log(result)
 	i = 0;
 	while (true)
 	{

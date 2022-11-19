@@ -1,6 +1,7 @@
-import dbConnectQuery from "../dbs/dbConnectQuery";
-import getLoginInfoByForm from "../dbs/getLoginInfoByForm";
-import getUserSeq from "../dbs/getUserSeq";
+import dbConnectQuery from "./tools/user/dBConnectQuery";
+import getLoginInfoByForm from "./tools/user/getLoginInfoByForm";
+import getUserSeq from "./tools/user/getUserSeq";
+import fs from 'fs';
 
 //GET /login
 export const getLogin = (req, res) => {
