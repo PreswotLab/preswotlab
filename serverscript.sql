@@ -1,6 +1,14 @@
+CREATE DATABASE SERVER;
+
+CREATE USER 'server'@'%' identified by 'password';
+
+USE SERVER;
+
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, RELOAD, PROCESS, REFERENCES, INDEX, ALTER, SHOW DATABASES, CREATE TEMPORARY TABLES, LOCK TABLES, EXECUTE, REPLICATION SLAVE, REPLICATION CLIENT, CREATE VIEW, SHOW VIEW, CREATE ROUTINE, ALTER ROUTINE, CREATE USER, EVENT, TRIGGER ON *.* TO 'server'@'%' WITH GRANT OPTION;
+
 -- 사용자
 CREATE TABLE tb_user (
-	user_seq INT NOT NULL AUTO_INCREMENT, 
+	user_seq INT NOT NULL, 
 	db_type VARCHAR(10) NOT NULL, 
 	host VARCHAR(15) NOT NULL, 
 	port VARCHAR(5) NOT NULL,
@@ -71,23 +79,23 @@ CREATE TABLE tb_attribute (
 	zero_num INT NULL DEFAULT 0,
 	special_num INT NULL DEFAULT 0, 
 	rattr_seq INT NULL,
-	key_candidate enum('Y', 'N') NOT NULL DEFAULT N
+	key_candidate enum('Y', 'N') NOT NULL DEFAULT 'N'
 );
 
-ALTER TABLE tb_attribute ADD CONSTRAINT PK_TB_ATTRIBUTE PRIMARY KEY (
+alter table tb_attribute add constraint pk_tb_attribute primary key (
 	attr_seq,
 	table_seq
 );
 
-ALTER TABLE tb_attribute ADD CONSTRAINT FK_tb_scan_TO_tb_attribute_1 FOREIGN KEY (
+alter table tb_attribute add constraint fk_tb_scan_to_tb_attribute_1 foreign key (
 	table_seq
-) REFERENCES tb_scan (
+) references tb_scan (
 	table_seq
 );
 
-ALTER TABLE tb_attribute ADD CONSTRAINT FK_tb_rep_attribute_TO_tb_attribute_1 FOREIGN KEY (
+alter table tb_attribute add constraint fk_tb_rep_attribute_to_tb_attribute_1 foreign key (
 	rattr_seq
-) REFERENCES tb_rep_attribute (
+) references tb_rep_attribute (
 	rattr_seq
 );
 
@@ -97,7 +105,7 @@ CREATE TABLE tb_mapping (
 	rkey_seq INT NOT NULL, 
 	attr_seq INT NOT NULL, 
 	table_seq INT NOT NULL,
-	chg_yn enum('Y','N') NOT NULL DEFAULT N
+	chg_yn enum('Y','N') NOT NULL DEFAULT 'N'
 );
 
 ALTER TABLE tb_mapping ADD CONSTRAINT PK_TB_MAPPING PRIMARY KEY (
@@ -127,7 +135,6 @@ ALTER TABLE tb_mapping ADD CONSTRAINT FK_tb_attribute_TO_tb_mapping_2 FOREIGN KE
 
 
 -- 조인결합결과
-
 CREATE TABLE tb_join ( 
 	join_seq INT NOT NULL, 
 	p_join_seq INT NOT NULL, 
@@ -178,5 +185,3 @@ ALTER TABLE tb_join ADD CONSTRAINT FK_tb_rep_key_TO_tb_join_1 FOREIGN KEY (
 ) REFERENCES tb_rep_key (
 	rkey_seq
 );
-
-
