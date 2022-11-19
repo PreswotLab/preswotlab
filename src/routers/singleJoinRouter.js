@@ -3,7 +3,7 @@ import express from 'express';
 const singleJoinRouter = express.Router();
 
 singleJoinRouter
-	.route('/single-join')
+	.route('/')
 	.all(checkLoginMiddleware)
 	.get(getSingleJoin)
 	.post(postSingleJoin)

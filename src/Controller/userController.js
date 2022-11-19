@@ -17,12 +17,12 @@ export const postLogin = async (req, res) => {
 	try {
 		await dbConnectQuery(fakeLoginInfo, null);
 		//db에 사용자 있는지 없는지 확인하고, 없으면 생성
+		console.log("fake:", fakeLoginInfo);
 		req.session.user_seq = await getUserSeq(fakeLoginInfo);
 	} catch (e) {
 		console.log(e.message);
 		return (res.status(400).render('login', { 
-			title : 'login', 
-			errorMessage : e.message}))
+			title : 'login'}))
 	}
 	console.log('로그인성공!');
 
@@ -51,6 +51,5 @@ export const getLogout = (req, res) => {
 		}
 	);
 	req.session.destroy();
-	console.log('session destroy');
 	return res.redirect("/");
 }

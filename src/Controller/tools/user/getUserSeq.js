@@ -4,7 +4,6 @@ import dbConnectQuery from "./dbConnectQuery";
 const getUserSeq = async (loginInfo) => {
 	let user_seq;
 	const serverLoginInfo = getServerLoginInfo();
-
 	const res = await dbConnectQuery(serverLoginInfo, 
 		`SELECT user_seq FROM tb_user AS U 
 		WHERE U.db_type = "${loginInfo.dbKind}" AND

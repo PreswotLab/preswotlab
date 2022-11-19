@@ -2,7 +2,7 @@ import "./env";
 import express from 'express';
 import morgan from 'morgan';
 import rootRouter from './routers/rootRouter';
-import {urlencoded} from 'body-parser';
+import { urlencoded } from 'body-parser';
 import session from 'express-session';
 import { localMiddleware } from './middlewares';
 import uploadRouter from './routers/uploadRouter';
@@ -18,13 +18,10 @@ app.use(morgan("dev"));
 app.set("view engine", "pug")
 app.set("views", process.cwd() + "/src/views/layouts")
 
-//formdata middleware
 app.use(urlencoded({ extended : true }));
 
-//string middleware
 app.use(express.json());
 
-//세션 미들웨어
 const { COOKIE_SECRET } = process.env;
 app.use(
 	session({
@@ -44,8 +41,8 @@ app.use("/", rootRouter);
 app.use(uploadRouter);
 app.use("/domain-scan", domainScanRouter);
 //app.use('/edit-table', editTableRouter);
-//app.use(singleJoinRouter);
-//app.use(multiJoinRouter);
+//app.use('/single-join', singleJoinRouter);
+//app.use('/multi-join', multiJoinRouter);
 //app.use('/result', resultRouter);
 
 app.use('/api', apiRouter);

@@ -2,7 +2,6 @@ const mariadb = require('mariadb');
 
 const MariaMyLogin = async (config, query) => {
 	const conn = await mariadb.createConnection(config);
-	console.log("maria connected");
 	if (query)
 	{
 		try {
