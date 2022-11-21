@@ -1,4 +1,5 @@
 import dbConnectQuery from "../user/dBConnectQuery";
+import getServerLoginInfo from "../user/getServerLoginInfo";
 
 export class ScanResult
 {
@@ -6,6 +7,7 @@ export class ScanResult
 	#loginInfo;
 	#numOfRecords;
 
+	#repAttrJoinKey;
 	#numericResult;
 	#categoryResult;
 
@@ -76,11 +78,14 @@ export class ScanResult
 		const numOfNullRecords = this.#getNumOfNullRecords(attrName);
 		const portionOfNullRecords = parseInt(numOfNullRecords) / parseInt(this.#numOfRecords);
 		const numOfDistinct = this.#getNumOfDistinct(attrName);
-		 /*	repAttr : ;
-		 *	joinKeyCandidate: ;
-		 *	repJoinKey : ;
-			*/
-	}
+		return ({
+			attrName,
+			attrType,
+			numOfNullRecords,
+			portionOfNullRecords,
+			numOfDistinct
+		});
+	};
 
 	async #getNumOfNullRecords (attrName)
 	{
@@ -103,34 +108,60 @@ export class ScanResult
 		`);
 		console.log("#of distinct", result, "\n");
 		return (result.length);
-	}
+	};
 
+	async #makeMinMax (fieldInfo)
+	{
+		const result = await dbConnectQuery(this.#loginInfo,
+		`
+		SELECT MAX(${fieldInfo}), MIN(${fieldInfo})
+		FROM ${this.#tableName};
+		`);
+		console.log("minmax result : ", result, "\n");
+		return (result[0]);
+	};
 
 	async #makeNumericScanObject (fieldInfo)
 	{
 		console.log("fieldinformation : ",fieldInfo);
-		const commonScanData = this.#makeCommonScanData;
-		return ({ 
-			...commonScanData, 
-		/*	max : ,
-		 *	min : ,
-		 *	numOfZero : ,
+		return ({
+			...this.#makeCommonScanData(fieldInfo),
+			...this.#makeMinMax(fieldInfo) 
+		/*	numOfZero : ,
 		 *	portionOfZero : 
 		 */
-		})
+		});
 	};
 
 	async #makeCategoryScanObject (fieldInfo)
 	{
 		console.log("fieldinformation : ",fieldInfo);
-		const commonScanData = this.#makeCommonScanData;
+		const commonScanData = this.#makeCommonScanData(fieldInfo);
 		return ({
 			...commonScanData,
 		/*	numOfSpcRecords : ,
 		 *	portionOfSpcRecords : 
 		 */
 		});
-	}
+	};
+
+	async #setRepAttrJoinKey ()
+	{
+		const repAttr = await dbConnectQuery(getServerLoginInfo(), 
+		`
+		SELECT rattr_name
+		FROM tb_rep_attribute;
+		`);
+		const repKey = await dbConnectQuery(getServerLoginInfo(),
+		`
+		SELECT rkey_name
+		FROM tb_rep_key;
+		`);
+		this.#repAttrJoinKey = {
+			repAttr,
+			repKey
+		};
+	};
 
 	async getResult ()
 	{
@@ -138,9 +169,11 @@ export class ScanResult
 		console.log("set num of records", this.#numOfRecords);
 		await this.#setNumeric();
 		await this.#setCategory();
+		await this.#setRepAttrJoinKey();
 		return ({
+			repAttrJoinKey : this.#repAttrJoinKey,
 			numericResult : this.#numericResult,
 			categoryResult : this.#categoryResult
-		})
-	}
-}
+		});
+	};
+};
