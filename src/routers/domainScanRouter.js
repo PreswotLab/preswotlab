@@ -13,7 +13,7 @@ domainScanRouter
 	.all(checkLoginMiddleware)
 	.get(getDomainScan);
 
-domainScanRouter.get("/:id([0-9A-Za-zㄱ-ㅎ-_]+)", checkLoginMiddleware, getDomainScanResult);
+domainScanRouter.get("/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)", checkLoginMiddleware, getDomainScanResult);
 
 domainScanRouter
 	.route('/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)/save')
