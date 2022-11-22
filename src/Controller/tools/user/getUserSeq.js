@@ -26,7 +26,14 @@ const getUserSeq = async (loginInfo) => {
 				"${loginInfo.dbUser}", 
 				"${loginInfo.dbName}");
 			`);
-		const userID = await dbConnectQuery(serverLoginInfo, `SELECT user_seq FROM tb_user AS U WHERE U.db_type = "${loginInfo.dbKind}" AND U.host = "${loginInfo.dbHostIp}" AND U.user_id = "${loginInfo.dbUser}" AND U.db_name = "${loginInfo.dbName}"`);
+		const userID = await dbConnectQuery(serverLoginInfo, 
+			`
+			SELECT user_seq 
+			FROM tb_user AS U 
+			WHERE U.db_type = "${loginInfo.dbKind}" 
+			AND U.host = "${loginInfo.dbHostIp}" 
+			AND U.user_id = "${loginInfo.dbUser}" 
+			AND U.db_name = "${loginInfo.dbName}"`);
 		user_seq = userID[0]["user_seq"];
 	} else {
 		user_seq = res[0]["user_seq"];
