@@ -45,8 +45,6 @@ app.use("/domain-scan", domainScanRouter);
 //app.use('/multi-join', multiJoinRouter);
 //app.use('/result', resultRouter);
 
-app.use('/api', apiRouter);
-
 //server 3000번 port사용, Listening 핸들러 호출
 const PORT = 3000;
 app.listen(PORT, () => {
