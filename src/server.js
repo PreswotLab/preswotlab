@@ -1,13 +1,19 @@
 import "./env";
 import express from 'express';
 import morgan from 'morgan';
-import rootRouter from './routers/rootRouter';
 import { urlencoded } from 'body-parser';
 import session from 'express-session';
 import { localMiddleware } from './middlewares';
-import uploadRouter from './routers/uploadRouter';
-import apiRouter from './routers/apiRouter';
-import domainScanRouter from './routers/domainScanRouter';
+
+//Common
+import rootRouter from "./routers/Common/rootRouter"; 
+import uploadRouter from "./routers/Common/uploadRouter";
+
+//A
+import domainScanRouter from "./routers/A/domainScanRouter";
+
+//B
+
 
 const app = express();
 
@@ -37,10 +43,15 @@ app.use(localMiddleware);
 //client단에서 사용될 정적파일들
 app.use('/static', express.static('assets'));
 
+//Common
 app.use("/", rootRouter);
 app.use(uploadRouter);
+
+//A
 app.use("/domain-scan", domainScanRouter);
 //app.use('/edit-table', editTableRouter);
+
+//B
 //app.use('/single-join', singleJoinRouter);
 //app.use('/multi-join', multiJoinRouter);
 //app.use('/result', resultRouter);

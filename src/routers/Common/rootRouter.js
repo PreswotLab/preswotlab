@@ -1,13 +1,6 @@
 import express from 'express';
-import {
-	getLogin, 
-	postLogin, 
-	getLogout
-} from '../Controller/userController';
-import {
-	checkLoginMiddleware,
-	checkNotLoginMiddleware
-} from '../middlewares';
+import { getLogin, postLogin, getLogout } from '../../Controller/Common/userController';
+import { checkLoginMiddleware, checkNotLoginMiddleware } from '../../middlewares';
 
 const rootRouter = express.Router();
 

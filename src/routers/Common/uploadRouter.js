@@ -1,6 +1,6 @@
 import express from 'express'
-import {getUpload, postUpload} from '../Controller/uploadController';
-import {checkLoginMiddleware, csvUpload} from '../middlewares';
+import { getUpload, postUpload } from '../../Controller/Common/uploadController';
+import { checkLoginMiddleware, csvUpload } from '../../middlewares';
 
 const uploadRouter = express.Router();
 

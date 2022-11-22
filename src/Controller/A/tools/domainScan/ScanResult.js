@@ -1,5 +1,5 @@
-import dbConnectQuery from "../user/dBConnectQuery";
-import getServerLoginInfo from "../user/getServerLoginInfo";
+import dbConnectQuery from "../../../Common/tools/user/dBConnectQuery";
+import getServerLoginInfo from "../../../Common/tools/user/getServerLoginInfo";
 
 export class ScanResult
 {
