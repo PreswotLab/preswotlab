@@ -11,6 +11,7 @@ import uploadRouter from "./routers/Common/uploadRouter";
 
 //A
 import domainScanRouter from "./routers/A/domainScanRouter";
+import { editTableRouter } from "./routers/A/editTableRouter";
 
 //B
 
@@ -49,7 +50,7 @@ app.use(uploadRouter);
 
 //A
 app.use("/domain-scan", domainScanRouter);
-//app.use('/edit-table', editTableRouter);
+app.use('/edit-table', editTableRouter);
 
 //B
 //app.use('/single-join', singleJoinRouter);
