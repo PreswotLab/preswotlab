@@ -7,7 +7,7 @@ const rootRouter = express.Router();
 //application이 /로 들어오는 요청에 대해 콜백함수들을 사용하게된다.
 //이 콜백함수들을 모두 middleware라고 부르며, 중간에 있는 미들웨어는 next()로 제어권을 다음 미들웨어로 위임.
 const handleHome = (req, res) => {
-	console.log('routing home');
+	console.log("세션 ID : ", req.sessionID);
 	res.render('home', { title : "PRESWOT LAB"});
 }
 
