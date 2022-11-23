@@ -1,23 +1,10 @@
 import express from 'express';
+import { getEditTable, deleteAttr } from '../../Controller/A/editTableController';
 
-const editTableRouter = express.Router();
+export const editTableRouter = express.Router();
 
 editTableRouter
-	.route('/edit-table')
+	.route('/')
 	.get(getEditTable)
-	.post(postEditTable);
 
-editTableRouter
-	.route('/:id/deletion')
-	.get(getDeleteCol)
-	.post(postDeleteCol);
-
-editTableRouter
-	.route('/:id/modify')
-	.get(getModifyCol)
-	.post(postModifyCol);
-
-editTableRouter
-	.route('/:id/mapping')
-	.get(getMappingCol)
-	.post(postMappingCol);
+editTableRouter.post('/:tableName/deletion', deleteAttr);

@@ -1,6 +1,6 @@
 import express from 'express';
 import { checkLoginMiddleware } from '../../middlewares';
-import { getDomainScan, getDomainScanResult, saveRepresentAttrKey } from '../../Controller/A/domainScanController';
+import { getDomainScan, getDomainScanResult, addRepAttr, addRepJoinKey, saveRepresentAttrKey } from '../../Controller/A/domainScanController';
 
 const domainScanRouter = express.Router();
 
@@ -11,9 +11,7 @@ domainScanRouter
 
 domainScanRouter.get("/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)", checkLoginMiddleware, getDomainScanResult);
 
-domainScanRouter
-	.route('/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)/save')
-	.all(checkLoginMiddleware)
-	.put(saveRepresentAttrKey);
+domainScanRouter.post("/addRepAttr", addRepAttr);
+domainScanRouter.post("/addRepAttr", addRepJoinKey);
 
 export default domainScanRouter;

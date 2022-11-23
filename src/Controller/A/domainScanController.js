@@ -28,6 +28,10 @@ export const getDomainScanResult = async (req, res) => {
 	}
 }
 
-export const saveRepresentAttrKey = async (req, res) => {
-	res.end();
+export const addRepAttr = async (req, res) => {
+
+}
+
+export const addRepJoinKey = async (req, res) => {
+
 }
