@@ -31,6 +31,26 @@ export class ScanResult
 		this.#numOfRecords = result.length;
 	}
 
+	async #setRepAttrJoinKey ()
+	{
+		const repAttr = await dbConnectQuery(getServerLoginInfo(), 
+		`
+		SELECT rattr_name
+		FROM tb_rep_attribute;
+		`);
+		const repKey = await dbConnectQuery(getServerLoginInfo(),
+		`
+		SELECT rkey_name
+		FROM tb_rep_key;
+		`);
+		console.log("repkey:", repKey);
+		console.log("repAttr", repAttr);
+		this.#repAttrJoinKey = {
+			repAttr,
+			repKey
+		};
+	};
+
 	async #setNumeric () 
 	{
 		const result = await dbConnectQuery(this.#loginInfo, 
@@ -136,40 +156,27 @@ export class ScanResult
 	async #makeCategoryScanObject (fieldInfo)
 	{
 		console.log("fieldinformation : ",fieldInfo);
-		const commonScanData = this.#makeCommonScanData(fieldInfo);
 		return ({
-			...commonScanData,
+			...this.#makeCommonScanData(fieldInfo),
 		/*	numOfSpcRecords : ,
 		 *	portionOfSpcRecords : 
 		 */
 		});
 	};
 
-	async #setRepAttrJoinKey ()
-	{
-		const repAttr = await dbConnectQuery(getServerLoginInfo(), 
-		`
-		SELECT rattr_name
-		FROM tb_rep_attribute;
-		`);
-		const repKey = await dbConnectQuery(getServerLoginInfo(),
-		`
-		SELECT rkey_name
-		FROM tb_rep_key;
-		`);
-		this.#repAttrJoinKey = {
-			repAttr,
-			repKey
-		};
-	};
-
+	/*
+	 * repAttrJoinKey : API 요청당 1번만
+	 * numericResult : API 요청 1번 -> 테이블 내의 모든 속성에 대해 요청
+	 * categoryResult : API 요청 1번 -> 테이블 내의 모든 속성에 대해 요청
+	 *
+	 * */
 	async getResult ()
 	{
 		await this.#setNumOfRecords();
 		console.log("set num of records", this.#numOfRecords);
+		await this.#setRepAttrJoinKey();
 		await this.#setNumeric();
 		await this.#setCategory();
-		await this.#setRepAttrJoinKey();
 		return ({
 			repAttrJoinKey : this.#repAttrJoinKey,
 			numericResult : this.#numericResult,
