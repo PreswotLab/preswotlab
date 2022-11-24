@@ -7,4 +7,4 @@ editTableRouter
 	.route('/')
 	.get(getEditTable)
 
-editTableRouter.post('/:tableName/deletion', deleteAttr);
+editTableRouter.post('/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)/deletion', deleteAttr);

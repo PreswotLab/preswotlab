@@ -12,6 +12,6 @@ domainScanRouter
 domainScanRouter.get("/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)", checkLoginMiddleware, getDomainScanResult);
 
 domainScanRouter.post("/addRepAttr", addRepAttr);
-domainScanRouter.post("/addRepAttr", addRepJoinKey);
+domainScanRouter.post("/addRepJoinKey", addRepJoinKey);
 
 export default domainScanRouter;
