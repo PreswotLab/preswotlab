@@ -6,11 +6,41 @@ block content
         #table-wrapper.category_domain
             .category_name 범주 속성 도메인 스캔 결과
             .category_table
-                .table 범주속성 테이블
+                .category_table_head
+                    table
+                        tr
+                            th 속성명
+                            th 데이터 타입
+                            th NULL 레코드 수
+                            th NULL 레코드 비율
+                            th 상이 수치 값
+                            th 최대 값 
+                            th 최소 값
+                            th 0 레코드 수
+                            th 0 레코드 비율
+                            th 대표 속성
+                            th 결합키 후보
+                            th 대표 결합키
+                        tbody
+                            //-여기서 category_rows mixin호출
         #table-wrapper.numeric_domain
             .numeric_name 수치 속성 도메인 스캔 결과
             .numeric_table
-                .table 수치속성 테이블
+                .numeric_table_head
+                    table
+                        tr
+                            th 속성명
+                            th 데이터 타입
+                            th NULL 레코드 수
+                            th NULL 레코드 비율
+                            th 상이 범주 값
+                            th 특수문자 포함 레코드 수 
+                            th 특수문자 포함 레코드 비율
+                            th 대표 속성
+                            th 결합키 후보
+                            th 대표 결합키
+                        tbody
+                            //-여기서 category_rows mixin호출
         #save
             input(type="submit" value="저장")
 
