@@ -22,7 +22,7 @@ const addRepOptions = document.getElementsByClassName("repSelect");
 
 const addRepAttr = async () => {
 	const name = prompt ("추가하고자하는 대표 속성을 입력하세요");
-	postData('./addRepAttr', { name }).then((data) => 
+	postData('/api/addRepAttr', { name }).then((data) => 
 	{
 		console.log(data); // JSON data parsed by `data.json()` call
 	});
@@ -30,7 +30,7 @@ const addRepAttr = async () => {
 
 const addRepJoinKey = async () => {
 	const name = prompt ("추가하고자하는 대표 결합키를 입력하세요");
-	postData('./addRepJoinKey', { name }).then((data) => 
+	postData('/api/addRepJoinKey', { name }).then((data) => 
 	{
 		console.log(data); // JSON data parsed by `data.json()` call
 	});

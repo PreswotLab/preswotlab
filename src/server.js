@@ -12,6 +12,7 @@ import uploadRouter from "./routers/Common/uploadRouter";
 //A
 import domainScanRouter from "./routers/A/domainScanRouter";
 import { editTableRouter } from "./routers/A/editTableRouter";
+import apiRouter from "./routers/Common/apiRouter";
 
 //B
 
@@ -47,6 +48,7 @@ app.use('/static', express.static('assets'));
 //Common
 app.use("/", rootRouter);
 app.use(uploadRouter);
+app.use(apiRouter);
 
 //A
 app.use("/domain-scan", domainScanRouter);

@@ -22,16 +22,13 @@ export const getDomainScanResult = async (req, res) => {
 		const result = await ScanObject.getResult();
 		console.log("NUMERIC SCAN RESULT : ", result.numericResult, "\n");
 		console.log("CATEGORY SCAN RESULT : ", result.categoryResult, "\n");
-		res.render("domain-scan-result",  { title : "PRESWOT LAB", result});
+		res.render("domain-scan-result",  { title : "PRESWOT LAB", result, tableName});
 	} catch (e) {
 		res.status(404).redirect('/logout');
 	}
 }
 
-export const addRepAttr = async (req, res) => {
+export const saveMappingData = async (req, res) => {
+	const { tableName } = req.params;
 
-}
-
-export const addRepJoinKey = async (req, res) => {
-
-}
+};
