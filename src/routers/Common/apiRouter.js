@@ -1,4 +1,5 @@
 import express from 'express';
+import { addRepAttr, addRepJoinKey } from '../../Controller/Common/apiController';
 
 const apiRouter = express.Router();
 

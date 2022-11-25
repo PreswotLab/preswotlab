@@ -59,8 +59,8 @@ app.use('/edit-table', editTableRouter);
 //app.use('/multi-join', multiJoinRouter);
 //app.use('/result', resultRouter);
 
-//server 3000번 port사용, Listening 핸들러 호출
-const PORT = 3000;
+//server 4000번 port사용, Listening 핸들러 호출
+const PORT = 4000;
 app.listen(PORT, () => {
 	console.log('test')
 });
