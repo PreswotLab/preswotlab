@@ -13,13 +13,13 @@ export const getDomainScan = async (req, res) => {
 };
 
 export const getDomainScanResult = async (req, res) => {
-	console.log("routing domain-test")
 	const { tableName } = req.params;
 	const { loginInfo } = req.session;
 	console.log(tableName);
 	try {
 		let ScanObject = new ScanResult(tableName, loginInfo);
 		const result = await ScanObject.getResult();
+		//ScanObject.InsertRow();
 		console.log("NUMERIC SCAN RESULT : ", result.numericResult, "\n");
 		console.log("CATEGORY SCAN RESULT : ", result.categoryResult, "\n");
 		res.render("domain-scan-result",  { title : "PRESWOT LAB", result, tableName});
