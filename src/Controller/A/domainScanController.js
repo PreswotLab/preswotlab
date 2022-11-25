@@ -19,7 +19,7 @@ export const getDomainScanResult = async (req, res) => {
 	try {
 		let ScanObject = new ScanResult(tableName, loginInfo);
 		const result = await ScanObject.getResult();
-		//ScanObject.InsertRow();
+		//ScanObject.insertRow();
 		console.log("NUMERIC SCAN RESULT : ", result.numericResult, "\n");
 		console.log("CATEGORY SCAN RESULT : ", result.categoryResult, "\n");
 		res.render("domain-scan-result",  { title : "PRESWOT LAB", result, tableName});

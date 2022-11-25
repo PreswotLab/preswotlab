@@ -1,5 +1,6 @@
 import dbConnectQuery from "../../../Common/tools/user/dBConnectQuery";
 import getServerLoginInfo from "../../../Common/tools/user/getServerLoginInfo";
+import {extractObjects} from "./extractObjects";
 
 export class ScanResult
 {
@@ -18,7 +19,6 @@ export class ScanResult
 		this.#numOfRecords = null;
 		this.#numericResult = null;
 		this.#categoryResult = null;
-		console.log("set ScanResult", this.#tableName, this.#loginInfo);
 	}
 
 	async #setNumOfRecords () 
@@ -28,26 +28,25 @@ export class ScanResult
 		SELECT *
 		FROM ${this.#tableName};
 		`);
-		this.#numOfRecords = result.length;
+		this.#numOfRecords = parseInt(result.length);
 	}
 
 	async #setRepAttrJoinKey ()
 	{
-		const repAttr = await dbConnectQuery(getServerLoginInfo(), 
+		const repAttrResult = await dbConnectQuery(getServerLoginInfo(), 
 		`
 		SELECT rattr_name
 		FROM tb_rep_attribute;
 		`);
-		const repKey = await dbConnectQuery(getServerLoginInfo(),
+		const repKeyResult = await dbConnectQuery(getServerLoginInfo(),
 		`
 		SELECT rkey_name
 		FROM tb_rep_key;
 		`);
-		console.log("repkey:", repKey);
-		console.log("repAttr", repAttr);
 		this.#repAttrJoinKey = {
-			repAttr,
-			repKey
+			repAttrArray : extractObjects(repAttrResult, 'rattr_name'),
+			repKeyArray : extractObjects(repKeyResult, 'rkey_name')
+
 		};
 	};
 
@@ -95,15 +94,16 @@ export class ScanResult
 	{
 		const attrName = fieldInfo.Field;
 		const attrType = fieldInfo.Type;
-		const numOfNullRecords = this.#getNumOfNullRecords(attrName);
-		const portionOfNullRecords = parseInt(numOfNullRecords) / parseInt(this.#numOfRecords);
-		const numOfDistinct = this.#getNumOfDistinct(attrName);
+		const numOfNullRecords = parseInt(await this.#getNumOfNullRecords(attrName));
+		const portionOfNullRecords = parseInt(numOfNullRecords) / this.#numOfRecords;
+		const numOfDistinct = await this.#getNumOfDistinct(attrName);
 		return ({
 			attrName,
 			attrType,
 			numOfNullRecords,
 			portionOfNullRecords,
-			numOfDistinct
+			numOfDistinct,
+			recommended : (numOfDistinct / this.#numOfRecords > 0.9) ? 'y' : 'n'
 		});
 	};
 
@@ -115,7 +115,7 @@ export class ScanResult
 		FROM ${this.#tableName}
 		WHERE ${attrName} IS NULL;
 		`);
-		console.log("#of null records : ",result, "\n");
+		return (extractObjects(result, 'COUNT(*)')[0]);
 	};
 
 	async #getNumOfDistinct (attrName)
@@ -126,7 +126,6 @@ export class ScanResult
 		FROM ${this.#tableName};
 		;
 		`);
-		console.log("#of distinct", result, "\n");
 		return (result.length);
 	};
 
@@ -134,33 +133,59 @@ export class ScanResult
 	{
 		const result = await dbConnectQuery(this.#loginInfo,
 		`
-		SELECT MAX(${fieldInfo}), MIN(${fieldInfo})
+		SELECT MAX(${fieldInfo.Field}), MIN(${fieldInfo.Field})
 		FROM ${this.#tableName};
 		`);
-		console.log("minmax result : ", result, "\n");
-		return (result[0]);
-	};
-
-	async #makeNumericScanObject (fieldInfo)
-	{
-		console.log("fieldinformation : ",fieldInfo);
 		return ({
-			...this.#makeCommonScanData(fieldInfo),
-			...this.#makeMinMax(fieldInfo) 
-		/*	numOfZero : ,
-		 *	portionOfZero : 
-		 */
+			min : extractObjects(result, `MAX(${fieldInfo.Field})`)[0],
+			max : extractObjects(result, `MIN(${fieldInfo.Field})`)[0]
 		});
 	};
 
+	async #getNumOfZero (fieldInfo)
+	{
+		const result = await dbConnectQuery(this.#loginInfo,
+		`SELECT * 
+		FROM ${this.#tableName} 
+		WHERE ${fieldInfo.Field} = 0;
+		`);
+		const numOfZero = result.length;
+		return ({
+			numOfZero,
+			portionOfZero : numOfZero / this.#numOfRecords
+		});
+	}
+
+	async #makeNumericScanObject (fieldInfo)
+	{
+		return ({
+			... await this.#makeCommonScanData(fieldInfo),
+			... await this.#makeMinMax(fieldInfo),
+			... await this.#getNumOfZero(fieldInfo)
+		});
+	};
+
+	async makeSpcRecordsData(fieldInfo)
+	{
+		const result = await dbConnectQuery(this.#loginInfo,
+		`
+			SELECT *
+			FROM ${this.#tableName}
+			WHERE ${fieldInfo.Field} LIKE '%[^0-9a-zA-Z ]%';
+		`);
+
+		const numOfSpcRecords = result.length;
+		return ({
+			numOfSpcRecords,
+			portionOfSpcRecords : numOfSpcRecords / this.#numOfRecords
+		})
+	}
+
 	async #makeCategoryScanObject (fieldInfo)
 	{
-		console.log("fieldinformation : ",fieldInfo);
 		return ({
-			...this.#makeCommonScanData(fieldInfo),
-		/*	numOfSpcRecords : ,
-		 *	portionOfSpcRecords : 
-		 */
+			... await this.#makeCommonScanData(fieldInfo),
+			... await this.#makeSpcRecordsData(fieldInfo)
 		});
 	};
 
@@ -173,7 +198,6 @@ export class ScanResult
 	async getResult ()
 	{
 		await this.#setNumOfRecords();
-		console.log("set num of records", this.#numOfRecords);
 		await this.#setRepAttrJoinKey();
 		await this.#setNumeric();
 		await this.#setCategory();
@@ -183,4 +207,9 @@ export class ScanResult
 			categoryResult : this.#categoryResult
 		});
 	};
+
+	async insertRow ()
+	{
+		//insert results in tb_scan 
+	}
 };
