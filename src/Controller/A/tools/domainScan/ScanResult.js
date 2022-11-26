@@ -77,7 +77,8 @@ export class ScanResult
 		SHOW COLUMNS from ${this.#tableName} 
 		WHERE TYPE LIKE '%char%' 
 		OR TYPE LIKE '%text%' 
-		OR TYPE LIKE '%date%' 
+		OR TYPE LIKE '%date%'
+		OR TYPE LIKE '%set%'
 		OR TYPE LIKE '%time%'
 		OR TYPE LIKE 'binary'
 		OR TYPE LIKE 'enum';
@@ -137,8 +138,8 @@ export class ScanResult
 		FROM ${this.#tableName};
 		`);
 		return ({
-			min : extractObjects(result, `MAX(${fieldInfo.Field})`)[0],
-			max : extractObjects(result, `MIN(${fieldInfo.Field})`)[0]
+			max : extractObjects(result, `MAX(${fieldInfo.Field})`)[0],
+			min : extractObjects(result, `MIN(${fieldInfo.Field})`)[0]
 		});
 	};
 
@@ -165,7 +166,7 @@ export class ScanResult
 		});
 	};
 
-	async makeSpcRecordsData(fieldInfo)
+	async #makeSpcRecordsData(fieldInfo)
 	{
 		const result = await dbConnectQuery(this.#loginInfo,
 		`

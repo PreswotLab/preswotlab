@@ -1,49 +1,16 @@
 extends default
 
 block content
-    #tableName 테이블이름
-    form(method="POST" action="./save")
-        #table-wrapper.category_domain
-            .category_name 범주 속성 도메인 스캔 결과
-            .category_table
-                .category_table_head
-                    table
-                        tr
-                            th 속성명
-                            th 데이터 타입
-                            th NULL 레코드 수
-                            th NULL 레코드 비율
-                            th 상이 수치 값
-                            th 최대 값 
-                            th 최소 값
-                            th 0 레코드 수
-                            th 0 레코드 비율
-                            th 대표 속성
-                            th 결합키 후보
-                            th 대표 결합키
-                        tbody
-                            //-여기서 category_rows mixin호출
-                a(href=tableName download=`./api/download/category/${tableName}`)
-        #table-wrapper.numeric_domain
-            .numeric_name 수치 속성 도메인 스캔 결과
-            .numeric_table
-                .numeric_table_head
-                    table
-                        tr
-                            th 속성명
-                            th 데이터 타입
-                            th NULL 레코드 수
-                            th NULL 레코드 비율
-                            th 상이 범주 값
-                            th 특수문자 포함 레코드 수 
-                            th 특수문자 포함 레코드 비율
-                            th 대표 속성
-                            th 결합키 후보
-                            th 대표 결합키
-                        tbody
-                            //-여기서 numeric_rows mixin호출
-                a(href=tableName download=`./api/download/numeric/${tableName}`)
-        #save
-            input(type="submit" value="매핑 저장하기")
+	#tableName=tableName
+	#from-wrapper
+		form(method="POST" action="./save")
+			#table-wrapper.category_domain
+				include ../includes/categoryTable.pug
+				a(href=tableName download=`./api/download/category/${tableName}`) 범주속성 스캔결과 다운로드
+			#table-wrapper.numeric_domain
+				include ../includes/numericTable.pug
+				a(href=tableName download=`./api/download/numeric/${tableName}`) 수치속성 스캔결과 다운로드
+			#save
+				input(type="submit" value="매핑 저장하기")
 block scripts
-    script(src='static/js/domain-scan-result.js')
+	script(src='/static/js/domain-scan-result.js')
