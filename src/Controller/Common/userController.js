@@ -26,8 +26,9 @@ export const postLogin = async (req, res) => {
 
 	//브라우저측에 세션정보 저장하기
 	req.session.loggedIn = true;
-	req.session.loginInfo = {...loginInfo};
+	req.session.loginInfo = {...loginInfo, user_seq : req.session.user_seq};
 	req.session.filePaths = [];
+	console.log(req.session.loginInfo);
 	res.redirect('/');
 }
 
