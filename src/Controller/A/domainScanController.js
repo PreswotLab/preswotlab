@@ -18,7 +18,6 @@ export const getDomainScanResult = async (req, res) => {
 	try {
 		let ScanObject = new ScanResult(tableName, loginInfo);
 		const result = await ScanObject.getResult();
-		//ScanObject.insertRow();
 // NUMERIC SCAN RESULT :  [
 //   {
 //     attrName: 'age',
