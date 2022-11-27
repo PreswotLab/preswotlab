@@ -1,1 +1,1 @@
-console.log("세션정보:", document.cookie);
+console.log("세션정보:", document.Cookie);

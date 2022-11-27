@@ -1,17 +1,15 @@
 include ../mixins/repAttrOption.pug
 include ../mixins/repJoinOption.pug
 
-mixin numericRows(result)
+mixin categoryRows(result)
 	tr
 		td=result.attrName
 		td=result.attrType
 		td=result.numOfNullRecords
 		td=result.portionOfNullRecords
 		td=result.numOfDistinct
-		td=result.max
-		td=result.min
-		td=result.numOfZero
-		td=result.portionOfZero
+		td=result.numOfSpcRecords
+		td=result.portionOfSpcRecords
 		td=result.recommended
 		td
 			select(class="repSelect" id=`${result.attrName}_repAttr`)

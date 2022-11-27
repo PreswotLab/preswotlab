@@ -1,10 +1,10 @@
 extends default
-include ../mixins/tablenames.pug
+include ../mixins/tableNamesAhref.pug
 
 block content
     div.table-grid
         each tableName in tableNames
-            +tableNames(tableName)
+            +tableNamesAhref(tableName)
         else
             span.notables 테이블이 없습니다.
 

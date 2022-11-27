@@ -12,21 +12,13 @@
  * */
 
 import dbConnectQuery from "../../../Common/tools/user/dBConnectQuery";
+import {extractObjects} from "./extractObjects";
 
 const getTableNames = async (loginInfo) => {
-	let tableNames = [];
-	let i;
-
 	const result = await dbConnectQuery(loginInfo, 'SHOW tables;');
-	i = 0;
-	while (true)
-	{
-		if (typeof(result[i]) == 'object')
-			tableNames.push(result[i][`Tables_in_${loginInfo.dbName}`])
-		else
-			break;
-		i++;
-	}
+
+	const tableNames = extractObjects(result, `Tables_in_${loginInfo.dbName}`);
+	console.log(tableNames);
 	return (tableNames);
 };
 

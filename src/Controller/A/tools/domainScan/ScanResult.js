@@ -1,11 +1,14 @@
 import dbConnectQuery from "../../../Common/tools/user/dBConnectQuery";
 import getServerLoginInfo from "../../../Common/tools/user/getServerLoginInfo";
+import {extractObjects} from "./extractObjects";
 
 export class ScanResult
 {
 	#tableName;
 	#loginInfo;
 	#numOfRecords;
+	#serverLoginInfo;
+	#tableSeq;
 
 	#repAttrJoinKey;
 	#numericResult;
@@ -15,41 +18,121 @@ export class ScanResult
 	constructor (tableName, loginInfo) {
 		this.#tableName = tableName;
 		this.#loginInfo = loginInfo;
+		this.#serverLoginInfo = getServerLoginInfo();
 		this.#numOfRecords = null;
 		this.#numericResult = null;
 		this.#categoryResult = null;
-		console.log("set ScanResult", this.#tableName, this.#loginInfo);
 	}
 
-	async #setNumOfRecords () 
+	/*
+	 * repAttrJoinKey : API 요청당 1번만
+	 * numericResult : API 요청 1번 -> 테이블 내의 모든 속성에 대해 요청
+	 * categoryResult : API 요청 1번 -> 테이블 내의 모든 속성에 대해 요청
+	 *
+	 * */
+	async getResult ()
 	{
-		const result = await dbConnectQuery(this.#loginInfo, 
-		`
-		SELECT *
-		FROM ${this.#tableName};
-		`);
-		this.#numOfRecords = result.length;
-	}
-
-	async #setRepAttrJoinKey ()
-	{
-		const repAttr = await dbConnectQuery(getServerLoginInfo(), 
-		`
-		SELECT rattr_name
-		FROM tb_rep_attribute;
-		`);
-		const repKey = await dbConnectQuery(getServerLoginInfo(),
-		`
-		SELECT rkey_name
-		FROM tb_rep_key;
-		`);
-		console.log("repkey:", repKey);
-		console.log("repAttr", repAttr);
-		this.#repAttrJoinKey = {
-			repAttr,
-			repKey
-		};
+		await this.#setNumOfRecords();
+		await this.#setRepAttrJoinKey();
+		await this.#setNumeric(); //테이블 각 수치속성 scan
+		await this.#setCategory();//테이블 각 범주속성 scan
+		return ({
+			repAttrJoinKey : this.#repAttrJoinKey,
+			numericResult : this.#numericResult,
+			categoryResult : this.#categoryResult
+		});
 	};
+
+	async saveResult()
+	{
+		const result = await dbConnectQuery(this.#serverLoginInfo,
+		`
+			SELECT table_seq
+			FROM tb_scan
+			WHERE user_seq = '${this.#loginInfo.user_seq}'
+			AND table_name = '${this.#tableName}'; 
+		`);
+		this.#tableSeq = result[0]['table_seq'];
+		await this.#deleteExistingResults();
+		await this.#saveNumericResult();
+		await this.#saveCategoryResult();
+		await dbConnectQuery(this.#serverLoginInfo, 
+			`
+				UPDATE tb_scan
+				SET scan_yn = 'Y'
+				WHERE user_seq = ${this.#loginInfo.user_seq}
+				AND table_name = '${this.#tableName}';
+			`);
+	};
+
+	async #deleteExistingResults()
+	{
+		await dbConnectQuery(this.#serverLoginInfo,
+		`
+			DELETE 
+			FROM tb_attribute
+			WHERE table_seq = ${this.#tableSeq};
+		`);
+	}
+
+	async #saveNumericResult()
+	{
+		for (let i = 0; i < this.#numericResult.length; i++)
+		{
+			await dbConnectQuery(this.#serverLoginInfo,
+			`
+				INSERT INTO tb_attribute (
+				table_seq,
+				attr_name,
+				attr_type,
+				d_type,
+				null_num,
+				diff_num,
+				max_value,
+				min_value,
+				zero_num
+				) VALUES (
+				${this.#tableSeq},
+				'${this.#numericResult[i]['attrName']}',
+				'N',
+				'${this.#numericResult[i]['attrType']}',
+				${this.#numericResult[i]['numOfNullRecords']},
+				${this.#numericResult[i]['numOfDistinct']},
+				${this.#numericResult[i]['max']},
+				${this.#numericResult[i]['min']},
+				${this.#numericResult[i]['numOfZero']}
+				);
+			`);
+		}
+	}
+
+	async #saveCategoryResult()
+	{
+		for (let i = 0; i < this.#categoryResult.length; i++)
+		{
+			await dbConnectQuery(this.#serverLoginInfo,
+			`
+				INSERT INTO tb_attribute (
+				table_seq,
+				attr_name,
+				attr_type,
+				d_type,
+				null_num,
+				diff_num,
+				special_num
+				) VALUES (
+				${this.#tableSeq},
+				'${this.#categoryResult[i]['attrName']}',
+				'C',
+				"${this.#categoryResult[i]['attrType']}",
+				${this.#categoryResult[i]['numOfNullRecords']},
+				${this.#categoryResult[i]['numOfDistinct']},
+				${this.#categoryResult[i]['numOfSpcRecords']}
+				);
+			`);
+
+		}
+	}
 
 	async #setNumeric () 
 	{
@@ -78,7 +161,8 @@ export class ScanResult
 		SHOW COLUMNS from ${this.#tableName} 
 		WHERE TYPE LIKE '%char%' 
 		OR TYPE LIKE '%text%' 
-		OR TYPE LIKE '%date%' 
+		OR TYPE LIKE '%date%'
+		OR TYPE LIKE '%set%'
 		OR TYPE LIKE '%time%'
 		OR TYPE LIKE 'binary'
 		OR TYPE LIKE 'enum';
@@ -91,19 +175,49 @@ export class ScanResult
 		this.#categoryResult = rtn;
 	};
 
+	async #setNumOfRecords () 
+	{
+		const result = await dbConnectQuery(this.#loginInfo, 
+		`
+		SELECT *
+		FROM ${this.#tableName};
+		`);
+		this.#numOfRecords = parseInt(result.length);
+	}
+
+	async #setRepAttrJoinKey ()
+	{
+		const repAttrResult = await dbConnectQuery(this.#serverLoginInfo, 
+		`
+		SELECT rattr_name
+		FROM tb_rep_attribute;
+		`);
+		const repKeyResult = await dbConnectQuery(this.#serverLoginInfo,
+		`
+		SELECT rkey_name
+		FROM tb_rep_key;
+		`);
+		this.#repAttrJoinKey = {
+			repAttrArray : extractObjects(repAttrResult, 'rattr_name'),
+			repKeyArray : extractObjects(repKeyResult, 'rkey_name')
+
+		};
+	};
+
 	async #makeCommonScanData (fieldInfo)
 	{
 		const attrName = fieldInfo.Field;
 		const attrType = fieldInfo.Type;
-		const numOfNullRecords = this.#getNumOfNullRecords(attrName);
-		const portionOfNullRecords = parseInt(numOfNullRecords) / parseInt(this.#numOfRecords);
-		const numOfDistinct = this.#getNumOfDistinct(attrName);
+		const numOfNullRecords = parseInt(await this.#getNumOfNullRecords(attrName));
+		const portionOfNullRecords = parseInt(numOfNullRecords) / this.#numOfRecords;
+		const numOfDistinct = await this.#getNumOfDistinct(attrName);
 		return ({
 			attrName,
 			attrType,
 			numOfNullRecords,
 			portionOfNullRecords,
-			numOfDistinct
+			numOfDistinct,
+			recommended : (numOfDistinct / this.#numOfRecords > 0.9) ? 'y' : 'n'
 		});
 	};
 
@@ -115,7 +229,7 @@ export class ScanResult
 		FROM ${this.#tableName}
 		WHERE ${attrName} IS NULL;
 		`);
-		console.log("#of null records : ",result, "\n");
+		return (extractObjects(result, 'COUNT(*)')[0]);
 	};
 
 	async #getNumOfDistinct (attrName)
@@ -126,7 +240,6 @@ export class ScanResult
 		FROM ${this.#tableName};
 		;
 		`);
-		console.log("#of distinct", result, "\n");
 		return (result.length);
 	};
 
@@ -134,53 +247,59 @@ export class ScanResult
 	{
 		const result = await dbConnectQuery(this.#loginInfo,
 		`
-		SELECT MAX(${fieldInfo}), MIN(${fieldInfo})
+		SELECT MAX(${fieldInfo.Field}), MIN(${fieldInfo.Field})
 		FROM ${this.#tableName};
 		`);
-		console.log("minmax result : ", result, "\n");
-		return (result[0]);
+		return ({
+			max : extractObjects(result, `MAX(${fieldInfo.Field})`)[0],
+			min : extractObjects(result, `MIN(${fieldInfo.Field})`)[0]
+		});
 	};
+
+	async #getNumOfZero (fieldInfo)
+	{
+		const result = await dbConnectQuery(this.#loginInfo,
+		`SELECT * 
+		FROM ${this.#tableName} 
+		WHERE ${fieldInfo.Field} = 0;
+		`);
+		const numOfZero = result.length;
+		return ({
+			numOfZero,
+			portionOfZero : numOfZero / this.#numOfRecords
+		});
+	}
 
 	async #makeNumericScanObject (fieldInfo)
 	{
-		console.log("fieldinformation : ",fieldInfo);
 		return ({
-			...this.#makeCommonScanData(fieldInfo),
-			...this.#makeMinMax(fieldInfo) 
-		/*	numOfZero : ,
-		 *	portionOfZero : 
-		 */
+			... await this.#makeCommonScanData(fieldInfo),
+			... await this.#makeMinMax(fieldInfo),
+			... await this.#getNumOfZero(fieldInfo)
 		});
 	};
+
+	async #makeSpcRecordsData(fieldInfo)
+	{
+		const result = await dbConnectQuery(this.#loginInfo,
+		`
+			SELECT *
+			FROM ${this.#tableName}
+			WHERE ${fieldInfo.Field} LIKE '%[^0-9a-zA-Z ]%';
+		`);
+
+		const numOfSpcRecords = result.length;
+		return ({
+			numOfSpcRecords,
+			portionOfSpcRecords : numOfSpcRecords / this.#numOfRecords
+		})
+	}
 
 	async #makeCategoryScanObject (fieldInfo)
 	{
-		console.log("fieldinformation : ",fieldInfo);
 		return ({
-			...this.#makeCommonScanData(fieldInfo),
-		/*	numOfSpcRecords : ,
-		 *	portionOfSpcRecords : 
-		 */
-		});
-	};
-
-	/*
-	 * repAttrJoinKey : API 요청당 1번만
-	 * numericResult : API 요청 1번 -> 테이블 내의 모든 속성에 대해 요청
-	 * categoryResult : API 요청 1번 -> 테이블 내의 모든 속성에 대해 요청
-	 *
-	 * */
-	async getResult ()
-	{
-		await this.#setNumOfRecords();
-		console.log("set num of records", this.#numOfRecords);
-		await this.#setRepAttrJoinKey();
-		await this.#setNumeric();
-		await this.#setCategory();
-		return ({
-			repAttrJoinKey : this.#repAttrJoinKey,
-			numericResult : this.#numericResult,
-			categoryResult : this.#categoryResult
+			... await this.#makeCommonScanData(fieldInfo),
+			... await this.#makeSpcRecordsData(fieldInfo)
 		});
 	};
 };
