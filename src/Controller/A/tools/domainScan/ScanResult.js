@@ -7,6 +7,8 @@ export class ScanResult
 	#tableName;
 	#loginInfo;
 	#numOfRecords;
+	#serverLoginInfo;
+	#tableSeq;
 
 	#repAttrJoinKey;
 	#numericResult;
@@ -16,9 +18,120 @@ export class ScanResult
 	constructor (tableName, loginInfo) {
 		this.#tableName = tableName;
 		this.#loginInfo = loginInfo;
+		this.#serverLoginInfo = getServerLoginInfo();
 		this.#numOfRecords = null;
 		this.#numericResult = null;
 		this.#categoryResult = null;
+	}
+
+	/*
+	 * repAttrJoinKey : API 요청당 1번만
+	 * numericResult : API 요청 1번 -> 테이블 내의 모든 속성에 대해 요청
+	 * categoryResult : API 요청 1번 -> 테이블 내의 모든 속성에 대해 요청
+	 *
+	 * */
+	async getResult ()
+	{
+		await this.#setNumOfRecords();
+		await this.#setRepAttrJoinKey();
+		await this.#setNumeric(); //테이블 각 수치속성 scan
+		await this.#setCategory();//테이블 각 범주속성 scan
+		return ({
+			repAttrJoinKey : this.#repAttrJoinKey,
+			numericResult : this.#numericResult,
+			categoryResult : this.#categoryResult
+		});
+	};
+
+	async saveResult()
+	{
+		const result = await dbConnectQuery(this.#serverLoginInfo,
+		`
+			SELECT table_seq
+			FROM tb_scan
+			WHERE user_seq = '${this.#loginInfo.user_seq}'
+			AND table_name = '${this.#tableName}'; 
+		`);
+		this.#tableSeq = result[0]['table_seq'];
+		await this.#deleteExistingResults();
+		await this.#saveNumericResult();
+		await this.#saveCategoryResult();
+		await dbConnectQuery(this.#serverLoginInfo, 
+			`
+				UPDATE tb_scan
+				SET scan_yn = 'Y'
+				WHERE user_seq = ${this.#loginInfo.user_seq}
+				AND table_name = '${this.#tableName}';
+			`);
+	};
+
+	async #deleteExistingResults()
+	{
+		await dbConnectQuery(this.#serverLoginInfo,
+		`
+			DELETE 
+			FROM tb_attribute
+			WHERE table_seq = ${this.#tableSeq};
+		`);
+	}
+
+	async #saveNumericResult()
+	{
+		for (let i = 0; i < this.#numericResult.length; i++)
+		{
+			await dbConnectQuery(this.#serverLoginInfo,
+			`
+				INSERT INTO tb_attribute (
+				table_seq,
+				attr_name,
+				attr_type,
+				d_type,
+				null_num,
+				diff_num,
+				max_value,
+				min_value,
+				zero_num
+				) VALUES (
+				${this.#tableSeq},
+				'${this.#numericResult[i]['attrName']}',
+				'N',
+				'${this.#numericResult[i]['attrType']}',
+				${this.#numericResult[i]['numOfNullRecords']},
+				${this.#numericResult[i]['numOfDistinct']},
+				${this.#numericResult[i]['max']},
+				${this.#numericResult[i]['min']},
+				${this.#numericResult[i]['numOfZero']}
+				);
+			`);
+		}
+	}
+
+	async #saveCategoryResult()
+	{
+		for (let i = 0; i < this.#categoryResult.length; i++)
+		{
+			await dbConnectQuery(this.#serverLoginInfo,
+			`
+				INSERT INTO tb_attribute (
+				table_seq,
+				attr_name,
+				attr_type,
+				d_type,
+				null_num,
+				diff_num,
+				special_num
+				) VALUES (
+				${this.#tableSeq},
+				'${this.#categoryResult[i]['attrName']}',
+				'C',
+				"${this.#categoryResult[i]['attrType']}",
+				${this.#categoryResult[i]['numOfNullRecords']},
+				${this.#categoryResult[i]['numOfDistinct']},
+				${this.#categoryResult[i]['numOfSpcRecords']}
+				);
+			`);
+
+		}
 	}
 
 	async #setNumeric () 
@@ -36,10 +149,7 @@ export class ScanResult
 		const rtn = [];
 		for (let i = 0; i < result.length; i++)
 		{
-			let scanResult = await this.#makeNumericScanObject(result[i]);
-			rtn.push(scanResult);
-			//scan 결과 SERVER DB에 save
-			await this.#saveNumericScanResult(scanResult);
+			rtn.push(await this.#makeNumericScanObject(result[i]));
 		}
 		this.#numericResult = rtn;
 	}
@@ -60,9 +170,7 @@ export class ScanResult
 		const rtn = [];
 		for (let i = 0; i < result.length; i++)
 		{
-			let scanResult = await this.#makeCategoryScanObject(result[i])
-			rtn.push(scanResult);
-			//await saveCategoryScanResult(scanResult);
+			rtn.push(await this.#makeCategoryScanObject(result[i]));
 		}
 		this.#categoryResult = rtn;
 	};
@@ -79,12 +187,12 @@ export class ScanResult
 
 	async #setRepAttrJoinKey ()
 	{
-		const repAttrResult = await dbConnectQuery(getServerLoginInfo(), 
+		const repAttrResult = await dbConnectQuery(this.#serverLoginInfo, 
 		`
 		SELECT rattr_name
 		FROM tb_rep_attribute;
 		`);
-		const repKeyResult = await dbConnectQuery(getServerLoginInfo(),
+		const repKeyResult = await dbConnectQuery(this.#serverLoginInfo,
 		`
 		SELECT rkey_name
 		FROM tb_rep_key;
@@ -192,29 +300,6 @@ export class ScanResult
 		return ({
 			... await this.#makeCommonScanData(fieldInfo),
 			... await this.#makeSpcRecordsData(fieldInfo)
-		});
-	};
-
-	async #saveNumericScanResult(result)
-	{
-	}
-
-	/*
-	 * repAttrJoinKey : API 요청당 1번만
-	 * numericResult : API 요청 1번 -> 테이블 내의 모든 속성에 대해 요청
-	 * categoryResult : API 요청 1번 -> 테이블 내의 모든 속성에 대해 요청
-	 *
-	 * */
-	async getResult ()
-	{
-		await this.#setNumOfRecords();
-		await this.#setRepAttrJoinKey();
-		await this.#setNumeric(); //테이블 각 수치속성 scan
-		await this.#setCategory();//테이블 각 범주속성 scan
-		return ({
-			repAttrJoinKey : this.#repAttrJoinKey,
-			numericResult : this.#numericResult,
-			categoryResult : this.#categoryResult
 		});
 	};
 };

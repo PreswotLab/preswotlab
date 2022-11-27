@@ -5,6 +5,7 @@ export const getDomainScan = async (req, res) => {
 	const loginInfo = req.session.loginInfo;
 	try {
 		const tableNames = await getTableNames(loginInfo);
+		//server에서 스캔여부 물어봐도 괜찮을듯!
 		res.render('domain-scan', { title : "PRESWOT LAB" , tableNames : tableNames});
 	} catch (e) {
 		console.log(e);
@@ -18,6 +19,7 @@ export const getDomainScanResult = async (req, res) => {
 	try {
 		let ScanObject = new ScanResult(tableName, loginInfo);
 		const result = await ScanObject.getResult();
+		await ScanObject.saveResult();
 // NUMERIC SCAN RESULT :  [
 //   {
 //     attrName: 'age',
@@ -78,12 +80,11 @@ export const getDomainScanResult = async (req, res) => {
 		res.render("domain-scan-result",  
 			{
 				title : "PRESWOT LAB",
-				numericResult : result.numericResult,
-				categoryResult : result.categoryResult,
-				repAttrJoinKey : result.repAttrJoinKey,
+				...result,
 				tableName
 			});
 	} catch (e) {
+		console.log(e.message);
 		res.status(404).redirect('/logout');
 	}
 }
