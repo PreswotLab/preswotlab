@@ -21,6 +21,52 @@ export class ScanResult
 		this.#categoryResult = null;
 	}
 
+	async #setNumeric () 
+	{
+		const result = await dbConnectQuery(this.#loginInfo, 
+			`
+			SHOW COLUMNS from ${this.#tableName} 
+			WHERE TYPE LIKE '%int%' 
+			OR TYPE LIKE 'double%' 
+			OR TYPE LIKE 'float%'
+			OR TYPE LIKE 'boolean'
+			OR TYPE LIKE 'bit'
+			OR TYPE LIKE 'decimal';
+		`);
+		const rtn = [];
+		for (let i = 0; i < result.length; i++)
+		{
+			let scanResult = await this.#makeNumericScanObject(result[i]);
+			rtn.push(scanResult);
+			//scan 결과 SERVER DB에 save
+			await this.#saveNumericScanResult(scanResult);
+		}
+		this.#numericResult = rtn;
+	}
+
+	async #setCategory () 
+	{
+		const result = await dbConnectQuery(this.#loginInfo, 
+		`
+		SHOW COLUMNS from ${this.#tableName} 
+		WHERE TYPE LIKE '%char%' 
+		OR TYPE LIKE '%text%' 
+		OR TYPE LIKE '%date%'
+		OR TYPE LIKE '%set%'
+		OR TYPE LIKE '%time%'
+		OR TYPE LIKE 'binary'
+		OR TYPE LIKE 'enum';
+		`);
+		const rtn = [];
+		for (let i = 0; i < result.length; i++)
+		{
+			let scanResult = await this.#makeCategoryScanObject(result[i])
+			rtn.push(scanResult);
+			//await saveCategoryScanResult(scanResult);
+		}
+		this.#categoryResult = rtn;
+	};
+
 	async #setNumOfRecords () 
 	{
 		const result = await dbConnectQuery(this.#loginInfo, 
@@ -48,47 +94,6 @@ export class ScanResult
 			repKeyArray : extractObjects(repKeyResult, 'rkey_name')
 
 		};
-	};
-
-	async #setNumeric () 
-	{
-		const result = await dbConnectQuery(this.#loginInfo, 
-			`
-			SHOW COLUMNS from ${this.#tableName} 
-			WHERE TYPE LIKE '%int%' 
-			OR TYPE LIKE 'double%' 
-			OR TYPE LIKE 'float%'
-			OR TYPE LIKE 'boolean'
-			OR TYPE LIKE 'bit'
-			OR TYPE LIKE 'decimal';
-		`);
-		const rtn = [];
-		for (let i = 0; i < result.length; i++)
-		{
-			rtn.push(await this.#makeNumericScanObject(result[i]));
-		}
-		this.#numericResult = rtn;
-	}
-
-	async #setCategory () 
-	{
-		const result = await dbConnectQuery(this.#loginInfo, 
-		`
-		SHOW COLUMNS from ${this.#tableName} 
-		WHERE TYPE LIKE '%char%' 
-		OR TYPE LIKE '%text%' 
-		OR TYPE LIKE '%date%'
-		OR TYPE LIKE '%set%'
-		OR TYPE LIKE '%time%'
-		OR TYPE LIKE 'binary'
-		OR TYPE LIKE 'enum';
-		`);
-		const rtn = [];
-		for (let i = 0; i < result.length; i++)
-		{
-			rtn.push(await this.#makeCategoryScanObject(result[i]));
-		}
-		this.#categoryResult = rtn;
 	};
 
 	async #makeCommonScanData (fieldInfo)
@@ -190,6 +195,10 @@ export class ScanResult
 		});
 	};
 
+	async #saveNumericScanResult(result)
+	{
+	}
+
 	/*
 	 * repAttrJoinKey : API 요청당 1번만
 	 * numericResult : API 요청 1번 -> 테이블 내의 모든 속성에 대해 요청
@@ -200,17 +209,12 @@ export class ScanResult
 	{
 		await this.#setNumOfRecords();
 		await this.#setRepAttrJoinKey();
-		await this.#setNumeric();
-		await this.#setCategory();
+		await this.#setNumeric(); //테이블 각 수치속성 scan
+		await this.#setCategory();//테이블 각 범주속성 scan
 		return ({
 			repAttrJoinKey : this.#repAttrJoinKey,
 			numericResult : this.#numericResult,
 			categoryResult : this.#categoryResult
 		});
 	};
-
-	async insertRow ()
-	{
-		//insert results in tb_scan 
-	}
 };
