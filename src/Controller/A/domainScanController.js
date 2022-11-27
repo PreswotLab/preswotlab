@@ -1,3 +1,5 @@
+import dbConnectQuery from "../Common/tools/user/dBConnectQuery";
+import getServerLoginInfo from "../Common/tools/user/getServerLoginInfo";
 import getTableNames from "./tools/domainScan/getTableNames";
 import { ScanResult } from "./tools/domainScan/ScanResult";
 
@@ -107,8 +109,54 @@ export const saveMappingData = async (req, res) => {
  * */
 export const addRepAttr = async (req, res) => {
 	console.log("사용자 입력: ", req.body.name);
+	const serverLoginInfo = getServerLoginInfo();
+	try {
+		const result = await dbConnectQuery(serverLoginInfo, 
+			`
+				SELECT *
+				FROM tb_rep_attribute
+				WHERE rattr_name = '${req.body.name}';
+			`);
+		if (result.length != 0)
+			res.send({ status : 0 });
+		else
+		{
+			await dbConnectQuery(serverLoginInfo,
+			`
+				INSERT INTO tb_rep_attribute(rattr_name)
+				VALUES('${req.body.name}');
+			`);
+			res.send({ status : 1 });
+		}
+	} catch (e) {
+		console.log(e.message);
+		res.status(404).redirect('/logout');
+	}
 }
 
 export const addRepJoinKey = async (req, res) => {
 	console.log("사용자 입력:",req.body.name);
+	const serverLoginInfo = getServerLoginInfo();
+	try {
+		const result = await dbConnectQuery(serverLoginInfo, 
+			`
+				SELECT *
+				FROM tb_rep_key
+				WHERE rkey_name = '${req.body.name}';
+			`);
+		if (result.length != 0)
+			res.send({ status : 0 });
+		else
+		{
+			await dbConnectQuery(serverLoginInfo,
+			`
+				INSERT INTO tb_rep_key(rkey_name)
+				VALUES('${req.body.name}');
+			`);
+			res.send({ status : 1 });
+		}
+	} catch (e) {
+		console.log(e.message);
+		res.status(404).redirect('/logout');
+	}
 }

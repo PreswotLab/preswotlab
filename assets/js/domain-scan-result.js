@@ -11,8 +11,8 @@ const addRepAttr = async (e) => {
 		await postData('/api/addRepAttr', { name }).then((data) => 
 		{
 			console.log(data); // JSON data parsed by `data.json()` call
-		e.target.value = name;
 		});
+		e.target.value = name;
 	}
 };
 
@@ -25,8 +25,8 @@ const addRepJoinKey = async (e) => {
 		await postData('/api/addRepJoinKey', { name }).then((data) => 
 		{
 			console.log(data); // JSON data parsed by `data.json()` call
-		e.target.value = name;
 		});
+		e.target.value = name;
 	}
 };
 
