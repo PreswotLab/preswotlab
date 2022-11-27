@@ -1,21 +1,29 @@
-import { postData } from "./postData";
+import { postData } from "./postData.js";
 
 const addRepOptions = document.getElementsByClassName("repSelect");
 
 const addRepAttr = async () => {
 	const name = prompt ("추가하고자하는 대표 속성을 입력하세요");
-	postData('/api/addRepAttr', { name }).then((data) => 
+	console.log(name);
+	if (name)
 	{
-		console.log(data); // JSON data parsed by `data.json()` call
-	});
+		await postData('/api/addRepAttr', { name }).then((data) => 
+		{
+			console.log(data); // JSON data parsed by `data.json()` call
+		});
+	}
 };
 
 const addRepJoinKey = async () => {
 	const name = prompt ("추가하고자하는 대표 결합키를 입력하세요");
-	postData('/api/addRepJoinKey', { name }).then((data) => 
+	console.log(name);
+	if (name)
 	{
-		console.log(data); // JSON data parsed by `data.json()` call
-	});
+		await postData('/api/addRepJoinKey', { name }).then((data) => 
+		{
+			console.log(data); // JSON data parsed by `data.json()` call
+		});
+	}
 };
 
 const handleListener = async (e) => {
