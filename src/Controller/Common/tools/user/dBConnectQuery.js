@@ -18,6 +18,7 @@ const dbConnectQuery = async(loginInfo, query) => {
 		if (query)
 			return (result);
 	} catch (e) {
+		console.log("dbConnectQuery error")
 		throw(e)
 	}
 }
