@@ -56,13 +56,7 @@ export class ScanResult
 		await this.#deleteExistingResults();
 		await this.#saveNumericResult();
 		await this.#saveCategoryResult();
-		await dbConnectQuery(this.#serverLoginInfo, 
-			`
-				UPDATE tb_scan
-				SET scan_yn = 'Y'
-				WHERE user_seq = ${this.#loginInfo.user_seq}
-				AND table_name = '${this.#tableName}';
-			`);
+		await this.#update_tb_scan_yn();
 	};
 
 	async #deleteExistingResults()
@@ -132,6 +126,17 @@ export class ScanResult
 			`);
 
 		}
+	}
+
+	async #update_tb_scan_yn()
+	{
+		await dbConnectQuery(this.#serverLoginInfo, 
+			`
+				UPDATE tb_scan
+				SET scan_yn = 'Y'
+				WHERE user_seq = ${this.#loginInfo.user_seq}
+				AND table_name = '${this.#tableName}';
+			`);
 	}
 
 	async #setNumeric () 
