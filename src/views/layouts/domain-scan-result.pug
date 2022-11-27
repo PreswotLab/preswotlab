@@ -3,7 +3,7 @@ extends default
 block content
 	#tableName=tableName
 	#from-wrapper
-		form(method="POST" action="./save")
+		form(method="POST" action=`./${tableName}/save`)
 			#table-wrapper.category_domain
 				include ../includes/categoryTable.pug
 				#category_download.download
