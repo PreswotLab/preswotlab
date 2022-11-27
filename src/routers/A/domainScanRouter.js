@@ -4,13 +4,10 @@ import { getDomainScan, getDomainScanResult, saveMappingData } from '../../Contr
 
 const domainScanRouter = express.Router();
 
-domainScanRouter
-	.route('/')
-	.all(checkLoginMiddleware)
-	.get(getDomainScan);
+domainScanRouter.get("/domain-scan",checkLoginMiddleware, getDomainScan);
 
-domainScanRouter.get("/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)", checkLoginMiddleware, getDomainScanResult);
+domainScanRouter.get("/domain-scan/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)", checkLoginMiddleware, getDomainScanResult);
 
-domainScanRouter.post("/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)/save", checkLoginMiddleware, saveMappingData)
+domainScanRouter.post("/domain-scan/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)/save", checkLoginMiddleware, saveMappingData)
 
 export default domainScanRouter;
