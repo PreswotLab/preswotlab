@@ -1,7 +1,7 @@
 import express from 'express';
 import { checkLoginMiddleware } from '../../middlewares';
 import { getDomainScan, getDomainScanResult, saveMappingData } from '../../Controller/A/domainScanController';
-import {addRepAttr, addRepJoinKey} from '../../Controller/Common/apiController';
+import { addRepAttr, addRepJoinKey } from '../../Controller/A/domainScanController';
 
 const domainScanRouter = express.Router();
 

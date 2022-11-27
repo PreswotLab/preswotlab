@@ -92,9 +92,23 @@ export const getDomainScanResult = async (req, res) => {
 		console.log(e.message);
 		res.status(404).redirect('/logout');
 	}
-}
+		}
+
+
 
 export const saveMappingData = async (req, res) => {
 	const { tableName } = req.params;
-
+	console.log(tableName);
+	console.log(req.body);
 };
+
+/*
+ * 사용자가 추가하고자하는 속성을 서버에 저장해야합니다.
+ * */
+export const addRepAttr = async (req, res) => {
+	console.log("사용자 입력: ", req.body.name);
+}
+
+export const addRepJoinKey = async (req, res) => {
+	console.log("사용자 입력:",req.body.name);
+}
