@@ -1,6 +1,7 @@
 import dbConnectQuery from "../Common/tools/user/dBConnectQuery";
 import getServerLoginInfo from "../Common/tools/user/getServerLoginInfo";
 import getTableNames from "./tools/domainScan/getTableNames";
+import {SaveMapping} from "./tools/domainScan/SaveMappingObj";
 import { ScanResult } from "./tools/domainScan/ScanResult";
 
 export const getDomainScan = async (req, res) => {
@@ -94,19 +95,31 @@ export const getDomainScanResult = async (req, res) => {
 		console.log(e.message);
 		res.status(404).redirect('/logout');
 	}
-		}
-
-
+}
 
 export const saveMappingData = async (req, res) => {
 	const { tableName } = req.params;
-	console.log(tableName);
-	console.log(req.body);
+	const { loginInfo } = req.session;
+
+	/*
+{
+  name: [ 'asdfa', '-' ],
+  pnum: [ '-', '-' ],
+  gender: [ '-', '-' ],
+  id: [ '-', '-' ]
+}
+*/
+	try {
+		const saveMap = new SaveMapping(tableName, loginInfo.user_seq);
+		await saveMap.init();
+		await saveMap.save(req.body);
+		res.redirect(`/domain-scan`);
+	} catch (e) {
+		console.log(e);
+		res.redirect('/logout');
+	}
 };
 
-/*
- * 사용자가 추가하고자하는 속성을 서버에 저장해야합니다.
- * */
 export const addRepAttr = async (req, res) => {
 	console.log("사용자 입력: ", req.body.name);
 	const serverLoginInfo = getServerLoginInfo();
@@ -159,4 +172,12 @@ export const addRepJoinKey = async (req, res) => {
 		console.log(e.message);
 		res.status(404).redirect('/logout');
 	}
+}
+
+export const downloadCategory = async( req, res) => {
+
+}
+
+export const downloadNumeric = async (req, res) => {
+
 }

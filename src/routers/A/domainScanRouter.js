@@ -1,7 +1,6 @@
 import express from 'express';
 import { checkLoginMiddleware } from '../../middlewares';
-import { getDomainScan, getDomainScanResult, saveMappingData } from '../../Controller/A/domainScanController';
-import { addRepAttr, addRepJoinKey } from '../../Controller/A/domainScanController';
+import { getDomainScan, getDomainScanResult, saveMappingData, addRepAttr, addRepJoinKey, downloadCategory, downloadNumeric } from '../../Controller/A/domainScanController';
 
 const domainScanRouter = express.Router();
 
@@ -13,5 +12,8 @@ domainScanRouter.post("/domain-scan/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)/save", che
 
 domainScanRouter.post("/api/addRepAttr", addRepAttr);
 domainScanRouter.post("/api/addRepJoinKey", addRepJoinKey);
+
+domainScanRouter.get("/api/download/category/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)", downloadCategory);
+domainScanRouter.get("/api/download/numeric/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)", downloadNumeric);
 
 export default domainScanRouter;

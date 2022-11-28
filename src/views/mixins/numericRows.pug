@@ -14,8 +14,8 @@ mixin numericRows(result)
 		td=result.portionOfZero
 		td=result.recommended
 		td
-			select(class="repSelect" name=`${result.attrName}_repAttr`)
+			select(class="repSelect repAttr" name=`${result.attrName}`)
 				+repAttrOption(repAttrJoinKey.repAttrArray)
 		td
-			select(class="repSelect" name=`${result.attrName}_repJoinKey`)
+			select(class="repSelect repJoinKey" name=`${result.attrName}`)
 				+repJoinOption(repAttrJoinKey.repKeyArray)

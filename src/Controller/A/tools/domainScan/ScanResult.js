@@ -14,7 +14,6 @@ export class ScanResult
 	#numericResult;
 	#categoryResult;
 
-
 	constructor (tableName, loginInfo) {
 		this.#tableName = tableName;
 		this.#loginInfo = loginInfo;
@@ -45,22 +44,21 @@ export class ScanResult
 
 	async saveResult()
 	{
-		const result = await dbConnectQuery(this.#serverLoginInfo,
-		`
-			SELECT table_seq
-			FROM tb_scan
-			WHERE user_seq = '${this.#loginInfo.user_seq}'
-			AND table_name = '${this.#tableName}'; 
-		`);
-		this.#tableSeq = result[0]['table_seq'];
-		await this.#deleteExistingResults();
+		await this.#delExistMappingAndAttribute();
 		await this.#saveNumericResult();
 		await this.#saveCategoryResult();
 		await this.#update_tb_scan_yn();
 	};
 
-	async #deleteExistingResults()
+	async #delExistMappingAndAttribute()
 	{
+		await dbConnectQuery(this.#serverLoginInfo,
+		`
+			DELETE
+			FROM tb_mapping
+			WHERE table_seq = ${this.#tableSeq};
+		`);
+
 		await dbConnectQuery(this.#serverLoginInfo,
 		`
 			DELETE 
@@ -84,7 +82,8 @@ export class ScanResult
 				diff_num,
 				max_value,
 				min_value,
-				zero_num
+				zero_num,
+				key_candidate
 				) VALUES (
 				${this.#tableSeq},
 				'${this.#numericResult[i]['attrName']}',
@@ -94,7 +93,8 @@ export class ScanResult
 				${this.#numericResult[i]['numOfDistinct']},
 				${this.#numericResult[i]['max']},
 				${this.#numericResult[i]['min']},
-				${this.#numericResult[i]['numOfZero']}
+				${this.#numericResult[i]['numOfZero']},
+				'${this.#numericResult[i]['recommended']}'
 				);
 			`);
 		}
@@ -113,7 +113,8 @@ export class ScanResult
 				d_type,
 				null_num,
 				diff_num,
-				special_num
+				special_num,
+				key_candidate
 				) VALUES (
 				${this.#tableSeq},
 				'${this.#categoryResult[i]['attrName']}',
@@ -121,7 +122,8 @@ export class ScanResult
 				"${this.#categoryResult[i]['attrType']}",
 				${this.#categoryResult[i]['numOfNullRecords']},
 				${this.#categoryResult[i]['numOfDistinct']},
-				${this.#categoryResult[i]['numOfSpcRecords']}
+				${this.#categoryResult[i]['numOfSpcRecords']},
+				'${this.#categoryResult[i]['recommended']}'
 				);
 			`);
 
@@ -138,6 +140,7 @@ export class ScanResult
 				AND table_name = '${this.#tableName}';
 			`);
 	}
+
 
 	async #setNumeric () 
 	{
@@ -182,12 +185,29 @@ export class ScanResult
 
 	async #setNumOfRecords () 
 	{
-		const result = await dbConnectQuery(this.#loginInfo, 
+		const result_1 = await dbConnectQuery(this.#serverLoginInfo,
+		`
+			SELECT table_seq
+			FROM tb_scan
+			WHERE user_seq = '${this.#loginInfo.user_seq}'
+			AND table_name = '${this.#tableName}'; 
+		`);
+
+		this.#tableSeq = result_1[0]['table_seq'];
+
+		const result_2 = await dbConnectQuery(this.#loginInfo, 
 		`
 		SELECT *
 		FROM ${this.#tableName};
 		`);
-		this.#numOfRecords = parseInt(result.length);
+		this.#numOfRecords = parseInt(result_2.length);
+
+		await dbConnectQuery(this.#serverLoginInfo, 
+		`
+		UPDATE tb_scan
+		SET row_num = ${this.#numOfRecords}
+		WHERE table_seq = ${this.#tableSeq};
+		`)
 	}
 
 	async #setRepAttrJoinKey ()
