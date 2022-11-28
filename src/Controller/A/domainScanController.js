@@ -1,3 +1,4 @@
+import {Parser} from "json2csv";
 import dbConnectQuery from "../Common/tools/user/dBConnectQuery";
 import getServerLoginInfo from "../Common/tools/user/getServerLoginInfo";
 import getTableNames from "./tools/domainScan/getTableNames";
@@ -174,10 +175,62 @@ export const addRepJoinKey = async (req, res) => {
 	}
 }
 
-export const downloadCategory = async( req, res) => {
+export const downloadCategory = async(req, res) => {
+	const { tableName } = req.params;
+	const { loginInfo } = req.session;
 
+	const result = await dbConnectQuery(getServerLoginInfo(),
+	`
+	SELECT 
+	attr_name,
+	d_type as attr_type,
+	null_num,
+	null_num / s.row_num AS 'null_portion',
+	diff_num, 
+	special_num,
+	special_num / s.row_num AS 'special_portion',
+	key_candidate as 'recommended key'
+	FROM tb_attribute a, tb_scan s
+	WHERE s.table_name = '${tableName}'
+	AND s.user_seq = ${loginInfo.user_seq}
+	AND a.table_seq = s.table_seq
+	AND a.attr_type = 'C';
+	`);
+	console.log("result : ",result);
+	const json2csvParser = new Parser();
+	const csv = json2csvParser.parse(result); //string으로 변환
+	res.setHeader('Content-type', "text/csv");
+	res.setHeader('Content-disposition', `attachment; filename=${tableName}_categoryScan.csv`);
+	res.send(csv);
 }
 
 export const downloadNumeric = async (req, res) => {
+	const { tableName } = req.params;
+	const { loginInfo } = req.session;
 
+	const result = await dbConnectQuery(getServerLoginInfo(),
+	`
+	SELECT 
+	attr_name,
+	d_type as attr_type,
+	null_num,
+	null_num / s.row_num AS 'null_portion',
+	diff_num,
+	max_value as 'max',
+	min_value as 'min',
+	zero_num,
+	zero_num / s.row_num AS 'zero_portion',
+	key_candidate AS 'recommended key'
+	FROM tb_attribute a, tb_scan s
+	WHERE s.table_name = '${tableName}'
+	AND s.user_seq = ${loginInfo.user_seq}
+	AND a.table_seq = s.table_seq
+	AND a.attr_type = 'N';
+	`);
+	console.log("result : ",result);
+	const json2csvParser = new Parser();
+	const csv = json2csvParser.parse(result); //string으로 변환
+	res.setHeader('Content-type', "text/csv");
+	res.setHeader('Content-disposition', `attachment; filename=${tableName}_numericScan.csv`);
+	res.send(csv);
 }
