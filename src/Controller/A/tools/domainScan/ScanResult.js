@@ -53,14 +53,21 @@ export class ScanResult
 			AND table_name = '${this.#tableName}'; 
 		`);
 		this.#tableSeq = result[0]['table_seq'];
-		await this.#deleteExistingResults();
+		await this.#delExistMappingAndAttribute();
 		await this.#saveNumericResult();
 		await this.#saveCategoryResult();
 		await this.#update_tb_scan_yn();
 	};
 
-	async #deleteExistingResults()
+	async #delExistMappingAndAttribute()
 	{
+		await dbConnectQuery(this.#serverLoginInfo,
+		`
+			DELETE
+			FROM tb_mapping
+			WHERE table_seq = ${this.#tableSeq};
+		`);
+
 		await dbConnectQuery(this.#serverLoginInfo,
 		`
 			DELETE 
@@ -142,6 +149,7 @@ export class ScanResult
 				AND table_name = '${this.#tableName}';
 			`);
 	}
+
 
 	async #setNumeric () 
 	{
