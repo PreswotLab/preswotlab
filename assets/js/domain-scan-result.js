@@ -1,7 +1,5 @@
 import { postData } from "./postData.js";
 
-const addRepOptions = document.getElementsByClassName("repSelect");
-
 const addRepAttr = async (e) => {
 	const name = prompt ("추가하고자하는 대표 속성을 입력하세요");
 	if (!name)
@@ -65,7 +63,9 @@ const handleListener = async (e) => {
 	}
 };
 
-for (let i = 0; i < addRepOptions.length; i++)
+const selectTags = document.getElementsByClassName("repSelect");
+
+for (let i = 0; i < selectTags.length; i++)
 {
-	addRepOptions[i].addEventListener('change', handleListener)
+	selectTags[i].addEventListener('change', handleListener)
 };
