@@ -1,5 +1,3 @@
-const csv = require('csv-parser');
-
 export const getUpload = (req, res) => {
 	return res.render('upload', {title : 'upload'});
 }
