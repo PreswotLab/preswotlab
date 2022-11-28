@@ -7,11 +7,11 @@ block content
 			#table-wrapper.category_domain
 				include ../includes/categoryTable.pug
 				#category_download.download
-					a(href=tableName download=`./api/download/category/${tableName}`) 범주속성 스캔결과 다운로드
+					a(download=`${tableName}_categoryScan` href=`/api/download/category/${tableName}`) 범주속성 스캔결과 다운로드
 			#table-wrapper.numeric_domain
 				include ../includes/numericTable.pug
 				#numeric_download.download
-					a(href=tableName download=`./api/download/numeric/${tableName}`) 수치속성 스캔결과 다운로드
+					a(download=`${tableName}_numericScan` href=`/api/download/numeric/${tableName}`) 수치속성 스캔결과 다운로드
 			#save
 				input(type="submit" value="매핑 저장하기")
 block scripts
