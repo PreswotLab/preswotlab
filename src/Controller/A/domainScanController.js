@@ -108,19 +108,7 @@ export const saveMappingData = async (req, res) => {
   gender: [ '-', '-' ],
   id: [ '-', '-' ]
 }
-
-	/*
-	 * requirements:
-	 * tb_attribute(raatr_seq)를 update,
-	 * tb_mapping update
-	 * */
-
-	/*
-	 * getTableSeq //tb_scan PK가져오기
-	 * getAttrSeq //속성테이블 PK가져오기
-	 * getRattrSeq //대표 속성 PK가져오기
-	 * getRkeySeq //대표결합키 PK가져오기
-	 * */
+*/
 	try {
 		const saveMap = new SaveMapping(tableName, loginInfo.user_seq);
 		await saveMap.init();
@@ -132,9 +120,6 @@ export const saveMappingData = async (req, res) => {
 	}
 };
 
-/*
- * 사용자가 추가하고자하는 속성을 서버에 저장해야합니다.
- * */
 export const addRepAttr = async (req, res) => {
 	console.log("사용자 입력: ", req.body.name);
 	const serverLoginInfo = getServerLoginInfo();

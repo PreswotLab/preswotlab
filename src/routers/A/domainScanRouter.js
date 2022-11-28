@@ -14,4 +14,5 @@ domainScanRouter.post("/domain-scan/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)/save", che
 domainScanRouter.post("/api/addRepAttr", addRepAttr);
 domainScanRouter.post("/api/addRepJoinKey", addRepJoinKey);
 
+
 export default domainScanRouter;
