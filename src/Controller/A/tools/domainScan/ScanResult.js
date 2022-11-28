@@ -84,7 +84,8 @@ export class ScanResult
 				diff_num,
 				max_value,
 				min_value,
-				zero_num
+				zero_num,
+				key_candidate
 				) VALUES (
 				${this.#tableSeq},
 				'${this.#numericResult[i]['attrName']}',
@@ -94,7 +95,8 @@ export class ScanResult
 				${this.#numericResult[i]['numOfDistinct']},
 				${this.#numericResult[i]['max']},
 				${this.#numericResult[i]['min']},
-				${this.#numericResult[i]['numOfZero']}
+				${this.#numericResult[i]['numOfZero']},
+				'${this.#numericResult[i]['recommended']}'
 				);
 			`);
 		}
@@ -113,7 +115,8 @@ export class ScanResult
 				d_type,
 				null_num,
 				diff_num,
-				special_num
+				special_num,
+				key_candidate
 				) VALUES (
 				${this.#tableSeq},
 				'${this.#categoryResult[i]['attrName']}',
@@ -121,7 +124,8 @@ export class ScanResult
 				"${this.#categoryResult[i]['attrType']}",
 				${this.#categoryResult[i]['numOfNullRecords']},
 				${this.#categoryResult[i]['numOfDistinct']},
-				${this.#categoryResult[i]['numOfSpcRecords']}
+				${this.#categoryResult[i]['numOfSpcRecords']},
+				'${this.#categoryResult[i]['recommended']}'
 				);
 			`);
 
