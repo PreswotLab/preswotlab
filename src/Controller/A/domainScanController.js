@@ -1,6 +1,7 @@
 import dbConnectQuery from "../Common/tools/user/dBConnectQuery";
 import getServerLoginInfo from "../Common/tools/user/getServerLoginInfo";
 import getTableNames from "./tools/domainScan/getTableNames";
+import {SaveMapping} from "./tools/domainScan/SaveMappingObj";
 import { ScanResult } from "./tools/domainScan/ScanResult";
 
 export const getDomainScan = async (req, res) => {
@@ -94,14 +95,41 @@ export const getDomainScanResult = async (req, res) => {
 		console.log(e.message);
 		res.status(404).redirect('/logout');
 	}
-		}
-
-
+}
 
 export const saveMappingData = async (req, res) => {
 	const { tableName } = req.params;
-	console.log(tableName);
-	console.log(req.body);
+	const { loginInfo } = req.session;
+
+	/*
+{
+  name: [ 'asdfa', '-' ],
+  pnum: [ '-', '-' ],
+  gender: [ '-', '-' ],
+  id: [ '-', '-' ]
+}
+
+	/*
+	 * requirements:
+	 * tb_attribute(raatr_seq)를 update,
+	 * tb_mapping update
+	 * */
+
+	/*
+	 * getTableSeq //tb_scan PK가져오기
+	 * getAttrSeq //속성테이블 PK가져오기
+	 * getRattrSeq //대표 속성 PK가져오기
+	 * getRkeySeq //대표결합키 PK가져오기
+	 * */
+	try {
+		const saveMap = new SaveMapping(tableName, loginInfo.user_seq);
+		await saveMap.init();
+		await saveMap.save(req.body);
+		res.redirect(`/domain-scan`);
+	} catch (e) {
+		console.log(e);
+		res.redirect('/logout');
+	}
 };
 
 /*
