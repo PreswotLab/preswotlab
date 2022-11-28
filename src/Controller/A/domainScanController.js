@@ -173,3 +173,11 @@ export const addRepJoinKey = async (req, res) => {
 		res.status(404).redirect('/logout');
 	}
 }
+
+export const downloadCategory = async( req, res) => {
+
+}
+
+export const downloadNumeric = async (req, res) => {
+
+}
