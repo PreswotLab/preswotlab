@@ -85,8 +85,13 @@ export class syncUser
 		{
 			await dbConnectQuery(this.#serverLoginInfo, 
 			`
-				INSERT INTO tb_scan(user_seq, table_name)
-				VALUES (${this.#userSeq}, '${tableNames[i]}');
+				INSERT INTO tb_scan(
+				user_seq, 
+				table_name
+				) VALUES (
+				${this.#userSeq}, 
+				'${tableNames[i]}'
+				);
 			`);
 		}
 	};

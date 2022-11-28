@@ -14,7 +14,6 @@ export class ScanResult
 	#numericResult;
 	#categoryResult;
 
-
 	constructor (tableName, loginInfo) {
 		this.#tableName = tableName;
 		this.#loginInfo = loginInfo;
@@ -45,14 +44,6 @@ export class ScanResult
 
 	async saveResult()
 	{
-		const result = await dbConnectQuery(this.#serverLoginInfo,
-		`
-			SELECT table_seq
-			FROM tb_scan
-			WHERE user_seq = '${this.#loginInfo.user_seq}'
-			AND table_name = '${this.#tableName}'; 
-		`);
-		this.#tableSeq = result[0]['table_seq'];
 		await this.#delExistMappingAndAttribute();
 		await this.#saveNumericResult();
 		await this.#saveCategoryResult();
@@ -194,12 +185,29 @@ export class ScanResult
 
 	async #setNumOfRecords () 
 	{
-		const result = await dbConnectQuery(this.#loginInfo, 
+		const result_1 = await dbConnectQuery(this.#serverLoginInfo,
+		`
+			SELECT table_seq
+			FROM tb_scan
+			WHERE user_seq = '${this.#loginInfo.user_seq}'
+			AND table_name = '${this.#tableName}'; 
+		`);
+
+		this.#tableSeq = result_1[0]['table_seq'];
+
+		const result_2 = await dbConnectQuery(this.#loginInfo, 
 		`
 		SELECT *
 		FROM ${this.#tableName};
 		`);
-		this.#numOfRecords = parseInt(result.length);
+		this.#numOfRecords = parseInt(result_2.length);
+
+		await dbConnectQuery(this.#serverLoginInfo, 
+		`
+		UPDATE tb_scan
+		SET row_num = ${this.#numOfRecords}
+		WHERE table_seq = ${this.#tableSeq};
+		`)
 	}
 
 	async #setRepAttrJoinKey ()
