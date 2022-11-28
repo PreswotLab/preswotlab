@@ -51,7 +51,7 @@ app.use(uploadRouter);
 app.use(apiRouter);
 
 //A
-app.use("/domain-scan", domainScanRouter);
+app.use(domainScanRouter);
 app.use('/edit-table', editTableRouter);
 
 //B

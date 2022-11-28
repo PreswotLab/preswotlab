@@ -3,13 +3,15 @@ extends default
 block content
 	#tableName=tableName
 	#from-wrapper
-		form(method="POST" action="./save")
+		form(method="POST" action=`./${tableName}/save`)
 			#table-wrapper.category_domain
 				include ../includes/categoryTable.pug
-				a(href=tableName download=`./api/download/category/${tableName}`) 범주속성 스캔결과 다운로드
+				#category_download.download
+					a(href=tableName download=`./api/download/category/${tableName}`) 범주속성 스캔결과 다운로드
 			#table-wrapper.numeric_domain
 				include ../includes/numericTable.pug
-				a(href=tableName download=`./api/download/numeric/${tableName}`) 수치속성 스캔결과 다운로드
+				#numeric_download.download
+					a(href=tableName download=`./api/download/numeric/${tableName}`) 수치속성 스캔결과 다운로드
 			#save
 				input(type="submit" value="매핑 저장하기")
 block scripts

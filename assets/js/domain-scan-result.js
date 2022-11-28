@@ -1,43 +1,71 @@
 import { postData } from "./postData.js";
 
-const addRepOptions = document.getElementsByClassName("repSelect");
-
-const addRepAttr = async () => {
+const addRepAttr = async (e) => {
 	const name = prompt ("추가하고자하는 대표 속성을 입력하세요");
-	console.log(name);
-	if (name)
+	if (!name)
+		e.target.value = "-";
+	else //입력 받았을때만 post요청 날립니다.
 	{
 		await postData('/api/addRepAttr', { name }).then((data) => 
 		{
 			console.log(data); // JSON data parsed by `data.json()` call
+			if (data.status == 1)
+			{
+				const repAttrSelects = document.getElementsByClassName("repAttr");
+				for (let i = 0; i < repAttrSelects.length; i++)
+				{
+					let option = document.createElement("option");
+					option.innerHTML = name;
+					option.value = name;
+					console.log(option);
+					repAttrSelects[i].add(option, 1);
+				}
+			}
 		});
+		e.target.value = name;
 	}
-};
-
-const addRepJoinKey = async () => {
+}; 
+ 
+const addRepJoinKey = async (e) => {
 	const name = prompt ("추가하고자하는 대표 결합키를 입력하세요");
-	console.log(name);
-	if (name)
+	if (!name)
+		e.target.value = "-";
+	else //입력 받았을때만 post 요청 날립니다.
 	{
 		await postData('/api/addRepJoinKey', { name }).then((data) => 
 		{
 			console.log(data); // JSON data parsed by `data.json()` call
+			if (data.status == 1)
+			{
+				const repJoinKeySelects = document.getElementsByClassName("repJoinKey");
+				for (let i = 0; i < repJoinKeySelects.length; i++)
+				{
+					let option = document.createElement("option");
+					option.innerHTML = name;
+					option.value = name;
+					console.log(option);
+					repJoinKeySelects[i].add(option, 1);
+				}
+			}
 		});
+		e.target.value = name;
 	}
 };
 
 const handleListener = async (e) => {
 	try {
 		if (e.target.value == "addRepAttr")
-			await addRepAttr();
+			await addRepAttr(e);
 		else if (e.target.value == "addRepJoinKey")
-			await addRepJoinKey();
+			await addRepJoinKey(e);
 	} catch (e) {
 		console.log(e);
 	}
 };
 
-for (let i = 0; i < addRepOptions.length; i++)
+const selectTags = document.getElementsByClassName("repSelect");
+
+for (let i = 0; i < selectTags.length; i++)
 {
-	addRepOptions[i].addEventListener('change', handleListener)
+	selectTags[i].addEventListener('change', handleListener)
 };
