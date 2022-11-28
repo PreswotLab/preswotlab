@@ -30,6 +30,7 @@ CREATE TABLE tb_scan (
 	table_seq INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	user_seq INT NOT NULL, 
 	table_name VARCHAR(50) NOT NULL,
+	row_num INT NOT NULL DEFAULT 0,
 	scan_yn enum('Y','N')NOT NULL DEFAULT 'N'
 );
 
