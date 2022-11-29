@@ -24,7 +24,11 @@ app.use(morgan("dev"));
 
 //템플릿 엔진 세팅
 app.set("view engine", "pug")
-app.set("views", process.cwd() + "/src/views/layouts")
+app.set("views", [
+	process.cwd() + "/src/views/layouts",
+	process.cwd() + "/src/views/layouts/domainScan",
+	process.cwd() + "/src/views/layouts/editTable"
+])
 
 app.use(urlencoded({ extended : true }));
 
