@@ -1,4 +1,4 @@
-include ../mixins/categoryRows.pug
+include ../../mixins/domainScan/categoryDomainRows.pug
 
 .category_name 범주 속성 도메인 스캔 결과
 .category_table
@@ -17,4 +17,4 @@ include ../mixins/categoryRows.pug
 				th 대표 결합키
 			tbody
 				each result in categoryResult
-					+categoryRows(result)
+					+categoryDomainRows(result)

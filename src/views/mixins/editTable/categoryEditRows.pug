@@ -1,0 +1,18 @@
+mixin categoryEditRows(result)
+	tr
+		td=result.attr_name
+		td=result.d_type
+		td
+			button(class=`${result.attr_name} delBtn`) 삭제
+		td=result.null_num
+		td=result.null_portion
+		td=result.diff_num
+		td=result.special_num
+		td=result.special_portion
+		td=result.key_candidate
+		td
+			select(class="repSelect repAttr" name=`${result.attr_name}`)
+				+repAttrOption(repAttrJoinKey.repAttrArray)
+		td
+			select(class="repSelect repJoinKey" name=`${result.attr_name}`)
+				+repJoinOption(repAttrJoinKey.repKeyArray)
