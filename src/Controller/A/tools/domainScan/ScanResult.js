@@ -31,6 +31,7 @@ export class ScanResult
 	 * */
 	async getResult ()
 	{
+		//사용자 DB로부터 서버DB에 저장할 데이터를 객체 내부에 저장한다.
 		await this.#setNumOfRecords();
 		await this.#setRepAttrJoinKey();
 		await this.#setNumeric(); //테이블 각 수치속성 scan
@@ -44,12 +45,13 @@ export class ScanResult
 
 	async saveResult()
 	{
-		await this.#delExistMappingAndAttribute();
-		await this.#saveNumericResult();
-		await this.#saveCategoryResult();
-		await this.#update_tb_scan_yn();
+		await this.#delExistMappingAndAttribute(); //이전에 스캔한 결과를 모두 삭제한다.
+		await this.#saveNumericResult(); //객체에 저장된 수치속성 스캔결과를 서버에 저장한다.
+		await this.#saveCategoryResult(); //객체의 범주속성 스캔결과 서버에 서장.
+		await this.#update_tb_scan_yn(); //테이블의 스캔 여부를 업데이트한다.
 	};
 
+	//이전에 스캔했던 결과를 모두 삭제.
 	async #delExistMappingAndAttribute()
 	{
 		await dbConnectQuery(this.#serverLoginInfo,
