@@ -5,11 +5,11 @@ block content
 	#from-wrapper
 		form(method="POST" action=`./${tableName}/save`)
 			#table-wrapper.category_domain
-				include ../includes/categoryTable.pug
+				include ../includes/categoryDomain.pug
 				#category_download.download
 					a(download=`${tableName}_categoryScan` href=`/api/download/category/${tableName}`) 범주속성 스캔결과 다운로드
 			#table-wrapper.numeric_domain
-				include ../includes/numericTable.pug
+				include ../includes/numericDomain.pug
 				#numeric_download.download
 					a(download=`${tableName}_numericScan` href=`/api/download/numeric/${tableName}`) 수치속성 스캔결과 다운로드
 			#save

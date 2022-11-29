@@ -7,11 +7,16 @@ export const getEditTableHome = async (req, res) => {
 }
 
 export const getEditTableRows = async (req, res) => {
+	const { loginInfo } = req.session;
+	const { tableName } = req.params;
 
+
+
+	res.render('edit-table-view', {});
 }
 
 /*
- * 속성 삭제하는 함수.
+ * 속성 삭제
  * req.session.loginInfo로 사용자 DB에 쿼리 날려야한다.
  * */
 export const deleteAttr = async (req, res) => {
