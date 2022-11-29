@@ -10,10 +10,10 @@ domainScanRouter.get("/domain-scan/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)", checkLogi
 
 domainScanRouter.post("/domain-scan/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)/save", checkLoginMiddleware, saveMappingData)
 
-domainScanRouter.post("/api/addRepAttr", addRepAttr);
-domainScanRouter.post("/api/addRepJoinKey", addRepJoinKey);
+domainScanRouter.post("/api/addRepAttr", checkLoginMiddleware,addRepAttr);
+domainScanRouter.post("/api/addRepJoinKey", checkLoginMiddleware,addRepJoinKey);
 
-domainScanRouter.get("/api/download/category/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)", downloadCategory);
-domainScanRouter.get("/api/download/numeric/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)", downloadNumeric);
+domainScanRouter.get("/api/download/category/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)", checkLoginMiddleware,downloadCategory);
+domainScanRouter.get("/api/download/numeric/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)", checkLoginMiddleware,downloadNumeric);
 
 export default domainScanRouter;
