@@ -60,17 +60,12 @@ export class SaveMapping
 		const rkey_seq = this.#rKeySeqObj[mapAttrName];
 		await dbConnectQuery(this.#serverInfo,
 		`
-			INSERT INTO tb_mapping (
-			rkey_seq,
-			attr_seq,
-			table_seq,
-			chg_yn
-			) VALUES (
-			${rkey_seq},
-			${attr_seq},
-			${this.#tableSeq},
-			'N'
-			);
+			UPDATE tb_mapping
+			SET rkey_seq = ${rkey_seq}, chg_yn = 'Y'
+			WHERE 
+			attr_seq = ${attr_seq} 
+			AND table_seq = ${this.#tableSeq};
+			;
 		`)
 	}
 

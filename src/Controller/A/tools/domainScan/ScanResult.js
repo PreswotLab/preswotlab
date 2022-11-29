@@ -32,7 +32,8 @@ export class ScanResult
 	async getResult ()
 	{
 		//사용자 DB로부터 서버DB에 저장할 데이터를 객체 내부에 저장한다.
-		await this.#setNumOfRecords();
+		await this.#setTableSeq();//tableSeq 세팅
+		await this.#setNumOfRecords(); //현재 테이블의 전체 행 개수 세팅
 		await this.#setRepAttrJoinKey();
 		await this.#setNumeric(); //테이블 각 수치속성 scan
 		await this.#setCategory();//테이블 각 범주속성 scan
@@ -47,9 +48,37 @@ export class ScanResult
 	{
 		await this.#delExistMappingAndAttribute(); //이전에 스캔한 결과를 모두 삭제한다.
 		await this.#saveNumericResult(); //객체에 저장된 수치속성 스캔결과를 서버에 저장한다.
-		await this.#saveCategoryResult(); //객체의 범주속성 스캔결과 서버에 서장.
+		await this.#saveCategoryResult(); //객체의 범주속성 스캔결과를 서버에 서장.
 		await this.#update_tb_scan_yn(); //테이블의 스캔 여부를 업데이트한다.
+		await this.#init_tb_mapping()//테이블의 속성 별 매핑 정보를 초기화한다
 	};
+
+	async #init_tb_mapping()
+	{
+		const attrSeqs = await dbConnectQuery(this.#serverLoginInfo, 
+			`
+				SELECT attr_seq
+				FROM tb_attribute a, tb_scan sc
+				WHERE sc.user_seq = ${this.#loginInfo.user_seq}
+				AND a.table_seq = sc.table_seq
+				AND sc.table_name = '${this.#tableName}';
+			`)
+		for (let i = 0; i < attrSeqs.length; i++)
+		{
+			await dbConnectQuery(this.#serverLoginInfo,
+			`
+				INSERT INTO tb_mapping (
+				rkey_seq, 
+				attr_seq, 
+				table_seq
+				) VALUES (
+				0,
+				${attrSeqs[i]['attr_seq']},
+				${this.#tableSeq}
+				);
+			`);
+		}
+	}
 
 	//이전에 스캔했던 결과를 모두 삭제.
 	async #delExistMappingAndAttribute()
@@ -85,7 +114,8 @@ export class ScanResult
 				max_value,
 				min_value,
 				zero_num,
-				key_candidate
+				key_candidate,
+				rattr_seq
 				) VALUES (
 				${this.#tableSeq},
 				'${this.#numericResult[i]['attrName']}',
@@ -96,7 +126,8 @@ export class ScanResult
 				${this.#numericResult[i]['max']},
 				${this.#numericResult[i]['min']},
 				${this.#numericResult[i]['numOfZero']},
-				'${this.#numericResult[i]['recommended']}'
+				'${this.#numericResult[i]['recommended']}',
+				0
 				);
 			`);
 		}
@@ -116,7 +147,8 @@ export class ScanResult
 				null_num,
 				diff_num,
 				special_num,
-				key_candidate
+				key_candidate,
+				rattr_seq
 				) VALUES (
 				${this.#tableSeq},
 				'${this.#categoryResult[i]['attrName']}',
@@ -125,7 +157,8 @@ export class ScanResult
 				${this.#categoryResult[i]['numOfNullRecords']},
 				${this.#categoryResult[i]['numOfDistinct']},
 				${this.#categoryResult[i]['numOfSpcRecords']},
-				'${this.#categoryResult[i]['recommended']}'
+				'${this.#categoryResult[i]['recommended']}',
+				0
 				);
 			`);
 
@@ -185,7 +218,7 @@ export class ScanResult
 		this.#categoryResult = rtn;
 	};
 
-	async #setNumOfRecords () 
+	async #setTableSeq ()
 	{
 		const result_1 = await dbConnectQuery(this.#serverLoginInfo,
 		`
@@ -196,7 +229,10 @@ export class ScanResult
 		`);
 
 		this.#tableSeq = result_1[0]['table_seq'];
+	}
 
+	async #setNumOfRecords () 
+	{
 		const result_2 = await dbConnectQuery(this.#loginInfo, 
 		`
 		SELECT *
