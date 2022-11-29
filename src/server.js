@@ -52,7 +52,7 @@ app.use(apiRouter);
 
 //A
 app.use(domainScanRouter);
-app.use('/edit-table', editTableRouter);
+app.use(editTableRouter);
 
 //B
 //app.use('/single-join', singleJoinRouter);
