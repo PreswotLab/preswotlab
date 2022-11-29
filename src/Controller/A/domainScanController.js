@@ -1,15 +1,15 @@
 import {Parser} from "json2csv";
 import dbConnectQuery from "../Common/tools/user/dBConnectQuery";
 import getServerLoginInfo from "../Common/tools/user/getServerLoginInfo";
-import getTableNames from "./tools/domainScan/getTableNames";
+import {getTableNamesAndScanyn} from "./tools/domainScan/getTableNamesAndScanyn";
 import {SaveMapping} from "./tools/domainScan/SaveMappingObj";
 import { ScanResult } from "./tools/domainScan/ScanResult";
 
 export const getDomainScan = async (req, res) => {
 	const loginInfo = req.session.loginInfo;
 	try {
-		const tableNames = await getTableNames(loginInfo);
-		res.render('domain-scan', { title : "PRESWOT LAB" , tableNames : tableNames});
+		const tbNameScanYn = await getTableNamesAndScanyn(loginInfo.user_seq);
+		res.render('domain-scan', { tbNameScanYn });
 	} catch (e) {
 		console.log(e);
 		res.status(404).redirect('/logout');
