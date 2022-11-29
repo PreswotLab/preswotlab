@@ -18,7 +18,6 @@ const getTableNames = async (loginInfo) => {
 	const result = await dbConnectQuery(loginInfo, 'SHOW tables;');
 
 	const tableNames = extractObjects(result, `Tables_in_${loginInfo.dbName}`);
-	console.log(tableNames);
 	return (tableNames);
 };
 
