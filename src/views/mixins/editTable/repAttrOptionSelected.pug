@@ -1,0 +1,8 @@
+mixin repAttrOptionSelected(repAttrArray, selected)
+	option(value="-") -
+	each attr in repAttrArray
+		if attr=selected
+			option(value = `${attr}` selected)=attr
+		else
+			option(value = `${attr}`)=attr
+	option(value="addRepAttr") 대표 속성 추가
