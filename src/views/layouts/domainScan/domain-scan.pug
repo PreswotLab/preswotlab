@@ -1,10 +1,10 @@
 extends ../default
-include ../../mixins/tableNamesAhref.pug
+include ../../mixins/domainScan/tbNameScanYnDomain.pug
 
 block content
 	div.table-grid
-		each tableName in tableNames
-			+tableNamesAhref(tableName)
+		each element in tbNameScanYn
+			+tbNameScanYnDomain(element)
 		else
 			span.notables 테이블이 없습니다.
 

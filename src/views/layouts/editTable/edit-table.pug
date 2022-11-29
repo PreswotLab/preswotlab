@@ -1,10 +1,10 @@
 extends ../default
-include ../../mixins/tbNameScanYn.pug
+include ../../mixins/editTable/tbNameScanYnEdit.pug
 
 block content
 	div.table-grid
 		each element in tbNameScanYn
-			+tbNameScanYn(element)
+			+tbNameScanYnEdit(element)
 		else
 			span.notables 테이블이 없습니다.
 
