@@ -9,12 +9,6 @@ export const getDomainScan = async (req, res) => {
 	const loginInfo = req.session.loginInfo;
 	try {
 		const tableNames = await getTableNames(loginInfo);
-		/*
-		 * 현재는 모든 table을 사용자 DB에서 가져오는데,
-		 * 사용자 테이블의 스캔여부를 서버에서 관리하는게 보장되므로
-		 * 	- 첫 로그인 시에 tb_scan이 모두 만들어지기때문에
-		 * tb_scan에서 테이블 이름, 스캔여부 가져오는 방법도 괜찮을듯
-		 * */
 		res.render('domain-scan', { title : "PRESWOT LAB" , tableNames : tableNames});
 	} catch (e) {
 		console.log(e);
