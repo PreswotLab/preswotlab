@@ -2,11 +2,10 @@ extends default
 include ../mixins/tableNamesAhref.pug
 
 block content
-    div.table-grid
-        each tableName in tableNames
-            +tableNamesAhref(tableName)
-        else
-            span.notables 테이블이 없습니다.
+	div.table-grid
+		each tableName in tableNames
+			+tableNamesAhref(tableName)
+		else
+			span.notables 테이블이 없습니다.
 
 block scripts
-    script(src='static/js/domain-scan.js')
