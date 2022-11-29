@@ -1,4 +1,12 @@
-export const getEditTable = async (req, res) => {
+import {getTableNamesAndScanyn} from "./tools/domainScan/getTableNamesAndScanyn";
+
+export const getEditTableHome = async (req, res) => {
+	const tbNameScanYn = await getTableNamesAndScanyn(req.session.loginInfo.user_seq);
+	console.log(tbNameScanYn);
+	res.render('edit-table', { tbNameScanYn });
+}
+
+export const getEditTableRows = async (req, res) => {
 
 }
 
@@ -9,3 +17,7 @@ export const getEditTable = async (req, res) => {
 export const deleteAttr = async (req, res) => {
 
 };
+
+export const modAttr = async (req, res) => {
+
+}
