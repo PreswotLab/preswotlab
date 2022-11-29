@@ -1,3 +1,6 @@
+include ../../mixins/editTable/repAttrOptionSelected.pug
+include ../../mixins/editTable/repJoinOptionSelected.pug
+
 mixin categoryEditRows(result)
 	tr
 		td=result.attr_name
@@ -12,7 +15,7 @@ mixin categoryEditRows(result)
 		td=result.key_candidate
 		td
 			select(class="repSelect repAttr" name=`${result.attr_name}`)
-				+repAttrOption(repAttrJoinKey.repAttrArray)
+				+repAttrOptionSelected(repAttrJoinKey.repAttrArray, result.rattr_name)
 		td
 			select(class="repSelect repJoinKey" name=`${result.attr_name}`)
-				+repJoinOption(repAttrJoinKey.repKeyArray)
+				+repJoinOptionSelected(repAttrJoinKey.repKeyArray, result.rkey_name)
