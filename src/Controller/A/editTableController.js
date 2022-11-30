@@ -14,9 +14,6 @@ export const getEditTableRows = async (req, res) => {
 	const { tableName } = req.params;
 	const { user_seq } = req.session.loginInfo;
 	const serverLoginInfo = getServerLoginInfo();
-	console.log("tableName: ", tableName);
-	console.log("userseq : ", user_seq);
-
 	try {
 		const result = await dbConnectQuery(serverLoginInfo, 
 			`
@@ -57,7 +54,6 @@ export const getEditTableRows = async (req, res) => {
 			repAttrArray : await getRepAttrs(),
 			repKeyArray : await getRepKeys()
 		};
-		console.log(result);
 		res.render('edit-table-result', { tableName, numericResult, categoryResult, repAttrJoinKey });
 	} catch (e)
 	{
