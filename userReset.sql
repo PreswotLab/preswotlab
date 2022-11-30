@@ -1,3 +1,6 @@
+DELETE
+FROM tb_join;
+
 DELETE 
 FROM tb_mapping;
 
