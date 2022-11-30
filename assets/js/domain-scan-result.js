@@ -1,4 +1,4 @@
-import repSelectListener from "./modules/repSelectListner";
+import repSelectListener from "./modules/repSelectListner.js";
 
 const selectTags = document.getElementsByClassName("repSelect");
 
