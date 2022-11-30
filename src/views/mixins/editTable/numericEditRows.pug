@@ -6,6 +6,8 @@ mixin numericEditRows(result)
 		td=result.attr_name
 		td=result.d_type
 		td
+			button(class=`modBtn` value=`${result.attr_name}`) 수정
+		td
 			button(class=`${result.attr_name} delBtn`) 삭제
 		td=result.null_num
 		td=result.null_portion
