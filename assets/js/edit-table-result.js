@@ -1,5 +1,5 @@
-import { addRepAttr } from "./modules/addRepAttr";
-import { addRepJoinKey } from "./modules/addRepJoinKey";
+import addRepJoinKey from "./modules/addRepJoinKey.js";
+import addRepAttr from "./modules/addRepAttr.js";
 
 const handleListener = async (e) => {
 	try {

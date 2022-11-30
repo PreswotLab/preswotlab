@@ -1,6 +1,6 @@
-import { postData } from "./postData";
+import postData from "./postData.js";
 
-export const addRepJoinKey = async (e) => {
+const addRepJoinKey = async (e) => {
 	const name = prompt ("추가하고자하는 대표 결합키를 입력하세요");
 	if (!name)
 		e.target.value = "-";
@@ -25,3 +25,5 @@ export const addRepJoinKey = async (e) => {
 		e.target.value = name;
 	}
 };
+
+export default addRepJoinKey;

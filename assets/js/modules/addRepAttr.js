@@ -1,6 +1,6 @@
-import { postData } from "./postData.js";
+import postData from "./postData.js";
 
-export const addRepAttr = async (e) => {
+const addRepAttr = async (e) => {
 	const name = prompt ("추가하고자하는 대표 속성을 입력하세요");
 	if (!name)
 		e.target.value = "-";
@@ -25,3 +25,5 @@ export const addRepAttr = async (e) => {
 		e.target.value = name;
 	}
 };
+
+export default addRepAttr;
