@@ -1,5 +1,5 @@
-import addRepJoinKey from "./modules/addRepJoinKey.js";
-import addRepAttr from "./modules/addRepAttr.js";
+import addRepJoinKey from "./addRepJoinKey.js";
+import addRepAttr from "./addRepAttr.js";
 
 const repSelectListener = async (e) => {
 	try {

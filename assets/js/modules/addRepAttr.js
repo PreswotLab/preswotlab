@@ -6,11 +6,13 @@ const addRepAttr = async (e) => {
 		e.target.value = "-";
 	else //입력 받았을때만 post요청 날립니다.
 	{
-		await postData('/api/addRepAttr', { name }).then((data) => 
+		//request body에 name을 담아서 보냅니다.
+		await postData('/api/addRepAttr', { name }).then((response) => 
 		{
-			console.log(data); // JSON data parsed by `data.json()` call
-			if (data.status == 1)
+			console.log(response); // JSON data parsed by `data.json()` call
+			if (response.status == 1) //status 1 : success
 			{
+				//현재 DOM의 repAttr select태그들에 option 추가
 				const repAttrSelects = document.getElementsByClassName("repAttr");
 				for (let i = 0; i < repAttrSelects.length; i++)
 				{
@@ -21,6 +23,8 @@ const addRepAttr = async (e) => {
 					repAttrSelects[i].add(option, 1);
 				}
 			}
+			else
+				alert("속성 추가 실패");
 		});
 		e.target.value = name;
 	}

@@ -8,7 +8,6 @@ const addRepJoinKey = async (e) => {
 	{
 		await postData('/api/addRepJoinKey', { name }).then((data) => 
 		{
-			console.log(data); // JSON data parsed by `data.json()` call
 			if (data.status == 1)
 			{
 				const repJoinKeySelects = document.getElementsByClassName("repJoinKey");
