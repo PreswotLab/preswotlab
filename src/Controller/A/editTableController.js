@@ -58,7 +58,7 @@ export const getEditTableRows = async (req, res) => {
 			repKeyArray : await getRepKeys()
 		};
 		console.log(result);
-		res.render('edit-table-view', { tableName, numericResult, categoryResult, repAttrJoinKey });
+		res.render('edit-table-result', { tableName, numericResult, categoryResult, repAttrJoinKey });
 	} catch (e)
 	{
 		console.log(e.message);
