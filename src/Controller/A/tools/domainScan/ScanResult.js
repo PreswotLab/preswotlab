@@ -1,5 +1,7 @@
 import dbConnectQuery from "../../../Common/tools/user/dBConnectQuery";
 import getServerLoginInfo from "../../../Common/tools/user/getServerLoginInfo";
+import {getRepAttrs} from "../editTable/getRepAttrs";
+import {getRepKeys} from "../editTable/getRepKeys";
 import {extractObjects} from "./extractObjects";
 
 export class ScanResult
@@ -222,16 +224,9 @@ export class ScanResult
 
 	async #setRepAttrJoinKey ()
 	{
-		const repAttrResult = await dbConnectQuery(this.#serverLoginInfo, 
-		`
-		SELECT rattr_name
-		FROM tb_rep_attribute;
-		`);
-		const repKeyResult = await dbConnectQuery(this.#serverLoginInfo,
-		`
-		SELECT rkey_name
-		FROM tb_rep_key;
-		`);
+		const repAttrResult =  await getRepAttrs();
+		const repKeyResult = await getRepKeys();
+
 		this.#repAttrJoinKey = {
 			repAttrArray : extractObjects(repAttrResult, 'rattr_name'),
 			repKeyArray : extractObjects(repKeyResult, 'rkey_name')
