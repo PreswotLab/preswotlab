@@ -2,7 +2,7 @@ include ../../mixins/editTable/repAttrOptionSelected.pug
 include ../../mixins/editTable/repJoinOptionSelected.pug
 
 mixin categoryEditRows(result)
-	tr(class=`${result.attr_name}`)
+	tr
 		td=result.attr_name
 		td=result.d_type
 		td
