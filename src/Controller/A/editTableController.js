@@ -17,7 +17,7 @@ export const getEditTableRows = async (req, res) => {
 	try {
 		const result = await dbConnectQuery(serverLoginInfo, 
 		`
-			SELECT
+			SELECT 
 			a.attr_seq,
 			a.table_seq,
 			sc.table_name,
@@ -36,30 +36,19 @@ export const getEditTableRows = async (req, res) => {
 			a.rattr_seq,
 			a.key_candidate,
 			ra.rattr_name,
-			tb.mapping_seq,
-			tb.rkey_seq,
-			tb.rkey_name
-			FROM tb_attribute a
-			INNER JOIN tb_scan sc ON a.table_seq = sc.table_seq
-			LEFT OUTER JOIN tb_rep_attribute ra ON a.rattr_seq = ra.rattr_seq # rattr_seq이 없을 수 있기 때문에 LEFT OUTER JOIN
-			LEFT OUTER JOIN # mapping이 안되어 있을 수 있기 때문에 LEFT OUTER JOIN
-			(SELECT
-				 m.mapping_seq,
-				 m.rkey_seq,
-				 m.attr_seq,
-				 m.table_seq,
-				 m.chg_yn,
-				 rk.rkey_name
-				FROM tb_mapping m
-				INNER JOIN tb_rep_key rk ON m.rkey_seq = rk.rkey_seq
-				WHERE m.chg_yn = 'N' # mapping은 단 하나만 존재해야 한다 / mapping 변경되면 'Y'로 바꿔줘야 함
-				) tb
-			ON a.attr_seq = tb.attr_seq 
-			and a.table_seq = tb.table_seq
-			WHERE
-			sc.user_seq = ${user_seq} and # 파라미터 이용
-			sc.table_name = '${tableName}' and # 파라미터 이용
-			sc.scan_yn = 'Y' # scan 된 것만 가져온다.`);
+			m.mapping_seq,
+			rk.rkey_seq,
+			rk.rkey_name
+			FROM tb_attribute a 
+			LEFT OUTER JOIN tb_scan sc ON  a.table_seq = sc.table_seq
+			LEFT OUTER JOIN tb_rep_attribute ra on ra.rattr_seq = a.rattr_seq 
+			LEFT OUTER JOIN tb_mapping m on m.attr_seq = a.attr_seq 
+			LEFT OUTER JOIN tb_rep_key rk on rk.rkey_seq = m.rkey_seq
+			WHERE sc.table_name = '${tableName}'
+			AND sc.user_seq = ${user_seq}
+			AND sc.scan_yn = 'Y'
+			AND m.chg_yn IS NULL OR m.chg_yn = 'N';`
+			);
 		const numericResult = [];
 		const categoryResult = [];
 		for (let i = 0; i < result.length; i++)
@@ -86,12 +75,42 @@ export const getEditTableRows = async (req, res) => {
  * req.session.loginInfo로 사용자 DB에 쿼리 날려야한다.
  * serverLoginInfo로 tb_attribute와 tb_mapping에 관련 속성을 삭제해야한다.
  * */
-
 export const deleteAttr = async (req, res) => {
 	try {
+		const serverLoginInfo = getServerLoginInfo();
 		console.log(req.body);
+		const table_name = req.params.tableName;
+		console.log(req.params);
+		const attr_name = req.body.delAttr;//attr_name
+		const user_seq = req.session.loginInfo.user_seq; //user_seq
+		await dbConnectQuery(serverLoginInfo, 
+		`
+			DELETE
+			FROM tb_mapping
+			WHERE attr_seq IN 
+			(
+				SELECT at.attr_seq
+				FROM tb_scan sc, tb_attribute at
+				WHERE sc.table_seq = at.table_seq
+				AND sc.user_seq = ${user_seq}
+				AND sc.table_name = '${table_name}'
+				AND at.attr_name = '${attr_name}'
+			);
+		`);
+		await dbConnectQuery(serverLoginInfo,
+		`
+			DELETE FROM tb_attribute 
+			WHERE attr_name = '${attr_name}'
+			AND table_seq IN (
+				SELECT table_seq 
+				FROM tb_scan sc
+				WHERE sc.user_seq = ${user_seq}
+				AND sc.table_name = '${table_name}'
+			);
+		`);
 		res.send({ status : 1 });
 	} catch (e) {
+		console.log(e.message);
 		res.send({ status : 0 });
 	}
 };
