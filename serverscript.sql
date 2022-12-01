@@ -104,7 +104,6 @@ CREATE TABLE tb_mapping (
 	mapping_seq INT NOT NULL PRIMARY KEY AUTO_INCREMENT, 
 	rkey_seq INT NOT NULL, 
 	attr_seq INT NOT NULL, 
-	table_seq INT NOT NULL,
 	chg_yn enum('Y','N') NOT NULL DEFAULT 'N'
 );
 
@@ -119,12 +118,6 @@ ALTER TABLE tb_mapping ADD CONSTRAINT FK_tb_attribute_TO_tb_mapping_1 FOREIGN KE
 ) REFERENCES tb_attribute ( 
 	attr_seq 
 );
-
-ALTER TABLE tb_mapping ADD CONSTRAINT FK_tb_attribute_TO_tb_mapping_2 FOREIGN KEY (
-	table_seq
-) REFERENCES tb_attribute ( 
-	table_seq 
-); 
 
 -- 조인결합결과
 CREATE TABLE tb_join ( 
