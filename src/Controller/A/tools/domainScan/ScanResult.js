@@ -61,7 +61,11 @@ export class ScanResult
 		`
 			DELETE
 			FROM tb_mapping
-			WHERE table_seq = ${this.#tableSeq};
+			WHERE attr_seq IN (
+				SELECT attr_seq
+				FROM tb_attribute a 
+				WHERE a.table_seq = ${this.#tableSeq}
+			); 
 		`);
 
 		await dbConnectQuery(this.#serverLoginInfo,
