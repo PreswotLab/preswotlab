@@ -60,7 +60,6 @@ export const getEditTableRows = async (req, res) => {
 			sc.user_seq = ${user_seq} and # 파라미터 이용
 			sc.table_name = '${tableName}' and # 파라미터 이용
 			sc.scan_yn = 'Y' # scan 된 것만 가져온다.`);
-		console.log(result);
 		const numericResult = [];
 		const categoryResult = [];
 		for (let i = 0; i < result.length; i++)
@@ -74,7 +73,6 @@ export const getEditTableRows = async (req, res) => {
 			repAttrArray : await getRepAttrs(),
 			repKeyArray : await getRepKeys()
 		};
-		console.log(repAttrJoinKey);
 		res.render('edit-table-result', { tableName, numericResult, categoryResult, repAttrJoinKey });
 	} catch (e)
 	{
