@@ -3,7 +3,7 @@ extends ../default
 block content
 	#tableName=tableName
 	#form-wrapper
-		form(method="POST" action=`./${tableName}/save`)
+		form(method="POST" action=`/domain-scan/${tableName}/save`)
 			#table-wrapper.categoryEdit
 				include ../../includes/editTable/categoryEdit.pug
 			#table-wrapper.numericEdit
