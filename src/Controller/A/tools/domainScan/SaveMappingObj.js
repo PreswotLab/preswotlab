@@ -44,7 +44,6 @@ export class SaveMapping
 	{
 		const attr_seq = this.#attrSeqObj[attrName];
 		let rattr_seq = this.#rAttrSeqObj[mapAttrName];
-		console.log("what type?", rattr_seq);
 		if (mapAttrName == '-') //mapping하고자하는 속성값이 -인경우 null로 대체
 			rattr_seq = null;
 		await dbConnectQuery(this.#serverInfo,
@@ -121,7 +120,6 @@ export class SaveMapping
 			let rattr_name = result[i]['rattr_name'];
 			this.#rAttrSeqObj[rattr_name] = result[i]['rattr_seq'];
 		}
-		console.log("rattr seq object:",this.#rAttrSeqObj);
 	}
 
 	async #setRkeySeqObj()
@@ -135,7 +133,6 @@ export class SaveMapping
 			let rkey_name = result[i]['rkey_name'];
 			this.#rKeySeqObj[rkey_name] = result[i]['rkey_seq'];
 		}
-		console.log("rkey seq object: ",this.#rKeySeqObj);
 	}
 
 };
