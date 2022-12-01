@@ -10,6 +10,8 @@ const modAttrListener = async (e) => {
 			throw(Error);
 		else
 		{
+			const modTd = document.getElementsByClassName(`td_${modAttr}_d_type`);
+			modTd.innerHtml = chhAttr;
 		}
 	} catch (e) {
 		alert("변경 실패");

@@ -2,9 +2,9 @@ include ../../mixins/editTable/repAttrOptionSelected.pug
 include ../../mixins/editTable/repJoinOptionSelected.pug
 
 mixin categoryEditRows(result)
-	tr(class=`${result.attr_name}`)
+	tr(class=`tr_${result.attr_name}`)
 		td=result.attr_name
-		td=result.d_type
+		td(class=`td_d_type`)=result.d_type
 		td
 			button(type='button' class=`modBtn` value=`${result.attr_name}`) 수정
 		td
