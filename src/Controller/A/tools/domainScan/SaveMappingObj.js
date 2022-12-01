@@ -35,17 +35,18 @@ export class SaveMapping
 		const keys = Object.keys(mappingRep);
 		for (let i = 0; i < keys.length; i++)
 		{
-			if (mappingRep[keys[i]][0] != '-')
-				await this.#saveRepAttrMapping(keys[i], mappingRep[keys[i]][0]);
-			if (mappingRep[keys[i]][1] != '-')
-				await this.#saveRepJoinKeyMapping(keys[i], mappingRep[keys[i]][1]);
+			await this.#saveRepAttrMapping(keys[i], mappingRep[keys[i]][0]);
+			await this.#saveRepJoinKeyMapping(keys[i], mappingRep[keys[i]][1]);
 		}
 	}
 
 	async #saveRepAttrMapping(attrName, mapAttrName)
 	{
 		const attr_seq = this.#attrSeqObj[attrName];
-		const rattr_seq = this.#rAttrSeqObj[mapAttrName];
+		let rattr_seq = this.#rAttrSeqObj[mapAttrName];
+		console.log("what type?", rattr_seq);
+		if (mapAttrName == '-') //mapping하고자하는 속성값이 -인경우 null로 대체
+			rattr_seq = null;
 		await dbConnectQuery(this.#serverInfo,
 		`
 			UPDATE tb_attribute
@@ -67,21 +68,19 @@ export class SaveMapping
 			UPDATE tb_mapping
 			SET chg_yn = 'Y' #기존에 현재 테이블과 속성을 매핑하는 튜플을 'Y'로 변경.
 			WHERE 
-			attr_seq = ${attr_seq}
-			AND table_seq = ${this.#tableSeq};
+			attr_seq = ${attr_seq};
 		`)
-		await dbConnectQuery(this.#serverInfo,
-		`
-			INSERT tb_mapping ( #새로 삽입
-				rkey_seq, 
-				attr_seq,
-				table_seq
-			) VALUES (
-				${rkey_seq},
-				${attr_seq},
-				${this.#tableSeq}
-			);
-		`)
+		if (mapAttrName != '-') //매핑하고자하는 대표 결합키가 -인경우 삽입X
+			await dbConnectQuery(this.#serverInfo,
+			`
+				INSERT tb_mapping ( #새로 삽입
+					rkey_seq, 
+					attr_seq
+				) VALUES (
+					${rkey_seq},
+					${attr_seq}
+				);
+			`)
 	}
 
 	async #setTableSeq()
