@@ -108,12 +108,6 @@ CREATE TABLE tb_mapping (
 	chg_yn enum('Y','N') NOT NULL DEFAULT 'N'
 );
 
-ALTER TABLE tb_mapping ADD CONSTRAINT UNIQUE_TB_MAPPING UNIQUE (
-	rkey_seq,
-	attr_seq,
-	table_seq
-); 
-
 ALTER TABLE tb_mapping ADD CONSTRAINT FK_tb_rep_key_TO_tb_mapping_1 FOREIGN KEY (
 	rkey_seq
 ) REFERENCES tb_rep_key ( 
