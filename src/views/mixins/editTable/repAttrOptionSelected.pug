@@ -1,4 +1,5 @@
 mixin repAttrOptionSelected(repAttrArray, selected)
+	option(value='-') -
 	each attr in repAttrArray
 		if attr.rattr_name==selected
 			option(value = `${attr.rattr_name}` selected)=attr.rattr_name
