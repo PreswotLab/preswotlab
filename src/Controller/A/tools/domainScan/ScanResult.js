@@ -3,6 +3,13 @@ import getServerLoginInfo from "../../../Common/tools/user/getServerLoginInfo";
 import {getRepAttrs} from "../editTable/getRepAttrs";
 import {getRepKeys} from "../editTable/getRepKeys";
 import {extractObjects} from "./extractObjects";
+import {getCommonScanData} from "./getCommonScanData";
+import {getGeneralChrNum} from "./getGeneralChrNum";
+import {makeMinMax} from "./getMinMax";
+import {getNumOfDistinct} from "./getNumOfDistinct";
+import {getNumOfNullRecords} from "./getNumOfNullRecords";
+import {getNumOfZero} from "./getNumOfZero";
+import {getNumPortionSpcRecords} from "./getSpcRecords";
 
 export class ScanResult
 {
@@ -125,6 +132,7 @@ export class ScanResult
 				null_num,
 				diff_num,
 				special_num,
+				general_chr_num,
 				key_candidate,
 				rattr_seq
 				) VALUES (
@@ -135,6 +143,7 @@ export class ScanResult
 				${this.#categoryResult[i]['numOfNullRecords']},
 				${this.#categoryResult[i]['numOfDistinct']},
 				${this.#categoryResult[i]['numOfSpcRecords']},
+				${this.#categoryResult[i]['numOfGenChrRecords']},
 				'${this.#categoryResult[i]['recommended']}',
 				NULL
 				);
@@ -238,102 +247,21 @@ export class ScanResult
 		};
 	};
 
-	async #makeCommonScanData (fieldInfo)
-	{
-		const attrName = fieldInfo.Field;
-		const attrType = fieldInfo.Type;
-		const numOfNullRecords = parseInt(await this.#getNumOfNullRecords(attrName));
-		const portionOfNullRecords = parseInt(numOfNullRecords) / this.#numOfRecords;
-		const numOfDistinct = await this.#getNumOfDistinct(attrName);
-		return ({
-			attrName,
-			attrType,
-			numOfNullRecords,
-			portionOfNullRecords,
-			numOfDistinct,
-			recommended : (numOfDistinct / this.#numOfRecords > 0.9) ? 'y' : 'n'
-		});
-	};
-
-	async #getNumOfNullRecords (attrName)
-	{
-		const result = await dbConnectQuery(this.#loginInfo, 
-		`
-		SELECT COUNT(*) 
-		FROM ${this.#tableName}
-		WHERE ${attrName} IS NULL;
-		`);
-		return (extractObjects(result, 'COUNT(*)')[0]);
-	};
-
-	async #getNumOfDistinct (attrName)
-	{
-		const result = await dbConnectQuery(this.#loginInfo,
-		`
-		SELECT DISTINCT ${attrName}
-		FROM ${this.#tableName};
-		;
-		`);
-		return (result.length);
-	};
-
-	async #makeMinMax (fieldInfo)
-	{
-		const result = await dbConnectQuery(this.#loginInfo,
-		`
-		SELECT MAX(${fieldInfo.Field}), MIN(${fieldInfo.Field})
-		FROM ${this.#tableName};
-		`);
-		return ({
-			max : extractObjects(result, `MAX(${fieldInfo.Field})`)[0],
-			min : extractObjects(result, `MIN(${fieldInfo.Field})`)[0]
-		});
-	};
-
-	async #getNumOfZero (fieldInfo)
-	{
-		const result = await dbConnectQuery(this.#loginInfo,
-		`SELECT * 
-		FROM ${this.#tableName} 
-		WHERE ${fieldInfo.Field} = 0;
-		`);
-		const numOfZero = result.length;
-		return ({
-			numOfZero,
-			portionOfZero : numOfZero / this.#numOfRecords
-		});
-	}
-
 	async #makeNumericScanObject (fieldInfo)
 	{
 		return ({
-			... await this.#makeCommonScanData(fieldInfo),
-			... await this.#makeMinMax(fieldInfo),
-			... await this.#getNumOfZero(fieldInfo)
+			... await getCommonScanData(this.#loginInfo, this.#tableName, fieldInfo, this.#numOfRecords),
+			... await makeMinMax(this.#loginInfo, this.#tableName, fieldInfo.Field),
+			... await getNumOfZero(this.#loginInfo, this.#tableName, fieldInfo.Field, this.#numOfRecords)
 		});
 	};
-
-	async #makeSpcRecordsData(fieldInfo)
-	{
-		const result = await dbConnectQuery(this.#loginInfo,
-		`
-			SELECT *
-			FROM ${this.#tableName}
-			WHERE ${fieldInfo.Field} LIKE '%[^0-9a-zA-Z ]%';
-		`);
-
-		const numOfSpcRecords = result.length;
-		return ({
-			numOfSpcRecords,
-			portionOfSpcRecords : numOfSpcRecords / this.#numOfRecords
-		})
-	}
 
 	async #makeCategoryScanObject (fieldInfo)
 	{
 		return ({
-			... await this.#makeCommonScanData(fieldInfo),
-			... await this.#makeSpcRecordsData(fieldInfo)
+			... await getCommonScanData(this.#loginInfo, this.#tableName, fieldInfo, this.#numOfRecords),
+			... await getNumPortionSpcRecords(this.#loginInfo, this.#tableName, fieldInfo.Field, this.#numOfRecords),
+			... await getGeneralChrNum(this.#loginInfo, this.#tableName, fieldInfo.Field)
 		});
 	};
 };
