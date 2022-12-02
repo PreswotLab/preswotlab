@@ -1,7 +1,7 @@
 import dbConnectQuery from "../../../Common/tools/user/dBConnectQuery";
 import { extractObjects } from "./extractObjects";
 
-export const makeMinMax = async (loginInfo, tableName, attrName) =>
+export const getMinMax = async (loginInfo, tableName, attrName) =>
 {
 	const result = await dbConnectQuery(loginInfo,
 	`
