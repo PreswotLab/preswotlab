@@ -108,7 +108,7 @@ export const saveMappingData = async (req, res) => {
 		const saveMap = new SaveMapping(tableName, loginInfo.user_seq);
 		await saveMap.init();
 		await saveMap.save(req.body);
-		res.redirect(`/domain-scan`);
+		res.redirect(`/edit-table`);
 	} catch (e) {
 		console.log(e);
 		res.redirect('/logout');
@@ -126,7 +126,7 @@ export const addRepAttr = async (req, res) => {
 				WHERE rattr_name = '${req.body.name}';
 			`);
 		if (result.length != 0)
-			res.send({ status : 0 });
+			res.json({ status : 0 });
 		else
 		{
 			await dbConnectQuery(serverLoginInfo,
@@ -134,7 +134,7 @@ export const addRepAttr = async (req, res) => {
 				INSERT INTO tb_rep_attribute(rattr_name)
 				VALUES('${req.body.name}');
 			`);
-			res.send({ status : 1 });
+			res.json({ status : 1 });
 		}
 	} catch (e) {
 		console.log(e.message);
@@ -153,7 +153,7 @@ export const addRepJoinKey = async (req, res) => {
 				WHERE rkey_name = '${req.body.name}';
 			`);
 		if (result.length != 0)
-			res.send({ status : 0 });
+			res.json({ status : 0 });
 		else
 		{
 			await dbConnectQuery(serverLoginInfo,
@@ -161,7 +161,7 @@ export const addRepJoinKey = async (req, res) => {
 				INSERT INTO tb_rep_key(rkey_name)
 				VALUES('${req.body.name}');
 			`);
-			res.send({ status : 1 });
+			res.json({ status : 1 });
 		}
 	} catch (e) {
 		console.log(e.message);
