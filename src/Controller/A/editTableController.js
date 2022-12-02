@@ -3,6 +3,10 @@ import {getTableNamesAndScanyn} from "./tools/domainScan/getTableNamesAndScanyn"
 import {getRepAttrs} from "./tools/editTable/getRepAttrs";
 import {getRepKeys} from "./tools/editTable/getRepKeys";
 import dbConnectQuery from "../Common/tools/user/dBConnectQuery";
+import {getNumOfRecords} from "./tools/domainScan/getNumOfRecords";
+import {getNumericScanObject} from "./tools/domainScan/getNumericScanObject";
+import { getCategoryScanObject } from "./tools/domainScan/getCategoryScanObject";
+import { updateTbAttribute } from "./tools/editTable/updateTbAttribute";
 
 export const getEditTableHome = async (req, res) => {
 	const tbNameScanYn = await getTableNamesAndScanyn(req.session.loginInfo.user_seq);
@@ -79,7 +83,7 @@ export const deleteAttr = async (req, res) => {
 	try {
 		const serverLoginInfo = getServerLoginInfo();
 		console.log(req.body);
-		const table_name = req.params.tableName;
+		const tableName = req.params.tableName;
 		console.log(req.params);
 		const attr_name = req.body.delAttr;//attr_name
 		const user_seq = req.session.loginInfo.user_seq; //user_seq
@@ -93,7 +97,7 @@ export const deleteAttr = async (req, res) => {
 				FROM tb_scan sc, tb_attribute at
 				WHERE sc.table_seq = at.table_seq
 				AND sc.user_seq = ${user_seq}
-				AND sc.table_name = '${table_name}'
+				AND sc.table_name = '${tableName}'
 				AND at.attr_name = '${attr_name}'
 			);
 		`);
@@ -105,21 +109,76 @@ export const deleteAttr = async (req, res) => {
 				SELECT table_seq 
 				FROM tb_scan sc
 				WHERE sc.user_seq = ${user_seq}
-				AND sc.table_name = '${table_name}'
+				AND sc.table_name = '${tableName}'
 			);
 		`);
-		res.send({ status : 1 });
+		res.json({ status : 1 });
 	} catch (e) {
 		console.log(e.message);
-		res.send({ status : 0 });
+		res.json({ status : 0 });
 	}
 };
 
+
+/* req.body:
+ * { modAttrName: 'PHONE_NUM', chgAttr: 'int(11)' }
+ * */
 export const modAttr = async (req, res) => {
 	try {
-		console.log(req.body);
-		res.send({ status : 1 });
-	} catch (e) {
-		res.send({ status : 0 });
+		const {modAttrName, chgType} = req.body;
+		const { loginInfo } = req.session;
+		const {tableName} = req.params;
+
+		//사용자 DB에서 속성 변경
+		await dbConnectQuery(loginInfo, 
+		`
+			ALTER TABLE ${tableName}
+			MODIFY COLUMN ${modAttrName}
+			${chgType};
+		`);
+
+		//tb_attribute update
+		const numOfRecords = await getNumOfRecords(loginInfo, tableName);
+
+		//1. 수정한 속성이 수치속성인지 범주속성인지 사용자 DB에서 확인
+		const is_category = await dbConnectQuery(loginInfo,
+		`
+			SHOW COLUMNS from ${tableName}
+			WHERE Field = "${modAttrName}" #수정한 속성명
+			AND (TYPE LIKE '%char%' 
+			OR TYPE LIKE '%text%' 
+			OR TYPE LIKE '%date%'
+			OR TYPE LIKE '%set%'
+			OR TYPE LIKE '%time%'
+			OR TYPE LIKE 'binary'
+			OR TYPE LIKE 'enum');
+		`);
+
+		if (is_category.length != 0) //범주속성으로 바뀐 경우 업데이트
+		{
+			const scanResult = await getCategoryScanObject(loginInfo, tableName, is_category[0], numOfRecords);
+			console.log(scanResult);
+			await updateTbAttribute(loginInfo, tableName, scanResult, 'C');
+		}
+		else //수치속성으로 바뀐 경우 업데이트
+		{
+			const is_numeric = await dbConnectQuery(loginInfo,
+			`
+				SHOW COLUMNS from ${tableName} 
+				WHERE TYPE LIKE '%int%' 
+				OR TYPE LIKE 'double%' 
+				OR TYPE LIKE 'float%'
+				OR TYPE LIKE 'boolean'
+				OR TYPE LIKE 'bit'
+				OR TYPE LIKE 'decimal';
+			`);
+			const scanResult = await getNumericScanObject(loginInfo, tableName, is_numeric[0], numOfRecords);
+			console.log(scanResult);
+			await updateTbAttribute(loginInfo, tableName, scanResult, 'N');
+		}
+		res.json({status : 1, scanResult});
+	} catch (e) { //트랜젝션 도중 에러 -> 실패알림
+		console.log(e.message);
+		res.json({ status : 0 });
 	}
 }

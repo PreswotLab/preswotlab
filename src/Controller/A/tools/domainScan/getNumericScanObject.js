@@ -2,7 +2,23 @@ import { getCommonScanData } from "./getCommonScanData";
 import { getMinMax } from "./getMinMax";
 import { getNumOfZero } from "./getNumOfZero";
 
-export const makeNumericScanObject = async (loginInfo, tableName, fieldInfo, numOfRecords) =>
+
+/*
+{
+	attrName: 'TEST_CNT',
+	attrType: 'int(11)',
+	numOfNullRecords: 0,
+	portionOfNullRecords: 0,
+	numOfDistinct: 20,
+	recommended: 'n',
+	max: 40,
+	min: 1,
+	numOfZero: 0,
+	portionOfZero: 0
+}
+*/
+
+export const getNumericScanObject = async (loginInfo, tableName, fieldInfo, numOfRecords) =>
 {
 		return ({
 			... await getCommonScanData(loginInfo, tableName, fieldInfo, numOfRecords),

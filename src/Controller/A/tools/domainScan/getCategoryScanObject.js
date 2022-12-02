@@ -1,13 +1,23 @@
 import { getCommonScanData } from "./getCommonScanData";
 import { getNumPortionSpcRecords } from "./getSpcRecords";
-import { getGeneralChrNum } from "./getGeneralChrNum";
 
-export const makeCategoryScanObject = async (loginInfo, tableName, fieldInfo, numOfRecords) =>
+
+/*
+{
+	attrName: 'TEST_AGE',
+	attrType: 'text',
+	numOfNullRecords: 0,
+	portionOfNullRecords: 0,
+	numOfDistinct: 76,
+	recommended: 'n',
+	numOfSpcRecords: 0,
+	portionOfSpcRecords: 0
+}
+*/
+export const getCategoryScanObject = async (loginInfo, tableName, fieldInfo, numOfRecords) =>
 {
 		return ({
 			... await getCommonScanData(loginInfo, tableName, fieldInfo, numOfRecords),
 			... await getNumPortionSpcRecords(loginInfo, tableName, fieldInfo.Field, numOfRecords),
-			... await getGeneralChrNum(loginInfo, tableName, fieldInfo.Field)
-
 		});
 };

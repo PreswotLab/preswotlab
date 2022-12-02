@@ -14,6 +14,6 @@ export const getCommonScanData = async (loginInfo, tableName, fieldInfo, numOfRe
 		numOfNullRecords,
 		portionOfNullRecords,
 		numOfDistinct,
-		recommended : (numOfDistinct / numOfRecords > 0.9) ? 'y' : 'n'
+		recommended : (numOfDistinct / numOfRecords > 0.9) ? 'Y' : 'N'
 	});
 };
