@@ -157,8 +157,8 @@ export const modAttr = async (req, res) => {
 		if (is_category.length != 0) //범주속성으로 바뀐 경우 업데이트
 		{
 			const scanResult = await getCategoryScanObject(loginInfo, tableName, is_category[0], numOfRecords);
-			console.log(scanResult);
 			await updateTbAttribute(loginInfo, tableName, scanResult, 'C');
+			res.json({status : 1, scanResult, attrType : 'C'});
 		}
 		else //수치속성으로 바뀐 경우 업데이트
 		{
@@ -173,10 +173,9 @@ export const modAttr = async (req, res) => {
 				OR TYPE LIKE 'decimal';
 			`);
 			const scanResult = await getNumericScanObject(loginInfo, tableName, is_numeric[0], numOfRecords);
-			console.log(scanResult);
 			await updateTbAttribute(loginInfo, tableName, scanResult, 'N');
+			res.json({status : 1, scanResult, attrType : 'N'});
 		}
-		res.json({status : 1, scanResult});
 	} catch (e) { //트랜젝션 도중 에러 -> 실패알림
 		console.log(e.message);
 		res.json({ status : 0 });

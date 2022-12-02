@@ -2,21 +2,21 @@ include ../../mixins/editTable/repAttrOptionSelected.pug
 include ../../mixins/editTable/repJoinOptionSelected.pug
 
 mixin numericEditRows(result)
-	tr(class=`tr_${result.attr_name}`)
-		td=result.attr_name
-		td(class=`td_${result.attr_name}_d_type`)=result.d_type
+	tr(id=`tr_${result.attr_name}`)
+		td(id=`n_td_${result.attr_name}_0`)=result.attr_name
+		td(id=`n_td_${result.attr_name}_1`)=result.d_type
 		td
 			button(type='button' class=`modBtn` value=`${result.attr_name}`) 수정
 		td
 			button(type='button' class=`delBtn` value=`${result.attr_name}`) 삭제
-		td=result.null_num
-		td=result.null_portion
-		td=result.diff_num
-		td=result.max_value
-		td=result.min_value
-		td=result.zero_num
-		td=result.zero_portion
-		td=result.key_candidate
+		td(id=`n_td_${result.attr_name}_2`)=result.null_num
+		td(id=`n_td_${result.attr_name}_3`)=result.null_portion
+		td(id=`n_td_${result.attr_name}_4`)=result.diff_num
+		td(id=`n_td_${result.attr_name}_5`)=result.max_value
+		td(id=`n_td_${result.attr_name}_6`)=result.min_value
+		td(id=`n_td_${result.attr_name}_7`)=result.zero_num
+		td(id=`n_td_${result.attr_name}_8`)=result.zero_portion
+		td(id=`n_td_${result.attr_name}_9`)=result.key_candidate
 		td
 			select(class="repSelect repAttr" name=`${result.attr_name}`)
 				+repAttrOptionSelected(repAttrJoinKey.repAttrArray, result.rattr_name)
