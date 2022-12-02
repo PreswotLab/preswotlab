@@ -3,13 +3,9 @@ import getServerLoginInfo from "../../../Common/tools/user/getServerLoginInfo";
 import {getRepAttrs} from "../editTable/getRepAttrs";
 import {getRepKeys} from "../editTable/getRepKeys";
 import {extractObjects} from "./extractObjects";
-import {getCommonScanData} from "./getCommonScanData";
-import {getGeneralChrNum} from "./getGeneralChrNum";
-import {makeMinMax} from "./getMinMax";
-import {getNumOfDistinct} from "./getNumOfDistinct";
-import {getNumOfNullRecords} from "./getNumOfNullRecords";
-import {getNumOfZero} from "./getNumOfZero";
-import {getNumPortionSpcRecords} from "./getSpcRecords";
+import { getNumericScanObject } from "./getNumericScanObject";
+import { getCategoryScanObject } from "./getCategoryScanObject";
+import {getNumOfRecords} from "./getNumOfRecords";
 
 export class ScanResult
 {
@@ -132,7 +128,6 @@ export class ScanResult
 				null_num,
 				diff_num,
 				special_num,
-				general_chr_num,
 				key_candidate,
 				rattr_seq
 				) VALUES (
@@ -143,7 +138,6 @@ export class ScanResult
 				${this.#categoryResult[i]['numOfNullRecords']},
 				${this.#categoryResult[i]['numOfDistinct']},
 				${this.#categoryResult[i]['numOfSpcRecords']},
-				${this.#categoryResult[i]['numOfGenChrRecords']},
 				'${this.#categoryResult[i]['recommended']}',
 				NULL
 				);
@@ -179,7 +173,7 @@ export class ScanResult
 		const rtn = [];
 		for (let i = 0; i < result.length; i++)
 		{
-			rtn.push(await this.#makeNumericScanObject(result[i]));
+			rtn.push(await getNumericScanObject(this.#loginInfo, this.#tableName, result[i], this.#numOfRecords));
 		}
 		this.#numericResult = rtn;
 	}
@@ -200,7 +194,7 @@ export class ScanResult
 		const rtn = [];
 		for (let i = 0; i < result.length; i++)
 		{
-			rtn.push(await this.#makeCategoryScanObject(result[i]));
+			rtn.push(await getCategoryScanObject(this.#loginInfo, this.#tableName, result[i], this.#numOfRecords));
 		}
 		this.#categoryResult = rtn;
 	};
@@ -220,12 +214,7 @@ export class ScanResult
 
 	async #setNumOfRecords () 
 	{
-		const result_2 = await dbConnectQuery(this.#loginInfo, 
-		`
-		SELECT *
-		FROM ${this.#tableName};
-		`);
-		this.#numOfRecords = parseInt(result_2.length);
+		this.#numOfRecords = await getNumOfRecords(this.#loginInfo, this.#tableName);
 
 		await dbConnectQuery(this.#serverLoginInfo, 
 		`
@@ -245,23 +234,5 @@ export class ScanResult
 			repKeyArray : extractObjects(repKeyResult, 'rkey_name')
 
 		};
-	};
-
-	async #makeNumericScanObject (fieldInfo)
-	{
-		return ({
-			... await getCommonScanData(this.#loginInfo, this.#tableName, fieldInfo, this.#numOfRecords),
-			... await makeMinMax(this.#loginInfo, this.#tableName, fieldInfo.Field),
-			... await getNumOfZero(this.#loginInfo, this.#tableName, fieldInfo.Field, this.#numOfRecords)
-		});
-	};
-
-	async #makeCategoryScanObject (fieldInfo)
-	{
-		return ({
-			... await getCommonScanData(this.#loginInfo, this.#tableName, fieldInfo, this.#numOfRecords),
-			... await getNumPortionSpcRecords(this.#loginInfo, this.#tableName, fieldInfo.Field, this.#numOfRecords),
-			... await getGeneralChrNum(this.#loginInfo, this.#tableName, fieldInfo.Field)
-		});
 	};
 };
