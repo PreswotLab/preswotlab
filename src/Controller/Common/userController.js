@@ -16,18 +16,20 @@ export const postLogin = async (req, res) => {
 	try {
 		//db에 사용자 있는지 없는지 확인하고, 없으면 생성
 		const syncUserObj = new syncUser(loginInfo);
+		//첫 로그인 시 현재 사용자 DB기반으로 tb_scan 생성
 		await syncUserObj.sync();
 		req.session.user_seq = syncUserObj.getUserSeq();
+
+		//브라우저측에 세션정보 저장하기
+		req.session.loggedIn = true;
+		req.session.loginInfo = {...loginInfo, user_seq : req.session.user_seq};
+		req.session.filePaths = [];
+		res.redirect('/');
 	} catch (e) {
 		console.log(e.message);
 		return (res.status(400).render('login', { 
 			title : 'login'}))
 	}
-	//브라우저측에 세션정보 저장하기
-	req.session.loggedIn = true;
-	req.session.loginInfo = {...loginInfo, user_seq : req.session.user_seq};
-	req.session.filePaths = [];
-	res.redirect('/');
 }
 
 export const getLogout = (req, res) => {

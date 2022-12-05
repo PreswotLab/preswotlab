@@ -43,8 +43,8 @@ export class syncUser
 		);
 		if (res.length == 0) //not exists
 		{
-			await this.#insertNewUser();
-			await this.#syncTable();
+			await this.#insertNewUser(); //사용자가 서버DB에 없으면 새로 생성한다.
+			await this.#syncTable(); //tb_scan에 초기값 N으로 생성해 넣는다.
 		}
 		else //exists
 		{
@@ -80,6 +80,7 @@ export class syncUser
 
 	async #syncTable()
 	{
+		//tb_scan에 테이블명으로 tuple생성
 		const tableNames = await getTableNames(this.#loginInfo);
 		for (let i = 0; i < tableNames.length; i++)
 		{

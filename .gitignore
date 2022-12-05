@@ -3,3 +3,5 @@ tmp/
 .env
 serverscript.sql
 clientscript.sql
+package-lock.json
+package.json

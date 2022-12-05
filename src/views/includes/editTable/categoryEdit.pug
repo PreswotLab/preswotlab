@@ -1,0 +1,22 @@
+include ../../mixins/editTable/categoryEditRows.pug
+
+.category_name 범주 속성 도메인 스캔 결과
+.category_table
+	.category_table_head
+		table
+			tr
+				th 속성명
+				th 데이터 타입
+				th 속성 수정
+				th 속성 삭제
+				th NULL 레코드 수
+				th NULL 레코드 비율
+				th 상이 범주 값
+				th 특수문자 포함 레코드 수 
+				th 특수문자 포함 레코드 비율
+				th 결합키 후보
+				th 대표 속성
+				th 대표 결합키
+			tbody#category_tbody
+				each result in categoryResult
+					+categoryEditRows(result)

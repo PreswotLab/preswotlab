@@ -1,0 +1,14 @@
+extends ../default
+
+block content
+	#tableName=tableName
+	#form-wrapper
+		form(method="POST" action=`/api/saveMapping/${tableName}`)
+			#table-wrapper.categoryEdit
+				include ../../includes/editTable/categoryEdit.pug
+			#table-wrapper.numericEdit
+				include ../../includes/editTable/numericEdit.pug
+			#save
+				input(type="submit" value="매핑 저장하기")
+block scripts
+	script(type='module' src='/static/js/edit-table-result.js')

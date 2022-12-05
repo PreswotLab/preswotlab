@@ -24,7 +24,12 @@ app.use(morgan("dev"));
 
 //템플릿 엔진 세팅
 app.set("view engine", "pug")
-app.set("views", process.cwd() + "/src/views/layouts")
+//템플릿 모듈화 경로
+app.set("views", [
+	process.cwd() + "/src/views/layouts",
+	process.cwd() + "/src/views/layouts/domainScan",
+	process.cwd() + "/src/views/layouts/editTable"
+])
 
 app.use(urlencoded({ extended : true }));
 
@@ -43,6 +48,7 @@ app.use(
 app.use(localMiddleware);
 
 //client단에서 사용될 정적파일들
+///static이라는 가상 경로에서 제공
 app.use('/static', express.static('assets'));
 
 //Common
@@ -52,7 +58,7 @@ app.use(apiRouter);
 
 //A
 app.use(domainScanRouter);
-app.use('/edit-table', editTableRouter);
+app.use(editTableRouter);
 
 //B
 //app.use('/single-join', singleJoinRouter);

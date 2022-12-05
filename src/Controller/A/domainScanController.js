@@ -1,21 +1,15 @@
 import {Parser} from "json2csv";
 import dbConnectQuery from "../Common/tools/user/dBConnectQuery";
 import getServerLoginInfo from "../Common/tools/user/getServerLoginInfo";
-import getTableNames from "./tools/domainScan/getTableNames";
+import {getTableNamesAndScanyn} from "./tools/domainScan/getTableNamesAndScanyn";
 import {SaveMapping} from "./tools/domainScan/SaveMappingObj";
 import { ScanResult } from "./tools/domainScan/ScanResult";
 
 export const getDomainScan = async (req, res) => {
 	const loginInfo = req.session.loginInfo;
 	try {
-		const tableNames = await getTableNames(loginInfo);
-		/*
-		 * 현재는 모든 table을 사용자 DB에서 가져오는데,
-		 * 사용자 테이블의 스캔여부를 서버에서 관리하는게 보장되므로
-		 * 	- 첫 로그인 시에 tb_scan이 모두 만들어지기때문에
-		 * tb_scan에서 테이블 이름, 스캔여부 가져오는 방법도 괜찮을듯
-		 * */
-		res.render('domain-scan', { title : "PRESWOT LAB" , tableNames : tableNames});
+		const tbNameScanYn = await getTableNamesAndScanyn(loginInfo.user_seq);
+		res.render('domain-scan', { tbNameScanYn });
 	} catch (e) {
 		console.log(e);
 		res.status(404).redirect('/logout');
@@ -83,9 +77,6 @@ export const getDomainScanResult = async (req, res) => {
 //   repAttrArray: [ 'finantial_info', 'health_info', 'study_info', 'user_info' ],
 //   repKeyArray: [ 'car_number', 'email', 'IP', 'phone_number', 'ssn' ]
 // }
-		console.log("category : ", result.categoryResult);
-		console.log("numeric : ", result.numericResult);
-		console.log("rep key attr : ", result.repAttrJoinKey);
 		res.render("domain-scan-result",  
 			{
 				title : "PRESWOT LAB",
@@ -114,7 +105,7 @@ export const saveMappingData = async (req, res) => {
 		const saveMap = new SaveMapping(tableName, loginInfo.user_seq);
 		await saveMap.init();
 		await saveMap.save(req.body);
-		res.redirect(`/domain-scan`);
+		res.redirect(`/edit-table`);
 	} catch (e) {
 		console.log(e);
 		res.redirect('/logout');
@@ -122,7 +113,6 @@ export const saveMappingData = async (req, res) => {
 };
 
 export const addRepAttr = async (req, res) => {
-	console.log("사용자 입력: ", req.body.name);
 	const serverLoginInfo = getServerLoginInfo();
 	try {
 		const result = await dbConnectQuery(serverLoginInfo, 
@@ -132,7 +122,7 @@ export const addRepAttr = async (req, res) => {
 				WHERE rattr_name = '${req.body.name}';
 			`);
 		if (result.length != 0)
-			res.send({ status : 0 });
+			res.json({ status : 0 });
 		else
 		{
 			await dbConnectQuery(serverLoginInfo,
@@ -140,7 +130,7 @@ export const addRepAttr = async (req, res) => {
 				INSERT INTO tb_rep_attribute(rattr_name)
 				VALUES('${req.body.name}');
 			`);
-			res.send({ status : 1 });
+			res.json({ status : 1 });
 		}
 	} catch (e) {
 		console.log(e.message);
@@ -149,7 +139,6 @@ export const addRepAttr = async (req, res) => {
 }
 
 export const addRepJoinKey = async (req, res) => {
-	console.log("사용자 입력:",req.body.name);
 	const serverLoginInfo = getServerLoginInfo();
 	try {
 		const result = await dbConnectQuery(serverLoginInfo, 
@@ -159,7 +148,7 @@ export const addRepJoinKey = async (req, res) => {
 				WHERE rkey_name = '${req.body.name}';
 			`);
 		if (result.length != 0)
-			res.send({ status : 0 });
+			res.json({ status : 0 });
 		else
 		{
 			await dbConnectQuery(serverLoginInfo,
@@ -167,7 +156,7 @@ export const addRepJoinKey = async (req, res) => {
 				INSERT INTO tb_rep_key(rkey_name)
 				VALUES('${req.body.name}');
 			`);
-			res.send({ status : 1 });
+			res.json({ status : 1 });
 		}
 	} catch (e) {
 		console.log(e.message);
@@ -196,7 +185,6 @@ export const downloadCategory = async(req, res) => {
 	AND a.table_seq = s.table_seq
 	AND a.attr_type = 'C';
 	`);
-	console.log("result : ",result);
 	const json2csvParser = new Parser();
 	const csv = json2csvParser.parse(result); //string으로 변환
 	res.setHeader('Content-type', "text/csv");
@@ -227,7 +215,6 @@ export const downloadNumeric = async (req, res) => {
 	AND a.table_seq = s.table_seq
 	AND a.attr_type = 'N';
 	`);
-	console.log("result : ",result);
 	const json2csvParser = new Parser();
 	const csv = json2csvParser.parse(result); //string으로 변환
 	res.setHeader('Content-type', "text/csv");

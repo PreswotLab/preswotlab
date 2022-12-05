@@ -1,0 +1,8 @@
+mixin repJoinOptionSelected(repKeyArray, selected)
+	option(value='-') -
+	each key in repKeyArray
+		if key.rkey_name==selected
+			option(value = `${key.rkey_name}` selected)=key.rkey_name
+		else
+			option(value = `${key.rkey_name}`)=key.rkey_name
+	option(value="addRepJoinKey") 결합키 속성 추가
