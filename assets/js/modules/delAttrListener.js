@@ -11,9 +11,8 @@ const delAttrListener = async (e) => {
 			throw(Error);
 		else //성공
 		{
-			const delTr = document.getElementsByClassName(`tr_${delAttr}`);
-			for (let i = 0; i < delTr.length; i++)
-				delTr[i].remove();
+			const delTr = document.getElementById(`tr_${delAttr}`);
+			delTr.remove();
 		}
 	} catch (e) {
 		console.log(e.message);
