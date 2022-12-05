@@ -82,11 +82,10 @@ export const getEditTableRows = async (req, res) => {
 export const deleteAttr = async (req, res) => {
 	try {
 		const serverLoginInfo = getServerLoginInfo();
-		console.log(req.body);
 		const tableName = req.params.tableName;
-		console.log(req.params);
 		const attr_name = req.body.delAttr;//attr_name
 		const user_seq = req.session.loginInfo.user_seq; //user_seq
+
 		await dbConnectQuery(serverLoginInfo, 
 		`
 			DELETE

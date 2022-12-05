@@ -77,9 +77,6 @@ export const getDomainScanResult = async (req, res) => {
 //   repAttrArray: [ 'finantial_info', 'health_info', 'study_info', 'user_info' ],
 //   repKeyArray: [ 'car_number', 'email', 'IP', 'phone_number', 'ssn' ]
 // }
-		console.log("category : ", result.categoryResult);
-		console.log("numeric : ", result.numericResult);
-		console.log("rep key attr : ", result.repAttrJoinKey);
 		res.render("domain-scan-result",  
 			{
 				title : "PRESWOT LAB",
@@ -116,7 +113,6 @@ export const saveMappingData = async (req, res) => {
 };
 
 export const addRepAttr = async (req, res) => {
-	console.log("사용자 입력: ", req.body.name);
 	const serverLoginInfo = getServerLoginInfo();
 	try {
 		const result = await dbConnectQuery(serverLoginInfo, 
@@ -143,7 +139,6 @@ export const addRepAttr = async (req, res) => {
 }
 
 export const addRepJoinKey = async (req, res) => {
-	console.log("사용자 입력:",req.body.name);
 	const serverLoginInfo = getServerLoginInfo();
 	try {
 		const result = await dbConnectQuery(serverLoginInfo, 
@@ -190,7 +185,6 @@ export const downloadCategory = async(req, res) => {
 	AND a.table_seq = s.table_seq
 	AND a.attr_type = 'C';
 	`);
-	console.log("result : ",result);
 	const json2csvParser = new Parser();
 	const csv = json2csvParser.parse(result); //string으로 변환
 	res.setHeader('Content-type', "text/csv");
@@ -221,7 +215,6 @@ export const downloadNumeric = async (req, res) => {
 	AND a.table_seq = s.table_seq
 	AND a.attr_type = 'N';
 	`);
-	console.log("result : ",result);
 	const json2csvParser = new Parser();
 	const csv = json2csvParser.parse(result); //string으로 변환
 	res.setHeader('Content-type', "text/csv");
