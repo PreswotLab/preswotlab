@@ -1,5 +1,5 @@
 import {insertCategoryChild, insertNumericScanChild} from "./insertScanChild.js";
-import postData from "./postData.js";
+import putData from "./putData.js";
 
 const modAttrListener = async (e) => {
 	try {
@@ -8,7 +8,7 @@ const modAttrListener = async (e) => {
 		if (!chgType)
 			return ;
 		const tableName = document.getElementById('tableName').innerHTML;
-		const response = await postData(`./${tableName}/mod`, { modAttrName, chgType });
+		const response = await putData(`./${tableName}/mod`, { modAttrName, chgType });
 		if (response.status == 0) //서버에서 트랜젝션 처리 실패시, throw
 			throw(Error);
 		else

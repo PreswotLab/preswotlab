@@ -7,5 +7,5 @@ export const editTableRouter = express.Router();
 editTableRouter.get("/edit-table", checkLoginMiddleware, getEditTableHome);
 editTableRouter.get("/edit-table/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)", checkLoginMiddleware, getEditTableRows);
 
-editTableRouter.post('/edit-table/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)/del', checkLoginMiddleware, deleteAttr);
-editTableRouter.post('/edit-table/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)/mod', checkLoginMiddleware, modAttr);
+editTableRouter.delete('/edit-table/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)/del', checkLoginMiddleware, deleteAttr);
+editTableRouter.put('/edit-table/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)/mod', checkLoginMiddleware, modAttr);
