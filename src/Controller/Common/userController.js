@@ -23,7 +23,6 @@ export const postLogin = async (req, res) => {
 		//브라우저측에 세션정보 저장하기
 		req.session.loggedIn = true;
 		req.session.loginInfo = {...loginInfo, user_seq : req.session.user_seq};
-		req.session.filePaths = [];
 		res.redirect('/');
 	} catch (e) {
 		console.log(e.message);
@@ -33,22 +32,6 @@ export const postLogin = async (req, res) => {
 }
 
 export const getLogout = (req, res) => {
-	const filePaths = req.session.filePaths;
-
-	console.log(filePaths)
-	filePaths.forEach
-	(
-		elem => {
-			fs.unlinkSync(
-					elem,
-					function (e)
-					{
-						console.log(e);
-						throw(e)
-					}
-				)
-		}
-	);
 	req.session.destroy();
 	return res.redirect("/");
 }

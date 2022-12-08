@@ -6,6 +6,7 @@ import {extractObjects} from "./extractObjects";
 import { getNumericScanObject } from "./getNumericScanObject";
 import { getCategoryScanObject } from "./getCategoryScanObject";
 import {getNumOfRecords} from "./getNumOfRecords";
+import { removeBomUtf8 } from "../../../Common/tools/upload/createTable";
 
 export class ScanResult
 {

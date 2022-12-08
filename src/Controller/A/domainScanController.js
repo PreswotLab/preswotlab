@@ -4,14 +4,16 @@ import getServerLoginInfo from "../Common/tools/user/getServerLoginInfo";
 import {getTableNamesAndScanyn} from "./tools/domainScan/getTableNamesAndScanyn";
 import {SaveMapping} from "./tools/domainScan/SaveMappingObj";
 import { ScanResult } from "./tools/domainScan/ScanResult";
+import { updateUserTables } from "./tools/domainScan/updateUserTables";
 
 export const getDomainScan = async (req, res) => {
 	const loginInfo = req.session.loginInfo;
 	try {
+		await updateUserTables(loginInfo);
 		const tbNameScanYn = await getTableNamesAndScanyn(loginInfo.user_seq);
 		res.render('domain-scan', { tbNameScanYn });
 	} catch (e) {
-		console.log(e);
+		console.log(e.message);
 		res.status(404).redirect('/logout');
 	}
 };
@@ -107,7 +109,7 @@ export const saveMappingData = async (req, res) => {
 		await saveMap.save(req.body);
 		res.redirect(`/edit-table`);
 	} catch (e) {
-		console.log(e);
+		console.log(e.message);
 		res.redirect('/logout');
 	}
 };
@@ -165,6 +167,8 @@ export const addRepJoinKey = async (req, res) => {
 }
 
 export const downloadCategory = async(req, res) => {
+
+	try {
 	const { tableName } = req.params;
 	const { loginInfo } = req.session;
 
@@ -190,9 +194,14 @@ export const downloadCategory = async(req, res) => {
 	res.setHeader('Content-type', "text/csv");
 	res.setHeader('Content-disposition', `attachment; filename=${tableName}_categoryScan.csv`);
 	res.send(csv);
+	} catch (e) {
+		console.log(e.message);
+	}
 }
 
 export const downloadNumeric = async (req, res) => {
+
+	try {
 	const { tableName } = req.params;
 	const { loginInfo } = req.session;
 
@@ -220,4 +229,7 @@ export const downloadNumeric = async (req, res) => {
 	res.setHeader('Content-type', "text/csv");
 	res.setHeader('Content-disposition', `attachment; filename=${tableName}_numericScan.csv`);
 	res.send(csv);
+	} catch (e) {
+		console.log(e.message);
+	}
 }
