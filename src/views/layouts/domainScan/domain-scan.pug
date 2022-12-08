@@ -1,11 +1,18 @@
 extends ../default
-include ../../mixins/domainScan/tbNameScanYnDomain.pug
+include ../../mixins/domainScan/domainScanRows.pug
 
 block content
-	div.table-grid
-		each element in tbNameScanYn
-			+tbNameScanYnDomain(element)
-		else
-			span.notables 테이블이 없습니다.
+	.table
+		.table_head
+			table
+				tr
+					th 테이블명
+					th 레코드 개수
+					th 스캔 여부
+					th
+					th 속성
+				tbody
+					each element in tbNameScanYn
+						+domainScanRows(element)
 
 block scripts

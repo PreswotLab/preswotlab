@@ -1,0 +1,12 @@
+mixin editTableRows(element)
+	tr
+		td
+			div=`${element.table_name}`
+		td.row_num
+			div=`${element.row_num}`
+		td.scan
+			a(href=`/domain-scan/${element.table_name}`) 스캔하기
+		td.edit
+			a(href=`/edit-table/${element.table_name}`) 속성 편집하기
+		td.attrs
+			div=`${element.attr_name}`

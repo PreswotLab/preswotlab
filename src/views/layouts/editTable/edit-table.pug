@@ -1,11 +1,18 @@
 extends ../default
-include ../../mixins/editTable/tbNameScanYnEdit.pug
-
+include ../../mixins/editTable/editTableRows.pug
+  
 block content
-	div.table-grid
-		each element in tbNameScanYn
-			+tbNameScanYnEdit(element)
-		else
-			span.notables 테이블이 없습니다.
+	.table
+		.table_head
+			table
+				tr
+					th.tablename_head 테이블명
+					th.rownum_head 레코드 개수
+					th
+					th
+					th.attrs_head 속성
+				tbody
+					each element in tbNameScanYn
+						+editTableRows(element)
 
 block scripts

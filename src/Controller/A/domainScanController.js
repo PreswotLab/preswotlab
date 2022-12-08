@@ -1,7 +1,7 @@
 import {Parser} from "json2csv";
 import dbConnectQuery from "../Common/tools/user/dBConnectQuery";
 import getServerLoginInfo from "../Common/tools/user/getServerLoginInfo";
-import {getTableNamesAndScanyn} from "./tools/domainScan/getTableNamesAndScanyn";
+import {getTableNamesAndScanynAttrs} from "./tools/domainScan/getTableNamesScanYnAttrs";
 import {SaveMapping} from "./tools/domainScan/SaveMappingObj";
 import { ScanResult } from "./tools/domainScan/ScanResult";
 import { updateUserTables } from "./tools/domainScan/updateUserTables";
@@ -10,7 +10,7 @@ export const getDomainScan = async (req, res) => {
 	const loginInfo = req.session.loginInfo;
 	try {
 		await updateUserTables(loginInfo);
-		const tbNameScanYn = await getTableNamesAndScanyn(loginInfo.user_seq);
+		const tbNameScanYn = await getTableNamesAndScanynAttrs(loginInfo.user_seq);
 		res.render('domain-scan', { tbNameScanYn });
 	} catch (e) {
 		console.log(e.message);

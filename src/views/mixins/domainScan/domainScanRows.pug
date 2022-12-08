@@ -1,0 +1,12 @@
+mixin domainScanRows(element)
+	tr
+		td
+			div=`${element.table_name}`
+		td.row_num
+			div=`${element.row_num}`
+		td.scanyn
+			div=`${element.scan_yn}`
+		td.scan
+			a(href=`/domain-scan/${element.table_name}`) 스캔하기
+		td.attrs
+			div=`${element.attr_name}`

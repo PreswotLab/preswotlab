@@ -7,7 +7,7 @@ export const getTableNamesAndScanyn = async (user_seq) => {
 	 * */
 	return (await dbConnectQuery(getServerLoginInfo(), 
 		`
-			SELECT table_name, scan_yn
+			SELECT table_name, scan_yn, row_num
 			FROM tb_scan
 			WHERE user_seq = ${user_seq};
 	`));

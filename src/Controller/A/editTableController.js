@@ -7,10 +7,10 @@ import {getNumOfRecords} from "./tools/domainScan/getNumOfRecords";
 import {getNumericScanObject} from "./tools/domainScan/getNumericScanObject";
 import { getCategoryScanObject } from "./tools/domainScan/getCategoryScanObject";
 import { updateTbAttribute } from "./tools/editTable/updateTbAttribute";
+import {getTableNamesScanned} from "./tools/editTable/getTableNamesScanned";
 
 export const getEditTableHome = async (req, res) => {
-	const tbNameScanYn = await getTableNamesAndScanyn(req.session.loginInfo.user_seq);
-	console.log(tbNameScanYn);
+	const tbNameScanYn = await getTableNamesScanned(req.session.loginInfo.user_seq);
 	res.render('edit-table', { tbNameScanYn });
 }
 
