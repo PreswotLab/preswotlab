@@ -5,6 +5,7 @@ import {getTableNamesAndScanynAttrs} from "./tools/domainScan/getTableNamesScanY
 import {SaveMapping} from "./tools/domainScan/SaveMappingObj";
 import { ScanResult } from "./tools/domainScan/ScanResult";
 import { updateUserTables } from "./tools/domainScan/updateUserTables";
+import { getBoxplotData } from "./tools/editTable/getBoxplotData";
 
 export const getDomainScan = async (req, res) => {
 	const loginInfo = req.session.loginInfo;
@@ -231,5 +232,47 @@ export const downloadNumeric = async (req, res) => {
 	res.send(csv);
 	} catch (e) {
 		console.log(e.message);
+	}
+}
+
+export const getBoxplotController = async (req, res) => {
+	try {
+		const { tableName } = req.params;
+	// [
+	//   {
+	// 	x: 'Category A',
+	// 	y: [54, 66, 69, 75, 88]
+	//   },
+	//   {
+	// 	x: 'Category B',
+	// 	y: [43, 65, 69, 76, 81]
+	//   },
+	//   {
+	// 	x: 'Category C',
+	// 	y: [31, 39, 45, 51, 59]
+	//   },
+	//   {
+	// 	x: 'Category D',
+	// 	y: [39, 46, 55, 65, 71]
+	//   },
+	//   {
+	// 	x: 'Category E',
+	// 	y: [29, 31, 35, 39, 44]
+	//   },
+	//   {
+	// 	x: 'Category F',
+	// 	y: [41, 49, 58, 61, 67]
+	//   },
+	//   {
+	// 	x: 'Category G',
+	// 	y: [54, 59, 66, 71, 88]
+	//   }
+	// ]
+	//위의 형식으로 데이터를 날려줘야한다.
+	const result = await getBoxplotData(req.session.loginInfo, tableName);
+		res.json({status : 1, data : result})
+	} catch (e) {
+		console.log(e.message);
+		res.json({status : 0});
 	}
 }

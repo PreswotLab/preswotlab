@@ -1,7 +1,7 @@
 import express from 'express';
 import { checkLoginMiddleware } from '../../middlewares';
-import { getDomainScan, getDomainScanResult, saveMappingData, addRepAttr, addRepJoinKey, downloadCategory, downloadNumeric } from '../../Controller/A/domainScanController';
-
+import { getDomainScan, getDomainScanResult, saveMappingData, addRepAttr, addRepJoinKey, downloadCategory, downloadNumeric, getBoxplotController } from '../../Controller/A/domainScanController';
+ 
 const domainScanRouter = express.Router();
 
 domainScanRouter.get("/domain-scan", checkLoginMiddleware, getDomainScan);
@@ -16,4 +16,6 @@ domainScanRouter.post("/api/addRepJoinKey", checkLoginMiddleware,addRepJoinKey);
 domainScanRouter.get("/api/download/category/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)", checkLoginMiddleware,downloadCategory);
 domainScanRouter.get("/api/download/numeric/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)", checkLoginMiddleware,downloadNumeric);
 
+domainScanRouter.get("/api/boxplot/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)", checkLoginMiddleware, getBoxplotController);
+ 
 export default domainScanRouter;
