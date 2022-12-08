@@ -44,7 +44,6 @@ export class syncUser
 		if (res.length == 0) //not exists
 		{
 			await this.#insertNewUser(); //사용자가 서버DB에 없으면 새로 생성한다.
-			await this.#syncTable(); //tb_scan에 초기값 N으로 생성해 넣는다.
 		}
 		else //exists
 		{
@@ -76,24 +75,5 @@ export class syncUser
 			AND U.user_id = "${this.#loginInfo.dbUser}" 
 			AND U.db_name = "${this.#loginInfo.dbName}"`);
 		this.#userSeq = userID[0]["user_seq"];
-	};
-
-	async #syncTable()
-	{
-		//tb_scan에 테이블명으로 tuple생성
-		const tableNames = await getTableNames(this.#loginInfo);
-		for (let i = 0; i < tableNames.length; i++)
-		{
-			await dbConnectQuery(this.#serverLoginInfo, 
-			`
-				INSERT INTO tb_scan(
-				user_seq, 
-				table_name
-				) VALUES (
-				${this.#userSeq}, 
-				'${tableNames[i]}'
-				);
-			`);
-		}
 	};
 };
