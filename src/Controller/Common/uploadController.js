@@ -1,5 +1,5 @@
-import dbConnectQuery from "./tools/user/dBConnectQuery";
-import { getCreateTableQuery } from "./tools/upload/getCreateTableQuery";
+import {createTable} from "./tools/upload/createTable";
+import { insertRows } from "./tools/upload/insertRows";
 const fs = require('fs');
 const csvParser = require('csv-parser');
 
@@ -17,18 +17,18 @@ export const postUpload = async (req, res) => {
 	//사용자 DB에 저장함.
 	try { 
 		 const path = req.file.path; 
-		 req.session.filePaths.push(path); 
 		 const results = []; 
 		 fs.createReadStream(path) 
 			 .pipe(csvParser()) 
 			 .on('data', (data) => results.push(data)) 
 			 .on('end', async () => { 
-				 const tableName = req.file.originalname; 
-				 const query = await getCreateTableQuery(tableName, results[0]); 
-				 await dbConnectQuery(req.session.loginInfo, query); 
-			 }); 
+				 const tableName = req.file.originalname.split('.').slice(0, -1).join('.'); 
+				 await createTable(req.session.loginInfo, tableName, results[0]);
+				 await insertRows(req.session.loginInfo, tableName, results);
+			 });
+		fs.unlinkSync(path);
 	 } catch (e) { 
-	     console.log(e); 
+	     console.log(e.message); 
 	     return (res.redirect("/logout"));//세션 종료시키려 logout으로 리다이렉트 
 	 } 
 	return (res.redirect("/"));
