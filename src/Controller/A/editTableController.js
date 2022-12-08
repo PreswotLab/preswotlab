@@ -1,5 +1,4 @@
 import getServerLoginInfo from "../Common/tools/user/getServerLoginInfo";
-import {getTableNamesAndScanyn} from "./tools/domainScan/getTableNamesAndScanyn";
 import {getRepAttrs} from "./tools/editTable/getRepAttrs";
 import {getRepKeys} from "./tools/editTable/getRepKeys";
 import dbConnectQuery from "../Common/tools/user/dBConnectQuery";
