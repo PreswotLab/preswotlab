@@ -20,37 +20,54 @@ export const getEditTableRows = async (req, res) => {
 	try {
 		const result = await dbConnectQuery(serverLoginInfo, 
 		`
-			SELECT 
-			a.attr_seq,
-			a.table_seq,
-			sc.table_name,
-			a.attr_name,
-			a.attr_type,
-			a.d_type,
-			a.null_num,
-			a.null_num / sc.row_num AS null_portion,
-			a.diff_num,
-			a.max_value,
-			a.min_value,
-			a.zero_num,
-			a.zero_num / sc.row_num AS zero_portion,
-			a.special_num,
-			a.special_num / sc.row_num AS special_portion,
-			a.rattr_seq,
-			a.key_candidate,
-			ra.rattr_name,
-			m.mapping_seq,
-			rk.rkey_seq,
-			rk.rkey_name
-			FROM tb_attribute a 
-			LEFT OUTER JOIN tb_scan sc ON  a.table_seq = sc.table_seq
-			LEFT OUTER JOIN tb_rep_attribute ra on ra.rattr_seq = a.rattr_seq 
-			LEFT OUTER JOIN tb_mapping m on m.attr_seq = a.attr_seq 
-			LEFT OUTER JOIN tb_rep_key rk on rk.rkey_seq = m.rkey_seq
-			WHERE sc.table_name = '${tableName}'
-			AND sc.user_seq = ${user_seq}
-			AND sc.scan_yn = 'Y'
-			AND m.chg_yn IS NULL OR m.chg_yn = 'N';`
+		select
+		tb.attr_seq,
+		tb.table_seq,
+		tb.table_name,
+		tb.attr_name,
+		tb.attr_type,
+		tb.d_type,
+		tb.null_num,
+		tb.null_num / tb.row_num AS null_portion,
+		tb.diff_num,
+		tb.max_value,
+		tb.min_value,
+		tb.zero_num,
+		tb.zero_num / tb.row_num AS zero_portion,
+		tb.special_num,
+		tb.special_num / tb.row_num AS special_portion,
+		m.mapping_seq,
+		tb.rattr_seq,
+		tb.key_candidate,
+		ra.rattr_name,
+		rk.rkey_seq,
+		rk.rkey_name
+		from
+		(select
+		a.attr_seq,
+		a.table_seq,
+		sc.table_name,
+		sc.row_num,
+		a.attr_name,
+		a.attr_type,
+		a.d_type,
+		a.null_num,
+		a.diff_num,
+		a.max_value,
+		a.min_value,
+		a.zero_num,
+		a.special_num,
+		a.rattr_seq,
+		a.key_candidate
+		from tb_attribute a
+		inner join tb_scan sc on a.table_seq = sc.table_seq
+		WHERE sc.table_name = '${tableName}'
+		AND sc.user_seq = ${user_seq}
+		AND sc.scan_yn = 'Y') tb
+		LEFT OUTER JOIN tb_rep_attribute ra on ra.rattr_seq = tb.rattr_seq
+		LEFT OUTER JOIN tb_mapping m on m.attr_seq = tb.attr_seq
+		LEFT OUTER JOIN tb_rep_key rk on rk.rkey_seq = m.rkey_seq
+		;`
 			);
 		const numericResult = [];
 		const categoryResult = [];
