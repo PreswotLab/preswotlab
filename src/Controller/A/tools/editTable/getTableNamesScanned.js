@@ -5,7 +5,7 @@ import {concatTableAttrs} from "../common/concatTableAttrs";
 export const getTableNamesScanned = async (user_seq) => {
 	const result = await dbConnectQuery(getServerLoginInfo(),
 	`
-		select table_name, attr_name, row_num 
+		select at.table_seq, table_name, attr_name, row_num 
 		from tb_scan sc, tb_attribute at 
 		WHERE sc.user_seq = ${user_seq}
 		and sc.table_seq = at.table_seq

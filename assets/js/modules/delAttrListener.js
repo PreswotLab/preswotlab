@@ -1,11 +1,11 @@
 import deleteData from "./deleteData.js";
 
 const delAttrListener = async (e) => {
-	console.log((e.target.value));
+	const delAttr = e.target.value;
+	const tableName = document.getElementById('tableName').innerHTML;
+	const tableSeq = window.location.pathname.split('/')[3];
 	try {
-		const delAttr = e.target.value;
-		const tableName = document.getElementById('tableName').innerHTML;
-		const response = await deleteData(`./${tableName}/del`, { delAttr });
+		const response = await deleteData(`./${tableSeq}/del`, { delAttr });
 		console.log(response);
 		if (response.status == 0) //서버에서 트랜젝션 처리 실패시, throw
 			throw(Error);

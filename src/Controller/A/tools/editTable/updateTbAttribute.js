@@ -28,7 +28,7 @@ import getServerLoginInfo from "../../../Common/tools/user/getServerLoginInfo";
 */
 
 
-export const updateTbAttribute = async (loginInfo, tableName, scanResult, attrType) =>
+export const updateTbAttribute = async (tableSeq, scanResult, attrType) =>
 {
 	if (attrType == 'C') //범주속성에 맞게 업데이트
 		await dbConnectQuery(getServerLoginInfo(),
@@ -41,12 +41,7 @@ export const updateTbAttribute = async (loginInfo, tableName, scanResult, attrTy
 			a.key_candidate = '${scanResult.recommended}',
 			a.special_num = ${scanResult.numOfSpcRecords}
 			WHERE a.attr_name = '${scanResult.attrName}'
-			AND a.table_seq IN (
-				SELECT table_seq
-				FROM tb_scan sc
-				WHERE sc.user_seq = ${loginInfo.user_seq}
-				AND sc.table_name = '${tableName}'
-			);
+			AND a.table_seq = ${tableSeq};
 		`);
 	else
 	{
@@ -62,12 +57,7 @@ export const updateTbAttribute = async (loginInfo, tableName, scanResult, attrTy
 			a.min_value = ${scanResult.min},
 			a.zero_num = ${scanResult.numOfZero}
 			WHERE a.attr_name = '${scanResult.attrName}'
-			AND a.table_seq IN (
-				SELECT table_seq
-				FROM tb_scan sc
-				WHERE sc.user_seq = ${loginInfo.user_seq}
-				AND sc.table_name = '${tableName}'
-			);
+			AND a.table_seq = ${tableSeq};
 		`);
 	}
 

@@ -5,7 +5,7 @@ import {checkLoginMiddleware} from '../../middlewares';
 export const editTableRouter = express.Router();
 
 editTableRouter.get("/edit-table", checkLoginMiddleware, getEditTableHome);
-editTableRouter.get("/edit-table/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)", checkLoginMiddleware, getEditTableRows);
+editTableRouter.get("/edit-table/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)/:tableSeq([0-9]+)", checkLoginMiddleware, getEditTableRows);
 
-editTableRouter.delete('/edit-table/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)/del', checkLoginMiddleware, deleteAttr);
-editTableRouter.put('/edit-table/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)/mod', checkLoginMiddleware, modAttr);
+editTableRouter.delete('/edit-table/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)/:tableSeq([0-9]+)/del', checkLoginMiddleware, deleteAttr);
+editTableRouter.put('/edit-table/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)/:tableSeq([0-9]+)/mod', checkLoginMiddleware, modAttr);

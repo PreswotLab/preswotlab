@@ -5,7 +5,7 @@ import {getTableNamesAndScanynAttrs} from "./tools/domainScan/getTableNamesScanY
 import {SaveMapping} from "./tools/domainScan/SaveMappingObj";
 import { ScanResult } from "./tools/domainScan/ScanResult";
 import { updateUserTables } from "./tools/domainScan/updateUserTables";
-import { getBoxplotData } from "./tools/editTable/getBoxplotData";
+import { getBoxplotData } from "./tools/domainScan/getBoxplotData";
 
 export const getDomainScan = async (req, res) => {
 	const loginInfo = req.session.loginInfo;
@@ -146,7 +146,7 @@ export const addRepJoinKey = async (req, res) => {
 }
 
 export const downloadCategory = async(req, res) => {
-	const { tableSeq } = req.params;
+	const { tableName, tableSeq } = req.params;
 	try {
 		const result = await dbConnectQuery(getServerLoginInfo(),
 		`
@@ -181,7 +181,7 @@ export const downloadNumeric = async (req, res) => {
 		`
 		SELECT 
 		attr_name,
-		d_type as attr_type,
+		d_type as attr_type/:tableSeq([0-9]+),
 		null_num,
 		null_num / s.row_num AS 'null_portion',
 		diff_num,
@@ -239,8 +239,8 @@ export const downloadNumeric = async (req, res) => {
 
 export const getBoxplotController = async (req, res) => {
 	try {
-		const { tableName } = req.params;
-		const result = await getBoxplotData(req.session.loginInfo, tableName);
+		const { tableName, tableSeq } = req.params;
+		const result = await getBoxplotData(req.session.loginInfo, tableName, tableSeq);
 		console.log(result);
 		res.json({status : 1, data : result})
 	} catch (e) {

@@ -26,6 +26,6 @@ domainScanRouter.post("/api/addRepJoinKey", checkLoginMiddleware,addRepJoinKey);
 domainScanRouter.get("/api/download/category/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)/:tableSeq([0-9]+)", checkLoginMiddleware, downloadCategory);
 domainScanRouter.get("/api/download/numeric/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)/:tableSeq([0-9]+)", checkLoginMiddleware, downloadNumeric);
 
-domainScanRouter.get("/api/boxplot/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)", checkLoginMiddleware, getBoxplotController);
+domainScanRouter.get("/api/boxplot/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)/:tableSeq([0-9]+)", checkLoginMiddleware, getBoxplotController);
  
 export default domainScanRouter;

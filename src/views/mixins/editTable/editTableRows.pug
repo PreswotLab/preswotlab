@@ -5,8 +5,8 @@ mixin editTableRows(element)
 		td.row_num
 			div=`${element.row_num}`
 		td.scan
-			a(href=`/domain-scan/${element.table_name}`) 스캔하기
+			a(href=`/domain-scan/${element.table_name}/${element.table_seq}`) 스캔하기
 		td.edit
-			a(href=`/edit-table/${element.table_name}`) 속성 편집하기
+			a(href=`/edit-table/${element.table_name}/${element.table_seq}`) 속성 편집하기
 		td.attrs
 			div=`${element.attr_name}`

@@ -6,6 +6,7 @@ import {renderingBoxplot} from "./modules/renderingBoxplot.js";
 const selectTags = document.getElementsByClassName("repSelect");
 const container = document.getElementById('boxplot_container')
 const tableName = document.getElementById('tableName').innerHTML;
+const tableSeq = window.location.pathname.split('/')[3];
 
 for (let i = 0; i < selectTags.length; i++)
 {
@@ -20,7 +21,7 @@ for (let i = 0; i < selectTags.length; i++)
 try {
 	let childNode;
 	let option;
-	const response = await getData(`/api/boxplot/${tableName}`);
+	const response = await getData(`/api/boxplot/${tableName}/${tableSeq}`);
 
 	if (response.status == 0)
 		throw(Error);

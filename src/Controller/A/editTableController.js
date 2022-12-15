@@ -14,8 +14,7 @@ export const getEditTableHome = async (req, res) => {
 }
 
 export const getEditTableRows = async (req, res) => {
-	const { tableName } = req.params;
-	const { user_seq } = req.session.loginInfo;
+	const { tableName, tableSeq } = req.params;
 	const serverLoginInfo = getServerLoginInfo();
 	try {
 		const result = await dbConnectQuery(serverLoginInfo, 
@@ -60,12 +59,13 @@ export const getEditTableRows = async (req, res) => {
 		a.rattr_seq,
 		a.key_candidate
 		from tb_attribute a
-		inner join tb_scan sc on a.table_seq = sc.table_seq
-		WHERE sc.table_name = '${tableName}'
-		AND sc.user_seq = ${user_seq}
+		inner join tb_scan sc 
+		on a.table_seq = sc.table_seq
+		WHERE sc.table_seq = '${tableSeq}'
 		AND sc.scan_yn = 'Y') tb
 		LEFT OUTER JOIN tb_rep_attribute ra on ra.rattr_seq = tb.rattr_seq
 		LEFT OUTER JOIN tb_mapping m on m.attr_seq = tb.attr_seq
+		AND m.chg_yn = 'N'
 		LEFT OUTER JOIN tb_rep_key rk on rk.rkey_seq = m.rkey_seq
 		;`
 			);
@@ -82,7 +82,7 @@ export const getEditTableRows = async (req, res) => {
 			repAttrArray : await getRepAttrs(),
 			repKeyArray : await getRepKeys()
 		};
-		res.render('edit-table-result', { tableName, numericResult, categoryResult, repAttrJoinKey });
+		res.render('edit-table-result', { tableName, tableSeq, numericResult, categoryResult, repAttrJoinKey });
 	} catch (e)
 	{
 		console.log(e.message);
@@ -97,35 +97,31 @@ export const getEditTableRows = async (req, res) => {
  * */
 export const deleteAttr = async (req, res) => {
 	const serverLoginInfo = getServerLoginInfo();
-	const { tableName } = req.params;
+	const { tableSeq } = req.params;
 	const { delAttr } = req.body;//attr_name
-	const { user_seq } = req.session.loginInfo; //user_seq
 
 	try {
+
+		//mapping 삭제
 		await dbConnectQuery(serverLoginInfo, 
 		`
 			DELETE
 			FROM tb_mapping
 			WHERE attr_seq IN 
 			(
-				SELECT at.attr_seq
-				FROM tb_scan sc, tb_attribute at
-				WHERE sc.table_seq = at.table_seq
-				AND sc.user_seq = ${user_seq}
-				AND sc.table_name = '${tableName}'
-				AND at.attr_name = '${delAttr}'
+				SELECT attr_seq
+				FROM tb_attribute 
+				WHERE table_seq = ${tableSeq} 
+				AND attr_name = '${delAttr}'
 			);
 		`);
+		//속성 삭제
 		await dbConnectQuery(serverLoginInfo,
 		`
 			DELETE FROM tb_attribute 
 			WHERE attr_name = '${delAttr}'
-			AND table_seq IN (
-				SELECT table_seq 
-				FROM tb_scan sc
-				WHERE sc.user_seq = ${user_seq}
-				AND sc.table_name = '${tableName}'
-			);
+			AND table_seq = ${tableSeq}
+			;
 		`);
 		res.json({ status : 1 });
 	} catch (e) {
@@ -141,7 +137,7 @@ export const deleteAttr = async (req, res) => {
 export const modAttr = async (req, res) => {
 	const { modAttrName, chgType } = req.body;
 	const { loginInfo } = req.session;
-	const { tableName } = req.params;
+	const { tableName, tableSeq } = req.params;
 	try {
 		//사용자 DB에서 속성 변경
 		await dbConnectQuery(loginInfo, 
@@ -171,7 +167,7 @@ export const modAttr = async (req, res) => {
 		if (is_category.length != 0) //범주속성으로 바뀐 경우 업데이트
 		{
 			const scanResult = await getCategoryScanObject(loginInfo, tableName, is_category[0], numOfRecords);
-			await updateTbAttribute(loginInfo, tableName, scanResult, 'C');
+			await updateTbAttribute(tableSeq, scanResult, 'C');
 			res.json({status : 1, scanResult, attrType : 'C'});
 		}
 		else //수치속성으로 바뀐 경우 업데이트
@@ -179,15 +175,19 @@ export const modAttr = async (req, res) => {
 			const is_numeric = await dbConnectQuery(loginInfo,
 			`
 				SHOW COLUMNS from ${tableName} 
-				WHERE TYPE LIKE '%int%' 
+				WHERE Field = "${modAttrName}" #수정한 속성명
+				AND (TYPE LIKE '%int%'
 				OR TYPE LIKE 'double%' 
 				OR TYPE LIKE 'float%'
 				OR TYPE LIKE 'boolean'
 				OR TYPE LIKE 'bit'
-				OR TYPE LIKE 'decimal';
+				OR TYPE LIKE 'decimal')
+				;
 			`);
+			console.log(tableSeq);
 			const scanResult = await getNumericScanObject(loginInfo, tableName, is_numeric[0], numOfRecords);
-			await updateTbAttribute(loginInfo, tableName, scanResult, 'N');
+			console.log(scanResult)
+			await updateTbAttribute(tableSeq, scanResult, 'N');
 			res.json({status : 1, scanResult, attrType : 'N'});
 		}
 	} catch (e) { //트랜젝션 도중 에러 -> 실패알림

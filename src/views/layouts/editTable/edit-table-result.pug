@@ -3,7 +3,7 @@ extends ../default
 block content
 	#tableName=tableName
 	#form-wrapper
-		form(method="POST" action=`/api/saveMapping/${tableName}`)
+		form(method="POST" action=`/api/saveMapping/${tableName}/${tableSeq}`)
 			#table-wrapper.categoryEdit
 				include ../../includes/editTable/categoryEdit.pug
 			#table-wrapper.numericEdit
