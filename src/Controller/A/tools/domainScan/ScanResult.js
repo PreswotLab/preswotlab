@@ -6,7 +6,6 @@ import {extractObjects} from "./extractObjects";
 import { getNumericScanObject } from "./getNumericScanObject";
 import { getCategoryScanObject } from "./getCategoryScanObject";
 import {getNumOfRecords} from "./getNumOfRecords";
-import { removeBomUtf8 } from "../../../Common/tools/upload/createTable";
 
 export class ScanResult
 {
@@ -20,9 +19,10 @@ export class ScanResult
 	#numericResult;
 	#categoryResult;
 
-	constructor (tableName, loginInfo) {
+	constructor (tableName, tableSeq, loginInfo) {
 		this.#tableName = tableName;
 		this.#loginInfo = loginInfo;
+		this.#tableSeq = tableSeq;
 		this.#serverLoginInfo = getServerLoginInfo();
 		this.#numOfRecords = null;
 		this.#numericResult = null;
@@ -38,7 +38,6 @@ export class ScanResult
 	async getResult ()
 	{
 		//사용자 DB로부터 서버DB에 저장할 데이터를 객체 내부에 저장한다.
-		await this.#setTableSeq();//tableSeq 세팅
 		await this.#setNumOfRecords(); //현재 테이블의 전체 행 개수 세팅
 		await this.#setRepAttrJoinKey();
 		await this.#setNumeric(); //테이블 각 수치속성 scan
@@ -153,8 +152,7 @@ export class ScanResult
 			`
 				UPDATE tb_scan
 				SET scan_yn = 'Y'
-				WHERE user_seq = ${this.#loginInfo.user_seq}
-				AND table_name = '${this.#tableName}';
+				WHERE table_seq = '${this.#tableSeq}';
 			`);
 	}
 
@@ -199,19 +197,6 @@ export class ScanResult
 		}
 		this.#categoryResult = rtn;
 	};
-
-	async #setTableSeq ()
-	{
-		const result_1 = await dbConnectQuery(this.#serverLoginInfo,
-		`
-			SELECT table_seq
-			FROM tb_scan
-			WHERE user_seq = '${this.#loginInfo.user_seq}'
-			AND table_name = '${this.#tableName}'; 
-		`);
-
-		this.#tableSeq = result_1[0]['table_seq'];
-	}
 
 	async #setNumOfRecords () 
 	{

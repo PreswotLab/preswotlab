@@ -12,6 +12,7 @@ export const getDomainScan = async (req, res) => {
 	try {
 		await updateUserTables(loginInfo);
 		const tbNameScanYn = await getTableNamesAndScanynAttrs(loginInfo.user_seq);
+		console.log(tbNameScanYn);
 		res.render('domain-scan', { tbNameScanYn });
 	} catch (e) {
 		console.log(e.message);
@@ -73,18 +74,19 @@ export const getDomainScan = async (req, res) => {
 //   repKeyArray: [ 'car_number', 'email', 'IP', 'phone_number', 'ssn' ]
 //
 
-export const getDomainScanResult = async (req, res) => {
-	const { tableName } = req.params;
+export const getDomainScanResult2 = async (req, res) => {
+	const { tableName, tableSeq } = req.params;
 	const { loginInfo } = req.session;
 	try {
-		let ScanObject = new ScanResult(tableName, loginInfo);
+		let ScanObject = new ScanResult(tableName, tableSeq ,loginInfo);
 		const result = await ScanObject.getResult();
 		await ScanObject.saveResult();
 		res.render("domain-scan-result",  
 			{
 				title : "PRESWOT LAB",
 				...result,
-				tableName
+				tableName,
+				tableSeq
 			});
 	} catch (e) {
 		console.log(e.message);
@@ -101,10 +103,9 @@ export const getDomainScanResult = async (req, res) => {
 }
 */
 export const saveMappingData = async (req, res) => {
-	const { tableName } = req.params;
-	const { loginInfo } = req.session;
+	const { tableSeq } = req.params;
 	try {
-		const saveMap = new SaveMapping(tableName, loginInfo.user_seq);
+		const saveMap = new SaveMapping(tableSeq);
 		await saveMap.init();
 		await saveMap.save(req.body);
 		res.redirect(`/edit-table`);
@@ -117,58 +118,35 @@ export const saveMappingData = async (req, res) => {
 export const addRepAttr = async (req, res) => {
 	const serverLoginInfo = getServerLoginInfo();
 	try {
-		const result = await dbConnectQuery(serverLoginInfo, 
-			`
-				SELECT *
-				FROM tb_rep_attribute
-				WHERE rattr_name = '${req.body.name}';
-			`);
-		if (result.length != 0)
-			res.json({ status : 0 });
-		else
-		{
 			await dbConnectQuery(serverLoginInfo,
 			`
 				INSERT INTO tb_rep_attribute(rattr_name)
 				VALUES('${req.body.name}');
 			`);
 			res.json({ status : 1 });
-		}
 	} catch (e) {
 		console.log(e.message);
-		res.status(404).redirect('/logout');
+		res.json({ status : 0 });
 	}
 }
 
 export const addRepJoinKey = async (req, res) => {
 	const serverLoginInfo = getServerLoginInfo();
 	try {
-		const result = await dbConnectQuery(serverLoginInfo, 
-			`
-				SELECT *
-				FROM tb_rep_key
-				WHERE rkey_name = '${req.body.name}';
-			`);
-		if (result.length != 0)
-			res.json({ status : 0 });
-		else
-		{
-			await dbConnectQuery(serverLoginInfo,
-			`
-				INSERT INTO tb_rep_key(rkey_name)
-				VALUES('${req.body.name}');
-			`);
-			res.json({ status : 1 });
-		}
+		await dbConnectQuery(serverLoginInfo,
+		`
+			INSERT INTO tb_rep_key(rkey_name)
+			VALUES('${req.body.name}');
+		`);
+		res.json({ status : 1 });
 	} catch (e) {
 		console.log(e.message);
-		res.status(404).redirect('/logout');
+		res.json({ status : 0 });
 	}
 }
 
 export const downloadCategory = async(req, res) => {
-	const { tableName } = req.params;
-	const { loginInfo } = req.session;
+	const { tableSeq } = req.params;
 	try {
 		const result = await dbConnectQuery(getServerLoginInfo(),
 		`
@@ -182,8 +160,7 @@ export const downloadCategory = async(req, res) => {
 		special_num / s.row_num AS 'special_portion',
 		key_candidate as 'recommended key'
 		FROM tb_attribute a, tb_scan s
-		WHERE s.table_name = '${tableName}'
-		AND s.user_seq = ${loginInfo.user_seq}
+		WHERE a.table_seq = ${tableSeq}
 		AND a.table_seq = s.table_seq
 		AND a.attr_type = 'C';
 		`);
@@ -198,8 +175,7 @@ export const downloadCategory = async(req, res) => {
 }
 
 export const downloadNumeric = async (req, res) => {
-	const { tableName } = req.params;
-	const { loginInfo } = req.session;
+	const { tableSeq } = req.params;
 	try {
 		const result = await dbConnectQuery(getServerLoginInfo(),
 		`
@@ -215,8 +191,7 @@ export const downloadNumeric = async (req, res) => {
 		zero_num / s.row_num AS 'zero_portion',
 		key_candidate AS 'recommended key'
 		FROM tb_attribute a, tb_scan s
-		WHERE s.table_name = '${tableName}'
-		AND s.user_seq = ${loginInfo.user_seq}
+		WHERE a.table_seq = ${tableSeq}
 		AND a.table_seq = s.table_seq
 		AND a.attr_type = 'N';
 		`);

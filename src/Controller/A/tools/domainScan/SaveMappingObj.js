@@ -3,19 +3,16 @@ import getServerLoginInfo from "../../../Common/tools/user/getServerLoginInfo";
 
 export class SaveMapping
 {
-	#tableName;
 	#serverInfo
 
-	#userSeq;
 	#tableSeq;
 	#attrSeqObj;
 	#rAttrSeqObj;
 	#rKeySeqObj;
 
-	constructor(tableName, userSeq)
+	constructor(tableSeq)
 	{
-		this.#tableName = tableName;
-		this.#userSeq = userSeq;
+		this.#tableSeq = tableSeq;
 		this.#serverInfo = getServerLoginInfo();
 		this.#attrSeqObj = {};
 		this.#rAttrSeqObj = {};
@@ -24,7 +21,6 @@ export class SaveMapping
 
 	async init()
 	{
-		await this.#setTableSeq(); //user_seq를 가진 table_seq를 tb_scan에서 가져온다.
 		await this.#setAttrSeqObj();//현재 table_seq를 기준으로 {attr_name : attr_seq, ... }로 객체를 생성한다.
 		await this.#setRattrSeqObj();//서버에 저장된 모든 {rattr_name : rattr_seq, ... }로 객체를 생성한다.
 		await this.#setRkeySeqObj();//서버에 저장된 모든 {rkey_name : rkey_seq, ...}로 객체를 생성한다.
@@ -66,8 +62,7 @@ export class SaveMapping
 		`
 			UPDATE tb_mapping
 			SET chg_yn = 'Y' #기존에 현재 테이블과 속성을 매핑하는 튜플을 'Y'로 변경.
-			WHERE 
-			attr_seq = ${attr_seq};
+			WHERE attr_seq = ${attr_seq};
 		`)
 		if (mapAttrName != '-') //매핑하고자하는 대표 결합키가 -인경우 삽입X
 			await dbConnectQuery(this.#serverInfo,
@@ -80,18 +75,6 @@ export class SaveMapping
 					${attr_seq}
 				);
 			`)
-	}
-
-	async #setTableSeq()
-	{
-		const result = await dbConnectQuery(this.#serverInfo,
-		`
-			SELECT table_seq
-			FROM tb_scan
-			WHERE table_name = '${this.#tableName}'
-			AND user_seq = ${this.#userSeq};
-		`);
-		this.#tableSeq = result[0]['table_seq'];
 	}
 
 	async #setAttrSeqObj()

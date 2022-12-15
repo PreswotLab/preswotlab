@@ -7,6 +7,6 @@ mixin domainScanRows(element)
 		td.scanyn
 			div=`${element.scan_yn}`
 		td.scan
-			a(href=`/domain-scan/${element.table_name}`) 스캔하기
+			a(href=`/domain-scan/${element.table_name}/${element.table_seq}`) 스캔하기
 		td.attrs
 			div=`${element.attr_name}`
