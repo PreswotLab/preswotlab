@@ -13,8 +13,8 @@ domainScanRouter.post("/api/saveMapping/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)", chec
 domainScanRouter.post("/api/addRepAttr", checkLoginMiddleware,addRepAttr);
 domainScanRouter.post("/api/addRepJoinKey", checkLoginMiddleware,addRepJoinKey);
 
-domainScanRouter.get("/api/download/category/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)", checkLoginMiddleware,downloadCategory);
-domainScanRouter.get("/api/download/numeric/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)", checkLoginMiddleware,downloadNumeric);
+domainScanRouter.get("/api/download/category/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)", checkLoginMiddleware, downloadCategory);
+domainScanRouter.get("/api/download/numeric/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)", checkLoginMiddleware, downloadNumeric);
 
 domainScanRouter.get("/api/boxplot/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)", checkLoginMiddleware, getBoxplotController);
  

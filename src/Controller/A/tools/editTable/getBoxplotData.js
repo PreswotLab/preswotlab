@@ -27,6 +27,13 @@ export const getBoxplotData = async (loginInfo, tableName) => {
 	let obj = {};
 	let attrName;
 
+	/*
+	 * { 
+	 *		x : 'attrName',
+	 *		y : [1,2,3,4,5...]
+	 * }
+	 * 의 객체를 result에 1개씩 push
+	 * */
 	for (let i = 0; i < attrNamesObject.length; i++)
 	{
 		attrName = attrNamesObject[i]['attr_name'];

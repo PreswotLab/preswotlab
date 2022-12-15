@@ -96,12 +96,12 @@ export const getEditTableRows = async (req, res) => {
  * serverLoginInfo로 tb_attribute와 tb_mapping에 관련 속성을 삭제해야한다.
  * */
 export const deleteAttr = async (req, res) => {
-	try {
-		const serverLoginInfo = getServerLoginInfo();
-		const tableName = req.params.tableName;
-		const attr_name = req.body.delAttr;//attr_name
-		const user_seq = req.session.loginInfo.user_seq; //user_seq
+	const serverLoginInfo = getServerLoginInfo();
+	const { tableName } = req.params;
+	const { delAttr } = req.body;//attr_name
+	const { user_seq } = req.session.loginInfo; //user_seq
 
+	try {
 		await dbConnectQuery(serverLoginInfo, 
 		`
 			DELETE
@@ -113,13 +113,13 @@ export const deleteAttr = async (req, res) => {
 				WHERE sc.table_seq = at.table_seq
 				AND sc.user_seq = ${user_seq}
 				AND sc.table_name = '${tableName}'
-				AND at.attr_name = '${attr_name}'
+				AND at.attr_name = '${delAttr}'
 			);
 		`);
 		await dbConnectQuery(serverLoginInfo,
 		`
 			DELETE FROM tb_attribute 
-			WHERE attr_name = '${attr_name}'
+			WHERE attr_name = '${delAttr}'
 			AND table_seq IN (
 				SELECT table_seq 
 				FROM tb_scan sc
@@ -139,11 +139,10 @@ export const deleteAttr = async (req, res) => {
  * { modAttrName: 'PHONE_NUM', chgAttr: 'int(11)' }
  * */
 export const modAttr = async (req, res) => {
+	const { modAttrName, chgType } = req.body;
+	const { loginInfo } = req.session;
+	const { tableName } = req.params;
 	try {
-		const {modAttrName, chgType} = req.body;
-		const { loginInfo } = req.session;
-		const {tableName} = req.params;
-
 		//사용자 DB에서 속성 변경
 		await dbConnectQuery(loginInfo, 
 		`

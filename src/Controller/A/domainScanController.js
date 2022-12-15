@@ -19,13 +19,7 @@ export const getDomainScan = async (req, res) => {
 	}
 };
 
-export const getDomainScanResult = async (req, res) => {
-	const { tableName } = req.params;
-	const { loginInfo } = req.session;
-	try {
-		let ScanObject = new ScanResult(tableName, loginInfo);
-		const result = await ScanObject.getResult();
-		await ScanObject.saveResult();
+
 // NUMERIC SCAN RESULT :  [
 //   {
 //     attrName: 'age',
@@ -52,7 +46,6 @@ export const getDomainScanResult = async (req, res) => {
 //     portionOfZero: 0
 //   }
 // ]
-
 // CATEGORY SCAN RESULT :  [
 //   {
 //     attrName: 'c_num',
@@ -75,11 +68,18 @@ export const getDomainScanResult = async (req, res) => {
 //     portionOfSpcRecords: 0
 //   }
 // ]
-
 // rep Attr & Join Key :  {
 //   repAttrArray: [ 'finantial_info', 'health_info', 'study_info', 'user_info' ],
 //   repKeyArray: [ 'car_number', 'email', 'IP', 'phone_number', 'ssn' ]
-// }
+//
+
+export const getDomainScanResult = async (req, res) => {
+	const { tableName } = req.params;
+	const { loginInfo } = req.session;
+	try {
+		let ScanObject = new ScanResult(tableName, loginInfo);
+		const result = await ScanObject.getResult();
+		await ScanObject.saveResult();
 		res.render("domain-scan-result",  
 			{
 				title : "PRESWOT LAB",
@@ -92,11 +92,7 @@ export const getDomainScanResult = async (req, res) => {
 	}
 }
 
-export const saveMappingData = async (req, res) => {
-	const { tableName } = req.params;
-	const { loginInfo } = req.session;
-
-	/*
+/*
 {
   name: [ 'asdfa', '-' ],
   pnum: [ '-', '-' ],
@@ -104,6 +100,9 @@ export const saveMappingData = async (req, res) => {
   id: [ '-', '-' ]
 }
 */
+export const saveMappingData = async (req, res) => {
+	const { tableName } = req.params;
+	const { loginInfo } = req.session;
 	try {
 		const saveMap = new SaveMapping(tableName, loginInfo.user_seq);
 		await saveMap.init();
@@ -168,108 +167,106 @@ export const addRepJoinKey = async (req, res) => {
 }
 
 export const downloadCategory = async(req, res) => {
-
-	try {
 	const { tableName } = req.params;
 	const { loginInfo } = req.session;
-
-	const result = await dbConnectQuery(getServerLoginInfo(),
-	`
-	SELECT 
-	attr_name,
-	d_type as attr_type,
-	null_num,
-	null_num / s.row_num AS 'null_portion',
-	diff_num, 
-	special_num,
-	special_num / s.row_num AS 'special_portion',
-	key_candidate as 'recommended key'
-	FROM tb_attribute a, tb_scan s
-	WHERE s.table_name = '${tableName}'
-	AND s.user_seq = ${loginInfo.user_seq}
-	AND a.table_seq = s.table_seq
-	AND a.attr_type = 'C';
-	`);
-	const json2csvParser = new Parser();
-	const csv = json2csvParser.parse(result); //string으로 변환
-	res.setHeader('Content-type', "text/csv");
-	res.setHeader('Content-disposition', `attachment; filename=${tableName}_categoryScan.csv`);
-	res.send(csv);
+	try {
+		const result = await dbConnectQuery(getServerLoginInfo(),
+		`
+		SELECT 
+		attr_name,
+		d_type as attr_type,
+		null_num,
+		null_num / s.row_num AS 'null_portion',
+		diff_num, 
+		special_num,
+		special_num / s.row_num AS 'special_portion',
+		key_candidate as 'recommended key'
+		FROM tb_attribute a, tb_scan s
+		WHERE s.table_name = '${tableName}'
+		AND s.user_seq = ${loginInfo.user_seq}
+		AND a.table_seq = s.table_seq
+		AND a.attr_type = 'C';
+		`);
+		const json2csvParser = new Parser();
+		const csv = json2csvParser.parse(result); //string으로 변환
+		res.setHeader('Content-type', "text/csv");
+		res.setHeader('Content-disposition', `attachment; filename=${tableName}_categoryScan.csv`);
+		res.send(csv);
 	} catch (e) {
 		console.log(e.message);
 	}
 }
 
 export const downloadNumeric = async (req, res) => {
-
-	try {
 	const { tableName } = req.params;
 	const { loginInfo } = req.session;
-
-	const result = await dbConnectQuery(getServerLoginInfo(),
-	`
-	SELECT 
-	attr_name,
-	d_type as attr_type,
-	null_num,
-	null_num / s.row_num AS 'null_portion',
-	diff_num,
-	max_value as 'max',
-	min_value as 'min',
-	zero_num,
-	zero_num / s.row_num AS 'zero_portion',
-	key_candidate AS 'recommended key'
-	FROM tb_attribute a, tb_scan s
-	WHERE s.table_name = '${tableName}'
-	AND s.user_seq = ${loginInfo.user_seq}
-	AND a.table_seq = s.table_seq
-	AND a.attr_type = 'N';
-	`);
-	const json2csvParser = new Parser();
-	const csv = json2csvParser.parse(result); //string으로 변환
-	res.setHeader('Content-type', "text/csv");
-	res.setHeader('Content-disposition', `attachment; filename=${tableName}_numericScan.csv`);
-	res.send(csv);
+	try {
+		const result = await dbConnectQuery(getServerLoginInfo(),
+		`
+		SELECT 
+		attr_name,
+		d_type as attr_type,
+		null_num,
+		null_num / s.row_num AS 'null_portion',
+		diff_num,
+		max_value as 'max',
+		min_value as 'min',
+		zero_num,
+		zero_num / s.row_num AS 'zero_portion',
+		key_candidate AS 'recommended key'
+		FROM tb_attribute a, tb_scan s
+		WHERE s.table_name = '${tableName}'
+		AND s.user_seq = ${loginInfo.user_seq}
+		AND a.table_seq = s.table_seq
+		AND a.attr_type = 'N';
+		`);
+		const json2csvParser = new Parser();
+		const csv = json2csvParser.parse(result); //string으로 변환
+		res.setHeader('Content-type', "text/csv");
+		res.setHeader('Content-disposition', `attachment; filename=${tableName}_numericScan.csv`);
+		res.send(csv);
 	} catch (e) {
 		console.log(e.message);
 	}
 }
 
+// [
+//   {
+// 	x: 'Category A',
+// 	y: [54, 66, 69, 75, 88]
+//   },
+//   {
+// 	x: 'Category B',
+// 	y: [43, 65, 69, 76, 81]
+//   },
+//   {
+// 	x: 'Category C',
+// 	y: [31, 39, 45, 51, 59]
+//   },
+//   {
+// 	x: 'Category D',
+// 	y: [39, 46, 55, 65, 71]
+//   },
+//   {
+// 	x: 'Category E',
+// 	y: [29, 31, 35, 39, 44]
+//   },
+//   {
+// 	x: 'Category F',
+// 	y: [41, 49, 58, 61, 67]
+//   },
+//   {
+// 	x: 'Category G',
+// 	y: [54, 59, 66, 71, 88]
+//   }
+// ]
+//위의 형식으로 데이터를 날려줘야한다.
+
 export const getBoxplotController = async (req, res) => {
 	try {
 		const { tableName } = req.params;
-	// [
-	//   {
-	// 	x: 'Category A',
-	// 	y: [54, 66, 69, 75, 88]
-	//   },
-	//   {
-	// 	x: 'Category B',
-	// 	y: [43, 65, 69, 76, 81]
-	//   },
-	//   {
-	// 	x: 'Category C',
-	// 	y: [31, 39, 45, 51, 59]
-	//   },
-	//   {
-	// 	x: 'Category D',
-	// 	y: [39, 46, 55, 65, 71]
-	//   },
-	//   {
-	// 	x: 'Category E',
-	// 	y: [29, 31, 35, 39, 44]
-	//   },
-	//   {
-	// 	x: 'Category F',
-	// 	y: [41, 49, 58, 61, 67]
-	//   },
-	//   {
-	// 	x: 'Category G',
-	// 	y: [54, 59, 66, 71, 88]
-	//   }
-	// ]
-	//위의 형식으로 데이터를 날려줘야한다.
-	const result = await getBoxplotData(req.session.loginInfo, tableName);
+		const result = await getBoxplotData(req.session.loginInfo, tableName);
+		console.log(result);
 		res.json({status : 1, data : result})
 	} catch (e) {
 		console.log(e.message);
