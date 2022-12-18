@@ -6,20 +6,19 @@ import {SaveMapping} from "./tools/domainScan/SaveMappingObj";
 import { ScanResult } from "./tools/domainScan/ScanResult";
 import { updateUserTables } from "./tools/domainScan/updateUserTables";
 import { getBoxplotData } from "./tools/domainScan/getBoxplotData";
+import {test_scan} from "./tools/domainScan/TEST_SCAN_RESULT";
 
 export const getDomainScan = async (req, res) => {
 	const loginInfo = req.session.loginInfo;
 	try {
 		await updateUserTables(loginInfo);
 		const tbNameScanYn = await getTableNamesAndScanynAttrs(loginInfo.user_seq);
-		console.log(tbNameScanYn);
 		res.render('domain-scan', { tbNameScanYn });
 	} catch (e) {
 		console.log(e.message);
 		res.status(404).redirect('/logout');
 	}
 };
-
 
 // NUMERIC SCAN RESULT :  [
 //   {
@@ -76,11 +75,8 @@ export const getDomainScan = async (req, res) => {
 
 export const getDomainScanResult2 = async (req, res) => {
 	const { tableName, tableSeq } = req.params;
-	const { loginInfo } = req.session;
 	try {
-		let ScanObject = new ScanResult(tableName, tableSeq ,loginInfo);
-		const result = await ScanObject.getResult();
-		await ScanObject.saveResult();
+		const result = await test_scan(req);
 		res.render("domain-scan-result",  
 			{
 				title : "PRESWOT LAB",

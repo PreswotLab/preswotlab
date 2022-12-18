@@ -1,6 +1,6 @@
-import { getCommonScanData } from "./getCommonScanData";
-import { getMinMax } from "./getMinMax";
-import { getNumOfZero } from "./getNumOfZero";
+import { getCommonScanData, getCommonScanDataByConn } from "./getCommonScanData";
+import { getMinMax, getMinMaxByConn } from "./getMinMax";
+import { getNumOfZero, getNumOfZeroByConn } from "./getNumOfZero";
 
 
 /*
@@ -24,5 +24,14 @@ export const getNumericScanObject = async (loginInfo, tableName, fieldInfo, numO
 			... await getCommonScanData(loginInfo, tableName, fieldInfo, numOfRecords),
 			... await getMinMax(loginInfo, tableName, fieldInfo.Field),
 			... await getNumOfZero(loginInfo, tableName, fieldInfo.Field, numOfRecords)
+		});
+};
+
+export const getNumericScanObjectByConn = async (userConn, tableName, fieldInfo, numOfRecords) =>
+{
+		return ({
+			... await getCommonScanDataByConn(userConn, tableName, fieldInfo, numOfRecords),
+			... await getMinMaxByConn(userConn, tableName, fieldInfo.Field),
+			... await getNumOfZeroByConn(userConn, tableName, fieldInfo.Field, numOfRecords)
 		});
 };

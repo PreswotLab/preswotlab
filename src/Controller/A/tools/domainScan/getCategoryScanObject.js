@@ -1,5 +1,5 @@
-import { getCommonScanData } from "./getCommonScanData";
-import { getNumPortionSpcRecords } from "./getSpcRecords";
+import { getCommonScanData, getCommonScanDataByConn } from "./getCommonScanData";
+import { getNumPortionSpcRecords, getNumPortionSpcRecordsByConn } from "./getSpcRecords";
 
 
 /*
@@ -19,5 +19,13 @@ export const getCategoryScanObject = async (loginInfo, tableName, fieldInfo, num
 		return ({
 			... await getCommonScanData(loginInfo, tableName, fieldInfo, numOfRecords),
 			... await getNumPortionSpcRecords(loginInfo, tableName, fieldInfo.Field, numOfRecords),
+		});
+};
+
+export const getCategoryScanObjectByConn = async (userConn, tableName, fieldInfo, numOfRecords) =>
+{
+		return ({
+			... await getCommonScanDataByConn(userConn, tableName, fieldInfo, numOfRecords),
+			... await getNumPortionSpcRecordsByConn(userConn, tableName, fieldInfo.Field, numOfRecords),
 		});
 };
