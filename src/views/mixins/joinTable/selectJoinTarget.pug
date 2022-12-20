@@ -1,0 +1,14 @@
+include ./selectTargetRows.pug
+
+mixin selectJoinTarget(targetResult, sessionData)
+	h4="대상 테이블 목록"
+	table
+		tr
+			th 테이블명
+			th 속성명
+			th 대표 결합키
+			th 대표 속성
+			th 선택
+		tbody#target_tbody
+			each result in targetResult
+				+selectTargetRows(result, sessionData)

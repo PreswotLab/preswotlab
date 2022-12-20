@@ -15,7 +15,7 @@ import { editTableRouter } from "./routers/A/editTableRouter";
 import apiRouter from "./routers/Common/apiRouter";
 
 //B
-
+import { singleJoinRouter } from "./routers/B/singleJoinRouter";
 
 const app = express();
 
@@ -28,7 +28,8 @@ app.set("view engine", "pug")
 app.set("views", [
 	process.cwd() + "/src/views/layouts",
 	process.cwd() + "/src/views/layouts/domainScan",
-	process.cwd() + "/src/views/layouts/editTable"
+	process.cwd() + "/src/views/layouts/editTable",
+	process.cwd() + "/src/views/layouts/singleJoin"
 ])
 
 app.use(urlencoded({ extended : true }));
@@ -61,6 +62,7 @@ app.use(domainScanRouter);
 app.use(editTableRouter);
 
 //B
+app.use(singleJoinRouter);
 //app.use('/single-join', singleJoinRouter);
 //app.use('/multi-join', multiJoinRouter);
 //app.use('/result', resultRouter);

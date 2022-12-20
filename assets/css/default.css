@@ -9,6 +9,15 @@ form {
     text-align: left;
 }
 
+form.button {
+    border: 0 solid transparent;
+    box-shadow: none;
+    min-width: unset;
+    max-width: unset;
+    padding: 0;
+    text-align: center;
+}
+
 .download a {
     border: 2px solid #00bfff;
     border-radius: 5px;
@@ -28,4 +37,8 @@ form {
 	font-weight: bold;
 	font-size: 30px;
 	text-align: center;
+}
+
+.hide {
+    display: none;
 }

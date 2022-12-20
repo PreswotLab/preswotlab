@@ -1,0 +1,22 @@
+extends ../default
+
+include ../../mixins/joinTable/search-form.pug
+include ../../mixins/joinTable/selectTable.pug
+include ../../mixins/joinTable/selectJoinTarget.pug
+
+block content
+    div
+        +searchForm(repAttrJoinKey, params)
+
+    div
+        +selectTable(searchResult)
+
+    if targetResult.length > 0
+        div
+            +selectJoinTarget(targetResult)
+    else
+        div.hide
+            +selectJoinTarget(targetResult, sessionData)
+
+block scripts
+    //script(type='module' src='/static/js/single-join.js')

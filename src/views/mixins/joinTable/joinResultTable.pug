@@ -1,0 +1,37 @@
+include ./selectTableRows.pug
+
+mixin joinResultTable(joinInfo)
+	h4="테이블 결합 결과"
+	table
+		tr
+			th 테이블A
+			th 테이블A 레코드 수
+			th 결합 키 속성 A
+			th 테이블B
+			th 테이블B 레코드 수
+			th 결합 키 속성 B
+			th 대표 결합키
+			th 결과 레코드 수
+			th 결합 성공률(w1)
+			th 결합 성공률(w2)
+			th 결합 진행상황
+			th 결합 테이블명
+		tr
+			td=joinInfo.talbe_name_A
+			td=joinInfo.total_num_A
+			td=joinInfo.attr_name_A
+			td=joinInfo.talbe_name_B
+			td=joinInfo.total_num_B
+			td=joinInfo.attr_name_B
+			td=joinInfo.rkey_name
+			td=joinInfo.result_num
+			td=joinInfo.success_rate_A
+			td=joinInfo.success_rate_B
+			if joinInfo.state === 'DONE'
+				td="완료"
+			else if joinInfo.state === 'READY'
+				td="대기"
+			else if joinInfo.state === 'KEEP'
+				td="진행 중"
+			td
+				a(href=`${joinInfo.file_path}`)=joinInfo.join_table_name

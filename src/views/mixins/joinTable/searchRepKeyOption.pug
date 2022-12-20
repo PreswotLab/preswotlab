@@ -1,0 +1,8 @@
+mixin searchRepKeyOption(repKeyArray, selected)
+	option(value='') -
+	each key in repKeyArray
+		if key.rkey_seq == selected
+			option(value = `${key.rkey_seq}` selected)=key.rkey_name
+		else
+			option(value = `${key.rkey_seq}` )=key.rkey_name
+

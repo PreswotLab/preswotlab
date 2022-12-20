@@ -1,0 +1,9 @@
+extends ../default
+
+include ../../mixins/joinTable/joinResultTable.pug
+
+block content
+    div
+        +joinResultTable(joinInfo)
+
+block scripts

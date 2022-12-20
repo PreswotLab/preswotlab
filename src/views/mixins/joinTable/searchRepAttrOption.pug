@@ -1,0 +1,9 @@
+mixin searchRepAttrOption(repAttrArray, selected)
+	option(value='') -
+	each attr in repAttrArray
+		if attr.rattr_seq == selected
+			option(value = `${attr.rattr_seq}` selected)=attr.rattr_name
+		else
+			option(value = `${attr.rattr_seq}`)=attr.rattr_name
+
+

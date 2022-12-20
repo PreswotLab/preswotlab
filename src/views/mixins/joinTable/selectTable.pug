@@ -1,0 +1,14 @@
+include ./selectTableRows.pug
+
+mixin selectTable(searchResult)
+	h4="선택 가능 테이블 목록"
+	table
+		tr
+			th 테이블명
+			th 속성명
+			th 대표 결합키
+			th 대표 속성
+			th 선택
+		tbody#search_tbody
+			each result in searchResult
+				+selectTableRows(result)
