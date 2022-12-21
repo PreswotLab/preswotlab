@@ -62,6 +62,15 @@ export class ScanResult
 	{
 		await dbConnectQuery(this.#serverLoginInfo,
 		`
+			DELETE 
+			FROM tb_join
+			WHERE a_table_seq = ${this.#tableSeq} 
+			OR b_table_seq = ${this.#tableSeq};
+		`
+		)
+
+		await dbConnectQuery(this.#serverLoginInfo,
+		`
 			DELETE
 			FROM tb_mapping
 			WHERE attr_seq IN (
@@ -99,7 +108,7 @@ export class ScanResult
 				rattr_seq
 				) VALUES (
 				${this.#tableSeq},
-				'${this.#numericResult[i]['attrName']}',
+				'${this.#numericResult[i]['attrName'].toUpperCase()}',
 				'N',
 				'${this.#numericResult[i]['attrType']}',
 				${this.#numericResult[i]['numOfNullRecords']},
@@ -132,7 +141,7 @@ export class ScanResult
 				rattr_seq
 				) VALUES (
 				${this.#tableSeq},
-				'${this.#categoryResult[i]['attrName']}',
+				'${this.#categoryResult[i]['attrName'].toUpperCase()}',
 				'C',
 				"${this.#categoryResult[i]['attrType']}",
 				${this.#categoryResult[i]['numOfNullRecords']},

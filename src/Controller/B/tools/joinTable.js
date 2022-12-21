@@ -15,14 +15,24 @@ export const joinTable = async (req, res) => {
 
 	const viewName = `${tableSeqA}_${attrSeqA}_${tableSeqB}_${attrSeqB}`;
 
-	// CLIENT에서 VIEW 생성 쿼리
-	const clientQuery = `
-		CREATE VIEW ${viewName} AS
-			SELECT
-				*
-			FROM ${tableNameA} A
-				INNER JOIN ${tableNameB} B ON A.${attrNameA} = B.${attrNameB};
-			`;
+	// 두 테이블의 모든 attrName 가져오기(정렬해서)
+	const getAttrNameAllQuery = `
+		select *
+		from
+			(SELECT
+				 ta.attr_name,
+				 sc.table_seq
+			 FROM tb_scan sc
+					  INNER JOIN tb_attribute ta on sc.table_seq = ta.table_seq
+			 WHERE sc.table_seq = ${tableSeqA}
+			 UNION
+			 SELECT
+				 ta.attr_name,
+				 sc.table_seq
+			 FROM tb_scan sc
+					  INNER JOIN tb_attribute ta on sc.table_seq = ta.table_seq
+			 WHERE sc.table_seq = ${tableSeqB}) tb order by attr_name;
+	`
 
 	// table A 개수 쿼리
 	const getACountQuery = `
@@ -59,6 +69,43 @@ export const joinTable = async (req, res) => {
 		await dbConnectQuery(req.session.loginInfo, `
 			DROP VIEW if exists ${viewName};
 		`);
+
+		// 같은 join 결과 삭제
+		const deleteQuery = `
+			DELETE FROM tb_join
+			WHERE view_name = '${viewName}';
+		`
+		await dbConnectQuery(serverLoginInfo, deleteQuery);
+
+		// VIEW 생성 쿼리
+		let clientQuery = `
+		CREATE VIEW ${viewName} AS
+			SELECT
+			`;
+
+		// 모든 attrName 받아오기
+		const attrNameResult = await dbConnectQuery(serverLoginInfo, getAttrNameAllQuery);
+
+		clientQuery += attrNameResult[0].table_seq === Number(tableSeqA) ? `A.${attrNameResult[0].attr_name},\n` : `B.${attrNameResult[0].attr_name},\n`;
+
+		// 같은 attrName 있으면 제거
+		for ( let i = 1 ; i < attrNameResult.length ; i++ ) {
+			if ( attrNameResult[i-1].attr_name !== attrNameResult[i].attr_name ) {
+				if (attrNameResult[i].table_seq === Number(tableSeqA) ) {
+					clientQuery += `A.${attrNameResult[i].attr_name}`
+				} else {
+					clientQuery += `B.${attrNameResult[i].attr_name}`
+				}
+				if ( i < attrNameResult.length-1 ) {
+					clientQuery += ',\n';
+				}
+			}
+		}
+
+		clientQuery += `
+			FROM ${tableNameA} A
+				INNER JOIN ${tableNameB} B ON A.${attrNameA} = B.${attrNameB};
+			`;
 
 		// view 생성
 		await dbConnectQuery(req.session.loginInfo, clientQuery);
