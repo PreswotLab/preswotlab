@@ -70,6 +70,13 @@ export const joinTable = async (req, res) => {
 			DROP VIEW if exists ${viewName};
 		`);
 
+		// 같은 join 결과 삭제
+		const deleteQuery = `
+			DELETE FROM tb_join
+			WHERE view_name = '${viewName}';
+		`
+		await dbConnectQuery(serverLoginInfo, deleteQuery);
+
 		// VIEW 생성 쿼리
 		let clientQuery = `
 		CREATE VIEW ${viewName} AS
