@@ -15,7 +15,7 @@ import dbConnectQuery from "../../../Common/tools/user/dBConnectQuery";
 import {extractObjects} from "./extractObjects";
 
 const getTableNames = async (loginInfo) => {
-	const result = await dbConnectQuery(loginInfo, 'SHOW tables;');
+	const result = await dbConnectQuery(loginInfo, `show full tables where Table_Type != 'VIEW'`);
 
 	const tableNames = extractObjects(result, `Tables_in_${loginInfo.dbName}`);
 	return (tableNames);
