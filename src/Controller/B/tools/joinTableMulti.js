@@ -4,8 +4,9 @@ import path from "path";
 
 export const joinTableMulti = async (merged, loginInfo) => {
 
-	// console.log(merged);
-	// console.log(loginInfo);
+	console.log(merged);
+	console.log(loginInfo);
+
 
 	const mysql = require('mysql');
 	const pool = mysql.createPool(
@@ -52,10 +53,6 @@ export const joinTableMulti = async (merged, loginInfo) => {
 			AND sc.table_seq = ${tableSeqB};
 	`;
 
-	// const getResultCountQuery = `
-	// 	SELECT COUNT(*) FROM SERVER.${};
-	// `
-
 	// rkeyName 쿼리
 	const getRKeyNameQuery = `
 		SELECT
@@ -63,13 +60,6 @@ export const joinTableMulti = async (merged, loginInfo) => {
 		FROM SERVER.tb_rep_key rk
 		WHERE rk.rkey_seq = ${rkeySeq};
 	`
-	// Multi join table
-	// await dBConnectQueryPromise(loginInfo, `
-	// 	CREATE TABLE IF NOT EXISTS SERVER.tb_multi_join (tableA varchar(255), numA INT, attrA varchar(255), 
-	// 	tableB varchar(255), numB INT, attrB varchar(255), repKey varchar(255), numResult INT default null,
-	// 	success_rate_A float default null, success_rate_B float default null, status varchar(255), joinTableName varchar(255));
-	// `);
-
 	try {
 		const rkeyName = (await dBConnectQueryPromise(pool, getRKeyNameQuery))[0].rkey_name;
 		const countA = (await dBConnectQueryPromise(pool, getACountQuery))[0].row_num;
@@ -164,10 +154,9 @@ export const joinTableMulti = async (merged, loginInfo) => {
 								b_attr_seq = ${attrSeqB})
 		`);
 		await console.log("fin");
-
 	} catch (e)
 	{
 		console.log(e.message);
-		// res.redirect('/logout');
+		res.redirect('/logout');
 	}
 }

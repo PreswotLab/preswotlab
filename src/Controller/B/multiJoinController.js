@@ -4,9 +4,9 @@ import {getRepKeys} from "./tools/getRepKeys";
 import {searchTable} from "./tools/searchTable";
 import {sameRepKey} from "./tools/sameRepKey"
 import {joinTableMulti} from "./tools/joinTableMulti";
-const fs = require('fs');
 import path from "path";
 
+const fs = require('fs');
 let repAttrJoinKey;
 let searchResult;
 let params;
@@ -28,9 +28,11 @@ export const getMultiSearchForm = async (req, res) => {
             attrName : req.query.attrName === undefined ? '' : req.query.attrName
         };
 
-        // console.log(params);
         searchResult = await searchTable(params);
+        
+        // console.log(params);
         // console.log("searchResult : \n" + searchResult);
+
         const targetResult = {};
         const sessionData = {};
 
@@ -56,13 +58,11 @@ export const getMultiPossibleResult = async (req, res) => {
             'attrNameA' : req.query.attr_name,
             'attrSeqA' : req.query.attr_seq
         }
-
-        // console.log(sessionData);
         
         const targetResult = await sameRepKey(parameters);
+        
+        // console.log(sessionData);
         // console.log(targetResult.toString());
-
-
 
         res.render('multi-join', {repAttrJoinKey, searchResult, params, targetResult, sessionData})
     }
@@ -133,7 +133,6 @@ export const getMultiJoin = async (req, res) => {
             console.log("######## end ######## ");
         }
 
-        // return; 
         res.redirect(`/multi-join-result`)
     }
     catch (e) {
