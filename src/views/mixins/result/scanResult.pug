@@ -1,0 +1,14 @@
+include ./scanTableRows
+
+mixin scanResult(scanResult)
+	h4="스캔 결과 목록"
+	table
+		tr
+			th 테이블명
+			th 레코드 수
+			th 범주 속성 리스트
+			th 수치 속성 리스트
+			th 상세 정보 확인
+		tbody
+			each element in scanResult
+				+scanTableRows(element)

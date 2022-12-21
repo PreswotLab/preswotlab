@@ -1,0 +1,22 @@
+mixin singleTableRows(element)
+    tr
+        td=element.a_table_name
+        td=element.a_count
+        td=element.a_attr_name
+        td=element.b_table_name
+        td=element.b_count
+        td=element.b_attr_name
+        td=element.rkey_name
+        td=element.result_count
+        td=element.success_rate_A
+        td=element.success_rate_B
+        if element.state === 'DONE'
+            td="완료"
+        else if element.state === 'READY'
+            td="대기"
+        else if element.state === 'KEEP'
+            td="진행 중"
+        td=`${element.a_table_name}_${element.b_table_name}_JOIN`
+        td#csv_download.download
+            a(download=`${element.a_table_name}_${element.b_table_name}_JOIN` href=`/api/download/join/${element.a_table_name}_${element.b_table_name}/${element.view_name}`) 다운로드
+

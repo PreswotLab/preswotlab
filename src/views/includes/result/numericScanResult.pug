@@ -1,0 +1,24 @@
+include ../../mixins/result/numericRows.pug
+
+h4.numeric_name 수치 속성 도메인 스캔 결과
+#numeric_download.download
+	a(download=`${tableName}_numericScan` href=`/api/download/numeric/${tableName}/${tableSeq}`) CSV 다운로드
+.numeric_table
+	.numeric_table_head
+		table
+			tr
+				th 속성명
+				th 데이터 타입
+				th NULL 레코드 수
+				th NULL 레코드 비율
+				th 상이 수치 값
+				th 최대 값
+				th 최소 값
+				th 0 레코드 수
+				th 0 레코드 비율
+				th 결합 키 후보
+				th 대표 속성
+				th 대표 결합키
+			tbody#numeric_tbody
+				each result in numericResult
+					+numericRows(result)

@@ -3,7 +3,9 @@ import {getRepKeys} from "./tools/getRepKeys";
 import {searchTable} from "./tools/searchTable";
 import {sameRepKey} from "./tools/sameRepKey"
 import {joinTable} from "./tools/joinTable";
+import path from "path";
 
+const fs = require('fs');
 let repAttrJoinKey;
 let searchResult;
 let params;
@@ -61,9 +63,20 @@ export const getPossibleResult = async (req, res) => {
 
 export const getSingleJoin = async (req, res) => {
     try {
-        const joinInfo = await joinTable(req);
+        fs.mkdir(path.join(__dirname, '..', 'B', 'joinCSV'), (err) => {
+            if (err) {
+                return console.error(err);
+            }
+            console.log('Directory created successfully!');
+        });
 
-        res.render('single-join-result', {joinInfo});
+        const loginInfo = req.session.loginInfo
+
+        console.log("before joinTable");
+        await joinTable(req, loginInfo);
+
+        res.redirect(`/result/single?redirect=Y`);
+//        res.render('single-join-result', {joinInfo});
     }
     catch (e) {
         console.log(e.message);

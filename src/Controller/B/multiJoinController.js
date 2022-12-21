@@ -133,20 +133,21 @@ export const getMultiJoin = async (req, res) => {
             console.log("######## end ######## ");
         }
 
-        res.redirect(`/multi-join-result`)
+        res.redirect(`/result/multi?redirect=Y`);
     }
     catch (e) {
         console.log(e.message);
         res.redirect('/logout');
     }
 }
+// resultController로 이동
 
-export const getMultiJoinResult = async (req, res) => {
-    const joinInfo = await dbConnectQuery(req.session.loginInfo, `
-        SELECT MAX(join_seq), a_table_name, a_attr_name, b_table_name, b_attr_name, a_count, b_count, rkey_name, result_count, success_rate_A, success_rate_B, state, view_name
-        FROM SERVER.tb_join
-        Where multi_yn = 'Y'
-        GROUP BY a_table_seq, a_attr_seq, b_table_seq, b_attr_seq
-    `);    
-    res.render('multi-join-result', {joinInfo})
-}
+// export const getMultiJoinResult = async (req, res) => {
+//     const joinInfo = await dbConnectQuery(req.session.loginInfo, `
+//         SELECT MAX(join_seq), a_table_name, a_attr_name, b_table_name, b_attr_name, a_count, b_count, rkey_name, result_count, success_rate_A, success_rate_B, state, view_name
+//         FROM SERVER.tb_join
+//         Where multi_yn = 'Y'
+//         GROUP BY a_table_seq, a_attr_seq, b_table_seq, b_attr_seq
+//     `);
+//     res.render('multi-join-result', {joinInfo})
+// }

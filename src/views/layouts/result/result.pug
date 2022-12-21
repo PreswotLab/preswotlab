@@ -1,0 +1,31 @@
+extends ../default
+
+include ../../mixins/result/scanResult
+include ../../mixins/result/singleResult
+include ../../mixins/result/multiResult
+
+block content
+    nav
+        ul
+            li
+                form(method="GET" action=`/result/scan`).button
+                    input(type="submit" id="getScanButton" value='스캔 결과 조회' ).white
+            li
+                form(method="GET" action=`/result/single`).button
+                    input(type="submit" id="getSingleButton" value='단일 결합 결과 조회' ).white
+            li
+                form(method="GET" action=`/result/multi`).button
+                    input(type="submit" id="getMultiButton" value='다중 결합 결과 조회' ).white
+
+    div#scanned_result.hide
+        +scanResult(scanResult)
+
+    div#single_result.hide
+        +singleResult(singleResult)
+
+    div#multi_result.hide
+        +multiResult(multiResult)
+
+
+block scripts
+    script(type='module' src='/static/js/result.js')

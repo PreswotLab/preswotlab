@@ -1,24 +1,15 @@
 import express from 'express';
+import { getResult, getScanResult, getSingleResult, getMultiResult, getScanDetail } from '../../Controller/B/resultContoller';
+import {checkLoginMiddleware} from '../../middlewares';
+import {getMultiJoinResult} from "../../Controller/B/multiJoinController";
 
 const resultRouter = express.Router();
 
-resultRouter
-	.all(checkLoginMiddleware)
-	.get(getResultHome);
+resultRouter.get("/result", checkLoginMiddleware, getResult);
 
-resultRouter
-	.route('/scanned/:id[0-9]')
-	.all(checkLoginMiddleware)
-	.get(getScannedResult);
-
-resultRouter
-	.route('/single/:id[0-9]')
-	.all(checkLoginMiddleware)
-	.get(getSingleResult);
-
-resultRouter
-	.route('/multi/:id[0-9]')
-	.all(checkLoginMiddleware)
-	.get(getMultiResult);
+resultRouter.get("/result/scan", checkLoginMiddleware, getScanResult);
+resultRouter.get("/result/scan/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)/:tableSeq([0-9]+)", checkLoginMiddleware, getScanDetail);
+resultRouter.get("/result/single", checkLoginMiddleware, getSingleResult);
+resultRouter.get("/result/multi", checkLoginMiddleware, getMultiResult);
 
 export default resultRouter;

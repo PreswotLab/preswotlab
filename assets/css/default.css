@@ -18,6 +18,11 @@ form.button {
     text-align: center;
 }
 
+input[type="submit"].white {
+    background-color: white !important;
+    color : #118bee !important;
+}
+
 .download a {
     border: 2px solid #00bfff;
     border-radius: 5px;

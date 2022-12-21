@@ -13,5 +13,5 @@ mixin joinResultTable-multi(result)
 		td=result.state
 		td=result.view_name
 		td#csv_download.download
-			a(download=`${joinInfo.table_name_A}_${joinInfo.table_name_B}_JOIN` href=`/api/download/multi-join/${result.a_table_name}_${result.b_table_name}/${result.view_name}`) 다운로드
+			a(download=`${result.a_table_name}_${result.b_table_name}_JOIN` href=`/api/download/multi-join/${result.a_table_name}_${result.b_table_name}/${result.view_name}`) 다운로드
 			//- a(download=`${joinInfo.table_name_A}_${joinInfo.table_name_B}_JOIN` href=`/api/download/join/${joinInfo.table_name_A}_${joinInfo.table_name_B}/${joinInfo.view_name}`) 다운로드

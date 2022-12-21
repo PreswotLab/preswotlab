@@ -1,24 +1,28 @@
 import {Parser} from "json2csv";
 import dbConnectQuery from "../Common/tools/user/dBConnectQuery";
 
+import path from "path";
+const { parse } = require('csv-parse');
+const fs = require('fs');
+
 export const downloadCSVFile = async (req, res) => {
 
     const { title, viewName } = req.params;
+    let csvData=[];
+    const csv_path = path.join(__dirname, '..', 'B', 'joinCSV', `${viewName}.csv`)
 
     try {
-        const selectViewQuery = `
-            SELECT
-                *
-            FROM ${viewName};
-        `;
-
-        const result = await dbConnectQuery(req.session.loginInfo, selectViewQuery);
-
-        const json2csvParser = new Parser();
-        const csv = json2csvParser.parse(result);
-        res.setHeader('Content-type', "text/csv");
-        res.setHeader('Content-disposition', `attachment; filename=${title}_JOIN.csv`);
-        res.send(csv);
+        await fs.createReadStream(csv_path)
+            .pipe(parse({delimiter: ','}))
+            .on('data', function(csvrow) {
+                csvData.push(csvrow);
+            })
+            .on('end',function() {
+                const data = csvData.map((row) => row.join(',')).join('\n')
+                res.setHeader('Content-type', "text/csv");
+                res.setHeader('Content-disposition', `attachment; filename=${title}.csv`);
+                res.send('\uFEFF' +  data);
+            });
     }
     catch (e) {
         console.log(e.message);

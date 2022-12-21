@@ -1,0 +1,9 @@
+mixin scanTableRows(element)
+    tr
+        td=`${element.table_name}`
+        td=`${element.row_num}`
+        td=`${element.cateList}`
+        td=`${element.numList}`
+        td
+            a(href=`/result/scan/${element.table_name}/${element.table_seq}`) 속성 상세
+

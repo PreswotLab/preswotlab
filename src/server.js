@@ -18,6 +18,7 @@ import apiRouter from "./routers/Common/apiRouter";
 import { singleJoinRouter } from "./routers/B/singleJoinRouter";
 import { multiJoinRouter } from "./routers/B/multiJoinRouter";
 import downloadRouter from "./routers/Common/downloadRouter";
+import resultRouter from "./routers/B/resultRouter";
 
 const app = express();
 
@@ -32,8 +33,8 @@ app.set("views", [
 	process.cwd() + "/src/views/layouts/domainScan",
 	process.cwd() + "/src/views/layouts/editTable",
 	process.cwd() + "/src/views/layouts/singleJoin",
-	process.cwd() + "/src/views/layouts/multiJoin"
-
+	process.cwd() + "/src/views/layouts/multiJoin",
+	process.cwd() + "/src/views/layouts/result"
 ])
 
 app.use(urlencoded({ extended : true }));
@@ -69,6 +70,7 @@ app.use(editTableRouter);
 //B
 app.use(singleJoinRouter);
 app.use(multiJoinRouter);
+app.use(resultRouter);
 //app.use('/single-join', singleJoinRouter);
 //app.use('/multi-join', multiJoinRouter);
 //app.use('/result', resultRouter);
