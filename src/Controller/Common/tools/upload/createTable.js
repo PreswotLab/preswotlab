@@ -16,7 +16,7 @@ export const createTable = async (loginInfo, tableName, result) => {
 	let test = "";
 	for (let i = 0; i < cols.length; i++)
 	{
-		test = test.concat(`${cols[i]} TEXT`);
+		test = test.concat(`${cols[i].toUpperCase()} TEXT`);
 		if (cols[i + 1])
 			test = test.concat(", ");
 	}
