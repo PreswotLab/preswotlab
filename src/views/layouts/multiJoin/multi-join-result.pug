@@ -1,0 +1,27 @@
+extends ../default
+
+include ../../mixins/joinTable/joinResultTable-multi.pug
+
+block content
+	div
+	h4="테이블 결합 결과"
+	table
+		tr
+			th 테이블A
+			th 테이블A 레코드 수
+			th 결합 키 속성 A
+			th 테이블B
+			th 테이블B 레코드 수
+			th 결합 키 속성 B
+			th 대표 결합키
+			th 결과 레코드 수
+			th 결합 성공률(w1)
+			th 결합 성공률(w2)
+			th 결합 진행상황
+			th 결합 테이블명
+			th CSV 저장
+		tbody#res_tbody
+			each result in joinInfo
+				+joinResultTable-multi(result)
+
+block scripts

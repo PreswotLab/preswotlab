@@ -1,0 +1,22 @@
+extends ../default
+
+include ../../mixins/joinTable/search-form-multi.pug
+include ../../mixins/joinTable/selectTable-multi.pug
+include ../../mixins/joinTable/selectJoinTarget-multi.pug
+
+block content
+    div
+        +searchForm-multi(repAttrJoinKey, params)
+
+    div
+        +selectTable-multi(searchResult)
+
+    if targetResult.length > 0
+        div
+            +selectJoinTarget-multi(targetResult)
+    else
+        div.hide
+            +selectJoinTarget-multi(targetResult, sessionData)
+
+block scripts
+    //- //script(type='module' src='/static/js/multi-join.js')

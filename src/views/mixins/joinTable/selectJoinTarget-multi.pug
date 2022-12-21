@@ -1,0 +1,26 @@
+include ./selectTargetRows-multi.pug
+
+mixin selectJoinTarget-multi(targetResult, sessionData)
+	
+	h4="대상 테이블 목록"
+	form(method="POST" action=`/api/getMultiJoin`).button
+
+		table
+			tr
+				th 테이블명
+				th 속성명
+				th 대표 결합키
+				th 대표 속성
+				th 선택
+			tbody#target_tbody
+				each result in targetResult
+					+selectTargetRows-multi(result, sessionData)
+		div 
+			//- input(type="hidden" name="f" value=`${1}` )
+			//- input(type="hidden" name="asd" value=`${sessionData}` )
+			//- input(type="hidden" name="kkk" value=`${sessionData.tableSeqA}` )
+			//- input(type="hidden" name="tableSeqA" value=`${sessionData.tableSeqA}` )
+			//- input(type="hidden" name="tableNameA" value=`${sessionData.tableNameA}` )
+			//- input(type="hidden" name="attrSeqA" value=`${sessionData.attrSeqA}` )
+			//- input(type="hidden" name="attrNameA" value=`${sessionData.attrNameA}` )
+			input(type="submit" class="getJoinButton" value='결합 실행' )

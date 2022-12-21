@@ -1,0 +1,22 @@
+include ./searchRepAttrOption.pug
+include ./searchRepKeyOption.pug
+
+mixin searchForm-multi(repAttrJoinKey, params)
+    #search-form
+        h4="검색"
+        div
+            form(method="GET" action=`/multi-join`)
+                div 테이블명
+                    input(type="text" name='tableName' placeholder="테이블명" value=`${params.tableName}`)
+                div 표준 결합키
+                    select(name="repKeySeq")
+                        +searchRepKeyOption(repAttrJoinKey.repKeyArray, params.repKeySeq)
+                div 대표 속성
+                    select(name="repAttrSeq")
+                        +searchRepAttrOption(repAttrJoinKey.repAttrArray, params.repAttrSeq)
+                div 속성명
+                    input(type="text" name="attrName" placeholder="속성명" value=`${params.attrName}`)
+                div
+                    input(type="submit" value="검색")
+            
+

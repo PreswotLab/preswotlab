@@ -1,11 +1,12 @@
 import express from 'express';
+import { getMultiSearchForm, getMultiPossibleResult, getMultiJoin, getMultiJoinResult } from '../../Controller/B/multiJoinController';
+import { getTest} from '../../Controller/B/multiJoinController';
+import {checkLoginMiddleware} from '../../middlewares';
 
-const multiJoinRouter = express.Router();
+export const multiJoinRouter = express.Router();
 
-multiJoinRouter
-	.route('/multi-join')
-	.all(checkLoginMiddleware)
-	.get(getMultiJoin)
-	.post(postMultiJoin)
+multiJoinRouter.get("/multi-join", checkLoginMiddleware, getMultiSearchForm);
+multiJoinRouter.get("/multi-join-result", checkLoginMiddleware, getMultiJoinResult);
+multiJoinRouter.get("/api/getMultiPossibleResult", checkLoginMiddleware, getMultiPossibleResult)
+multiJoinRouter.post("/api/getMultiJoin", checkLoginMiddleware, getMultiJoin)
 
-export default multiJoinRouter;

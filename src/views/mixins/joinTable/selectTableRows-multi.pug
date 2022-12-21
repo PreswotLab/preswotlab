@@ -1,0 +1,17 @@
+mixin selectTableRows-multi(result)
+	tr(id=`tr_${result.row}`)
+		td=result.table_name
+		td=result.attr_name
+		td=result.rkey_name
+		if result.rattr_seq == null
+			td="-"
+		else
+			td=result.rattr_name
+		td
+			form(method="GET" action=`/api/getMultiPossibleResult`).button
+				input(type="hidden" name="table_seq" value=`${result.table_seq}` )
+				input(type="hidden" name="table_name" value=`${result.table_name}` )
+				input(type="hidden" name="attr_name" value=`${result.attr_name}` )
+				input(type="hidden" name="attr_seq" value=`${result.attr_seq}` )
+				input(type="hidden" name="rkey_seq" value=`${result.rkey_seq}` )
+				input(type="submit" class="getTargetButton" value='선택' )

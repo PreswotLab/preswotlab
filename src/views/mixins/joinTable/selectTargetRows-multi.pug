@@ -1,0 +1,23 @@
+mixin selectTargetRows-multi(result)
+	tr
+		td=result.table_name
+			td=result.table_name
+			td=result.attr_name 
+			td=result.rkey_name
+			if result.rattr_seq == null
+				td="-"
+			else
+				td=result.rattr_name
+			td
+				input(type="hidden" name="tableSeqA" value=`${sessionData.tableSeqA}` )
+				input(type="hidden" name="tableNameA" value=`${sessionData.tableNameA}` )
+				input(type="hidden" name="attrSeqA" value=`${sessionData.attrSeqA}` )
+				input(type="hidden" name="attrNameA" value=`${sessionData.attrNameA}` )
+				input(type="hidden" name="tableSeqB" value=`${result.table_seq}` )
+				input(type="hidden" name="tableNameB" value=`${result.table_name}` )
+				input(type="hidden" name="attrSeqB" value=`${result.attr_seq}` )
+				input(type="hidden" name="attrNameB" value=`${result.attr_name}` )
+				input(type="hidden" name="rkeySeq" value=`${result.rkey_seq}` )
+				input(type="checkbox" name="multiCheck" value=`${result.table_seq}`)
+
+				
