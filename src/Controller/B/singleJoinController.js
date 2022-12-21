@@ -1,6 +1,3 @@
-import {Parser} from "json2csv";
-import dbConnectQuery from "../Common/tools/user/dBConnectQuery";
-import getServerLoginInfo from "../Common/tools/user/getServerLoginInfo";
 import {getRepAttrs} from "./tools/getRepAttrs";
 import {getRepKeys} from "./tools/getRepKeys";
 import {searchTable} from "./tools/searchTable";
@@ -25,11 +22,8 @@ export const getSearchForm = async (req, res) => {
             attrName : req.query.attrName === undefined ? '' : req.query.attrName
         };
 
-        console.log(params);
-
         searchResult = await searchTable(params);
 
-        console.log("searchResult : \n" + searchResult);
         const targetResult = {};
         const sessionData = {};
 
@@ -57,7 +51,6 @@ export const getPossibleResult = async (req, res) => {
 
         const targetResult = await sameRepKey(parameters);
 
-        console.log(targetResult.toString());
         res.render('single-join', {repAttrJoinKey, searchResult, params, targetResult, sessionData})
     }
     catch (e) {
@@ -68,9 +61,7 @@ export const getPossibleResult = async (req, res) => {
 
 export const getSingleJoin = async (req, res) => {
     try {
-        console.log("Let's Do single Join!!!");
-        console.log(req.body);
-        const joinInfo = await joinTable(req.body);
+        const joinInfo = await joinTable(req);
 
         res.render('single-join-result', {joinInfo});
     }

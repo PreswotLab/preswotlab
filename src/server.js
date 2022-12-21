@@ -16,6 +16,7 @@ import apiRouter from "./routers/Common/apiRouter";
 
 //B
 import { singleJoinRouter } from "./routers/B/singleJoinRouter";
+import downloadRouter from "./routers/Common/downloadRouter";
 
 const app = express();
 
@@ -56,6 +57,7 @@ app.use('/static', express.static('assets'));
 app.use("/", rootRouter);
 app.use(uploadRouter);
 app.use(apiRouter);
+app.use(downloadRouter);
 
 //A
 app.use(domainScanRouter);

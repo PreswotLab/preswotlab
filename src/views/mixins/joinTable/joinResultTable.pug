@@ -16,11 +16,12 @@ mixin joinResultTable(joinInfo)
 			th 결합 성공률(w2)
 			th 결합 진행상황
 			th 결합 테이블명
+			th CSV 저장
 		tr
-			td=joinInfo.talbe_name_A
+			td=joinInfo.table_name_A
 			td=joinInfo.total_num_A
 			td=joinInfo.attr_name_A
-			td=joinInfo.talbe_name_B
+			td=joinInfo.table_name_B
 			td=joinInfo.total_num_B
 			td=joinInfo.attr_name_B
 			td=joinInfo.rkey_name
@@ -33,5 +34,6 @@ mixin joinResultTable(joinInfo)
 				td="대기"
 			else if joinInfo.state === 'KEEP'
 				td="진행 중"
-			td
-				a(href=`${joinInfo.file_path}`)=joinInfo.join_table_name
+			td=`${joinInfo.table_name_A}_${joinInfo.table_name_B}_JOIN`
+			td#csv_download.download
+				a(download=`${joinInfo.table_name_A}_${joinInfo.table_name_B}_JOIN` href=`/api/download/join/${joinInfo.table_name_A}_${joinInfo.table_name_B}/${joinInfo.view_name}`) 다운로드

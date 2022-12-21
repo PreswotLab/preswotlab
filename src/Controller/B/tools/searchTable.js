@@ -2,7 +2,7 @@ import dbConnectQuery from "../../Common/tools/user/dBConnectQuery"
 import getServerLoginInfo from "../../Common/tools/user/getServerLoginInfo";
 
 export const searchTable = async (params, res) => {
-	console.log("Let's search Table");
+
 	let query = `
 			SELECT
 				row_number() over(order by a.table_seq) as row,
@@ -43,8 +43,6 @@ export const searchTable = async (params, res) => {
 	query += `;`;
 
 	const serverLoginInfo = getServerLoginInfo();
-
-	console.log(query);
 
 	try {
 		return await dbConnectQuery(serverLoginInfo, query);

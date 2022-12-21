@@ -13,7 +13,7 @@ block content
 
     if targetResult.length > 0
         div
-            +selectJoinTarget(targetResult)
+            +selectJoinTarget(targetResult, sessionData)
     else
         div.hide
             +selectJoinTarget(targetResult, sessionData)

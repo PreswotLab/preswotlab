@@ -3,7 +3,6 @@ import getServerLoginInfo from "../../Common/tools/user/getServerLoginInfo";
 
 export const sameRepKey = async (params, res) => {
 	// 특정 repKey에 대한 join 할 수 있는 테이블 목록
-	console.log("Let's find same Rep Key");
 
 	const query = `
 		SELECT
@@ -30,7 +29,6 @@ export const sameRepKey = async (params, res) => {
 	const serverLoginInfo = getServerLoginInfo();
 
 	try {
-		console.log(query);
 
 		return await dbConnectQuery(serverLoginInfo, query);
 
