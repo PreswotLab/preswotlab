@@ -8,7 +8,8 @@ import {
 	addRepJoinKey, 
 	downloadCategory, 
 	downloadNumeric, 
-	getBoxplotController 
+	getBoxplotController, 
+	downloadDomainFreq
 } from '../../Controller/A/domainScanController';
  
 const domainScanRouter = express.Router();
@@ -27,5 +28,7 @@ domainScanRouter.get("/api/download/category/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)/:
 domainScanRouter.get("/api/download/numeric/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)/:tableSeq([0-9]+)", checkLoginMiddleware, downloadNumeric);
 
 domainScanRouter.get("/api/boxplot/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)/:tableSeq([0-9]+)", checkLoginMiddleware, getBoxplotController);
- 
+
+domainScanRouter.get("/api/download/domain_freq/:tableName([0-9A-Za-zㄱ-ㅎ-_]+)/:attrName([0-9A-Za-zㄱ-ㅎ-_]+)", checkLoginMiddleware, downloadDomainFreq);
+
 export default domainScanRouter;
