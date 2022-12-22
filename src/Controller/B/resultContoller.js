@@ -2,10 +2,13 @@ import dbConnectQuery from "../Common/tools/user/dBConnectQuery"
 import getServerLoginInfo from "../Common/tools/user/getServerLoginInfo";
 import {getRepAttrs} from "../A/tools/editTable/getRepAttrs";
 import {getRepKeys} from "../A/tools/editTable/getRepKeys";
+import { searchJoin } from "./tools/searchJoin";
 
 let scanResult = {};
 let singleResult = {};
 let multiResult = {};
+let params;
+let isMulti;
 
 export const getResult = async (req, res) => {
     try {
@@ -35,8 +38,8 @@ export const getScanResult = async (req, res) => {
                 FROM tb_attribute
                 WHERE table_seq = ${scanResult[i].table_seq};
             `);
-            console.log("attrNameList");
-            console.log(attrNameList);
+            // console.log("attrNameList");
+            // console.log(attrNameList);
             let numList = ``;
             let cateList = ``;
 
@@ -55,9 +58,9 @@ export const getScanResult = async (req, res) => {
             scanResult[i].cateList = cateList;
         }
 
-        console.log(scanResult);
+        // console.log(scanResult);
 
-        res.render('result', {scanResult, singleResult, multiResult});
+        res.render('result', {scanResult, singleResult, multiResult, params});
     }
     catch (e) {
         console.log(e.message);
@@ -131,7 +134,7 @@ export const getScanDetail = async (req, res) => {
             repAttrArray : await getRepAttrs(),
             repKeyArray : await getRepKeys()
         };
-        res.render('result-scan-detail', { tableName, tableSeq, numericResult, categoryResult, repAttrJoinKey });
+        res.render('result-scan-detail', { tableName, tableSeq, numericResult, categoryResult, repAttrJoinKey, params});
 
         // res.render('result', {scanResult, singleResult, multiResult});
     }
@@ -146,15 +149,19 @@ export const getSingleResult = async (req, res) => {
         scanResult = {};
         multiResult = {};
         singleResult = {};
+        console.log('getSingleResult');
 
-        singleResult = await dbConnectQuery(getServerLoginInfo(), `
-            SELECT
-                *
-            FROM tb_join
-                WHERE multi_yn = 'N';
-        `);
-
-        res.render('result', {scanResult, singleResult, multiResult});
+        params = {
+            tableName : req.query.tableName === undefined ? '' : req.query.tableName,
+            minSuccessRate : req.query.minSuccessRate === undefined ? 0 : req.query.minSuccessRate,
+            minCount : req.query.minCount === undefined ? 0 : req.query.minCount,
+        };
+        
+        isMulti = 'N';
+        console.log("params");
+        console.log(params);
+        singleResult = await searchJoin(params, isMulti);
+        res.render('result', {scanResult, singleResult, multiResult, params});
     }
     catch (e) {
         console.log(e.message);
@@ -167,19 +174,30 @@ export const getMultiResult = async (req, res) => {
         scanResult = {};
         singleResult = {};
         multiResult = {};
+        console.log('getMultiResult');
+        // console.log(req.query);
+        params = {
+            tableName : req.query.tableName === undefined ? '' : req.query.tableName,
+            minSuccessRate : req.query.minSuccessRate === undefined ? 0 : req.query.minSuccessRate,
+            minCount : req.query.minCount === undefined ? 0 : req.query.minCount,
+        };
 
-        multiResult = await dbConnectQuery(req.session.loginInfo, `
-            SELECT MAX(join_seq), a_table_name, a_attr_name, b_table_name, b_attr_name, a_count, b_count, rkey_name, result_count, success_rate_A, success_rate_B, state, view_name
-            FROM SERVER.tb_join
-            Where multi_yn = 'Y'
-            GROUP BY a_table_seq, a_attr_seq, b_table_seq, b_attr_seq
-        `);
-        // res.render('multi-join-result', {joinInfo})
-
-        res.render('result', {scanResult, singleResult, multiResult});
+        isMulti = 'Y';
+        console.log("params");
+        console.log(params);
+        multiResult = await searchJoin(params, isMulti);
+        res.render('result', {scanResult, singleResult, multiResult, params});
     }
     catch (e) {
         console.log(e.message);
         res.redirect('/logout');
     }
 }
+
+        // multiResult = await dbConnectQuery(req.session.loginInfo, `
+        //     SELECT MAX(join_seq), a_table_name, a_attr_name, b_table_name, b_attr_name, a_count, b_count, rkey_name, result_count, success_rate_A, success_rate_B, state, view_name
+        //     FROM SERVER.tb_join
+        //     Where multi_yn = 'Y'                 
+        //     GROUP BY a_table_seq, a_attr_seq, b_table_seq, b_attr_seq
+        // `);
+        // res.render('multi-join-result', {joinInfo})

@@ -2,11 +2,12 @@ mixin selectTargetRows-multi(result)
 	tr
 		td=result.table_name
 		td=result.attr_name
-		td=result.rkey_name
+		td=result.row_num
 		if result.rattr_seq == null
 			td="-"
 		else
 			td=result.rattr_name
+		td=result.rkey_name
 		td
 			input(type="hidden" name="tableSeqA" value=`${sessionData.tableSeqA}` )
 			input(type="hidden" name="tableNameA" value=`${sessionData.tableNameA}` )

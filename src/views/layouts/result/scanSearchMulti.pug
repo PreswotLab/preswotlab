@@ -1,0 +1,14 @@
+mixin scanSearchMulti(params)
+    #search-form
+        h4="검색"
+        div
+            form(method="GET" action=`/result/multi`)
+                div 테이블명 (A, B 모두 적용)
+                    input(type="text" name='tableName' placeholder="테이블명" value=`${params.tableName}`)
+                div 결합 성공률 임계 값 (w1, w2 모두 적용, 소수점 2자리로 반올림)
+                    input(type="text" name='minSuccessRate' placeholder="결합 성공률 임계 값" value=`${params.minSuccessRate}`)
+                div 최소 결합 결과 레코드 수
+                    input(type="text" name="minCount" placeholder="최소 결합 결과 레코드 수" value=`${params.minCount}`)
+                div
+                    input(type="submit" value="검색")
+

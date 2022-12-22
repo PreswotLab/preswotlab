@@ -3,6 +3,8 @@ extends ../default
 include ../../mixins/result/scanResult
 include ../../mixins/result/singleResult
 include ../../mixins/result/multiResult
+include ./scanSearch
+include ./scanSearchMulti
 
 block content
     nav
@@ -21,9 +23,11 @@ block content
         +scanResult(scanResult)
 
     div#single_result.hide
+        +scanSearch(params)
         +singleResult(singleResult)
 
     div#multi_result.hide
+        +scanSearchMulti(params)
         +multiResult(multiResult)
 
 

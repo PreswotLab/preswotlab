@@ -1,6 +1,6 @@
 include ../../mixins/joinTable/joinResultTable-multi.pug
 
-mixin multiResult(multiResult)
+mixin multiResult(scanSearchResult, params)
 	h4="다중 결합 결과 목록"
 	table
 		tr
@@ -12,11 +12,11 @@ mixin multiResult(multiResult)
 			th 결합 키 속성 B
 			th 대표 결합키
 			th 결과 레코드 수
-			th 결합 성공률(w1
-			th 결합 성공률(w2
+			th 결합 성공률(w1)
+			th 결합 성공률(w2)
 			th 결합 진행상황
 			th 결합 테이블명
 			th CSV 저장
 		tbody
-			each result in multiResult
+			each result in scanSearchResult
 				+joinResultTable-multi(result)

@@ -1,5 +1,5 @@
 mixin joinResultTable-multi(result)
-	tr(id=`tr_${result.row}`)
+	tr
 		td=result.a_table_name
 		td=result.a_count
 		td=result.a_attr_name
@@ -10,8 +10,13 @@ mixin joinResultTable-multi(result)
 		td=result.result_count
 		td=result.success_rate_A
 		td=result.success_rate_B
-		td=result.state
-		td=result.view_name
+		if result.state === 'DONE'
+			td="완료"
+		else if result.state === 'READY'
+			td="대기"
+		else if result.state === 'KEEP'
+			td="진행 중"
+		td=`${result.a_table_name}_${result.b_table_name}_결합`
 		td#csv_download.download
 			a(download=`${result.a_table_name}_${result.b_table_name}_JOIN` href=`/api/download/multi-join/${result.a_table_name}_${result.b_table_name}/${result.view_name}`) 다운로드
 			//- a(download=`${joinInfo.table_name_A}_${joinInfo.table_name_B}_JOIN` href=`/api/download/join/${joinInfo.table_name_A}_${joinInfo.table_name_B}/${joinInfo.view_name}`) 다운로드

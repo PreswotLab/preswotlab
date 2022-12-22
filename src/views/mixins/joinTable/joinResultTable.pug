@@ -32,6 +32,6 @@ mixin joinResultTable(joinInfo)
 				td="대기"
 			else if joinInfo.state === 'KEEP'
 				td="진행 중"
-			td=`${joinInfo.table_name_A}_${joinInfo.table_name_B}_JOIN`
+			td=`${joinInfo.table_name_A}_${joinInfo.table_name_B}_결합`
 			td#csv_download.download
 				a(download=`${joinInfo.table_name_A}_${joinInfo.table_name_B}_JOIN` href=`/api/download/join/${joinInfo.table_name_A}_${joinInfo.table_name_B}/${joinInfo.view_name}`) 다운로드

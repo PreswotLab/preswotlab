@@ -13,7 +13,8 @@ export const searchTable = async (params, res) => {
 				rk.rkey_seq,
 				rk.rkey_name,
 				ra.rattr_seq,
-				ra.rattr_name
+				ra.rattr_name,
+				sc.row_num
 			FROM tb_attribute a
 				INNER JOIN tb_mapping m ON a.attr_seq = m.attr_seq
 				INNER JOIN tb_rep_key rk ON m.rkey_seq = rk.rkey_seq
@@ -41,6 +42,8 @@ export const searchTable = async (params, res) => {
 	}
 
 	query += `;`;
+
+
 
 	const serverLoginInfo = getServerLoginInfo();
 
