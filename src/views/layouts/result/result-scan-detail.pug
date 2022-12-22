@@ -1,10 +1,12 @@
 extends ../default
+include ../../includes/result/categoryScanResult
+include ../../includes/result/numericScanResult
 
 block content
 	#tableName=tableName
 	#form-wrapper
 		#table-wrapper-category.categoryEdit
-			include ../../includes/result/categoryScanResult
+			+categoryScanResult(categoryResult)
 
 		#table-wrapper-numeric.numericEdit
-			include ../../includes/result/numericScanResult
+			+numericScanResult(numericResult)

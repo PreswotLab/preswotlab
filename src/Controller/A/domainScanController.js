@@ -175,13 +175,13 @@ export const downloadCategory = async(req, res) => {
 }
 
 export const downloadNumeric = async (req, res) => {
-	const { tableSeq } = req.params;
+	const { tableName, tableSeq } = req.params;
 	try {
 		const result = await dbConnectQuery(getServerLoginInfo(),
 		`
 		SELECT 
 		attr_name,
-		d_type as attr_type/:tableSeq([0-9]+),
+		d_type as attr_type,
 		null_num,
 		null_num / s.row_num AS 'null_portion',
 		diff_num,

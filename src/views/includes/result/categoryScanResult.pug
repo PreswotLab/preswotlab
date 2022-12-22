@@ -1,22 +1,23 @@
 include ../../mixins/result/categoryRows.pug
 
-h4.category_name 범주 속성 도메인 스캔 결과
-#category_download.download
-	a(download=`${tableName}_categoryScan` href=`/api/download/category/${tableName}/${tableSeq}`) CSV 다운로드
-.category_table
-	.category_table_head
-		table
-			tr
-				th 속성명
-				th 데이터 타입
-				th NULL 레코드 수
-				th NULL 레코드 비율
-				th 상이 범주 값
-				th 특수문자 포함 레코드 수 
-				th 특수문자 포함 레코드 비율
-				th 결합키 후보
-				th 대표 속성
-				th 대표 결합키
-			tbody#category_tbody
-				each result in categoryResult
-					+categoryRows(result)
+mixin categoryScanResult(categoryResult)
+	h4.category_name 범주 속성 도메인 스캔 결과
+	#category_download.download
+		a(download=`${tableName}_categoryScan` href=`/api/download/category/${tableName}/${tableSeq}`) CSV 다운로드
+	.category_table
+		.category_table_head
+			table
+				tr
+					th 속성명
+					th 데이터 타입
+					th NULL 레코드 수
+					th NULL 레코드 비율
+					th 상이 범주 값
+					th 특수문자 포함 레코드 수
+					th 특수문자 포함 레코드 비율
+					th 결합키 후보
+					th 대표 속성
+					th 대표 결합키
+				tbody#category_tbody
+					each result in categoryResult
+						+categoryRows(result)

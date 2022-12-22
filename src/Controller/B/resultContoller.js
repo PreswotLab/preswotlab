@@ -133,7 +133,7 @@ export const getScanDetail = async (req, res) => {
         };
         res.render('result-scan-detail', { tableName, tableSeq, numericResult, categoryResult, repAttrJoinKey });
 
-        res.render('result', {scanResult, singleResult, multiResult});
+        // res.render('result', {scanResult, singleResult, multiResult});
     }
     catch (e) {
         console.log(e.message);
