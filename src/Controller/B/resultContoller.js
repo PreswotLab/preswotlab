@@ -7,7 +7,11 @@ import { searchJoin } from "./tools/searchJoin";
 let scanResult = {};
 let singleResult = {};
 let multiResult = {};
-let params;
+let params = {
+    tableName : '',
+    minSuccessRate : 0,
+    minCount : 0
+};
 let isMulti;
 
 export const getResult = async (req, res) => {
@@ -58,7 +62,7 @@ export const getScanResult = async (req, res) => {
             scanResult[i].cateList = cateList;
         }
 
-        // console.log(scanResult);
+        // console.log(scanResult);       
 
         res.render('result', {scanResult, singleResult, multiResult, params});
     }
