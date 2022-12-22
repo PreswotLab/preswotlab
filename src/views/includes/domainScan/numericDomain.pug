@@ -17,6 +17,7 @@ include ../../mixins/domainScan/numericDomainRows.pug
 				th 결합키 후보
 				th 대표 속성
 				th 대표 결합키
+				th 도메인, 발생횟수
 			tbody
 				each result in numericResult
 					+numericDomainRows(result)
