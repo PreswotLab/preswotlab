@@ -19,3 +19,5 @@ mixin numericDomainRows(result)
 		td
 			select(class="repSelect repJoinKey" name=`${result.attrName}`)
 				+repJoinOption(repAttrJoinKey.repKeyArray)
+		td
+			a(href=`/api/download/domain_freq/${tableName}/${result.attrName}` download=`${result.attrName}_numericFreq`) 다운로드

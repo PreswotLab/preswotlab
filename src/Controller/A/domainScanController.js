@@ -228,7 +228,7 @@ export const downloadNumeric = async (req, res) => {
 //   },
 //   {
 // 	x: 'Category F',
-// 	y: [41, 49, 58, 61, 67]
+// 	y: [41, 49, 58, 61, 6
 //   },
 //   {
 // 	x: 'Category G',
@@ -246,5 +246,32 @@ export const getBoxplotController = async (req, res) => {
 	} catch (e) {
 		console.log(e.message);
 		res.json({status : 0});
+	}
+}
+
+export const downloadDomainFreq = async (req, res) => {
+	try {
+		const { tableName, attrName } = req.params;
+		const result = await dbConnectQuery(req.session.loginInfo,
+		`
+		SELECT ${attrName}, count(*) as cnt 
+		FROM ${tableName} 
+		GROUP BY ${attrName}
+		ORDER BY cnt desc;`);
+
+		let csv = ``
+		csv += `${attrName}, cnt\n`;
+		for (const row of result) 
+		{
+			console.log(row);
+			const serialized = row.cnt.toString();
+			csv += `${serialized}, ${row[attrName]}\n`;
+		}
+		console.log(csv);
+		res.setHeader('Content-type', "text/csv");
+		res.setHeader('Content-disposition', `attachment; filename=${attrName}_numericFreq.csv`);
+		res.send(csv);
+	} catch (e) {
+		console.log(e.message);
 	}
 }

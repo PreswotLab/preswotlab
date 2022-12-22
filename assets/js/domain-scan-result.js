@@ -8,16 +8,6 @@ const container = document.getElementById('boxplot_container')
 const tableName = document.getElementById('tableName').innerHTML;
 const tableSeq = window.location.pathname.split('/')[3];
 
-for (let i = 0; i < selectTags.length; i++)
-{
-	selectTags[i].addEventListener('change', repSelectListener);
-};
-
-for (let i = 0; i < selectTags.length; i++)
-{
-	selectTags[i].addEventListener('change', repSelectListener);
-};
-
 try {
 	let childNode;
 	let option;
@@ -36,3 +26,17 @@ try {
 	console.log(e.message);
 }
 
+for (let i = 0; i < selectTags.length; i++)
+{
+	selectTags[i].addEventListener('change', repSelectListener);
+};
+
+for (let i = 0; i < selectTags.length; i++)
+{
+	selectTags[i].addEventListener('change', repSelectListener);
+};
+
+for (let i = 0; i < numericFreqDownload.length; i++)
+{
+	numericFreqDownload[i].addEventListener('click', downloadNumericFreq);
+}
