@@ -82,16 +82,19 @@ export const joinTable = async (req, loginInfo, res) => {
 				AND multi_yn = 'N';
 		`
 		await dbConnectQuery(getServerLoginInfo(), deleteQuery);
-		console.log(deleteQuery);
+		// console.log(deleteQuery);
 		console.log("Delete exist Single Join")
 
 		const countA = (await dBConnectQueryPromise(pool, getACountQuery))[0].row_num;
 		const countB = (await dBConnectQueryPromise(pool, getBCountQuery))[0].row_num;
 
 		const csv_path = path.join(__dirname, '..', 'joinCSV', `${viewName}.csv`)
+		
+		console.log("here");
 
 		console.log(attrNameA);
 		console.log(attrNameB);
+
 
 		// join 결과 insert 쿼리
 		const insertJoinQuery = `
@@ -140,7 +143,11 @@ export const joinTable = async (req, loginInfo, res) => {
 		`;
 
 		// join 테이블에 join 결과 insert
+
+		await console.log("join sffs");
+
 		await dBConnectQueryPromise(pool, insertJoinQuery);
+
 
 		// 1. Join
 		await console.log("start join");
@@ -176,6 +183,14 @@ export const joinTable = async (req, loginInfo, res) => {
 								b_table_seq = ${tableSeqB} and
 								b_attr_seq = ${attrSeqB})
 		`);
+
+		await pool.getConnection(function(err,connection){
+			if(!err){
+			  //connected!
+			}
+			// 커넥션을 풀에 반환
+			connection.release();
+		});
 
 	} catch (e)
 	{

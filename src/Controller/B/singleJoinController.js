@@ -63,12 +63,19 @@ export const getPossibleResult = async (req, res) => {
 
 export const getSingleJoin = async (req, res) => {
     try {
-        fs.mkdir(path.join(__dirname, '..', 'B', 'joinCSV'), (err) => {
-            if (err) {
-                return console.error(err);
-            }
-            console.log('Directory created successfully!');
-        });
+
+        const pathJoin = path.join(__dirname, '..', 'B', 'joinCSV')
+
+        if (!fs.existsSync(pathJoin)){
+            fs.mkdir(pathJoin, (err) => {
+                if (err) {
+                    console.log("errorr single ");
+                    return console.error(err);
+                }
+                console.log('Directory created successfully!');
+            });
+        }
+        
 
         const loginInfo = req.session.loginInfo
 

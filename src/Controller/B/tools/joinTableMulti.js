@@ -154,9 +154,18 @@ export const joinTableMulti = async (merged, loginInfo) => {
 								b_attr_seq = ${attrSeqB})
 		`);
 		await console.log("fin");
+
+		await pool.getConnection(function(err,connection){
+			if(!err){
+			  //connected!
+			}
+			// 커넥션을 풀에 반환
+			connection.release();
+		});
+
+
 	} catch (e)
 	{
 		console.log(e.message);
-		res.redirect('/logout');
 	}
 }

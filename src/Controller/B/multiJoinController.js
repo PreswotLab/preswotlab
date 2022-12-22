@@ -78,12 +78,18 @@ export const getMultiJoin = async (req, res) => {
         console.log("start multi join");
         console.log(req.body); 
 
-        fs.mkdir(path.join(__dirname, '..', 'B', 'multiJoinCSV'), (err) => {
-            if (err) {
-                return console.error(err);
-            }
-            console.log('Directory created successfully!');
-        });
+        const pathJoin = path.join(__dirname, '..', 'B', 'multiJoinCSV')
+
+        if (!fs.existsSync(pathJoin)){
+            fs.mkdir(pathJoin, (err) => {
+                if (err) {
+                    console.log("errorr single ");
+                    return console.error(err);
+                }
+                console.log('Directory created successfully!');
+            });
+        }
+        
         
         if(Object.keys(req.body).length === 0) {
             console.log('empty');
