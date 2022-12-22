@@ -35,10 +35,8 @@ const createValuesQuery = (results) => {
 		tmp = tmp.concat("(\"");
 		tmp = tmp.concat(Object.values(results[i]).join("\",\""))
 		tmp = tmp.concat("\")");
-		console.log("tmp:", tmp);
 		rtn.push(tmp.slice());
 	}
-	console.log(rtn);
 	return (rtn.join(","));
 }
 
@@ -48,10 +46,6 @@ export const insertRows = async (loginInfo, tableName, results) => {
 	const rowNamesQuery = createRowNamesQuery(rowNames);
 	const valuesQuery = createValuesQuery(results);
 
-	console.log(`
-	INSERT INTO ${tableName} ${rowNamesQuery}
-	VALUES ${valuesQuery};
-	`)
 	await dbConnectQuery(loginInfo,
 	`
 	INSERT INTO ${tableName} ${rowNamesQuery}
