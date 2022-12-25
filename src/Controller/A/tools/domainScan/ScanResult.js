@@ -39,9 +39,9 @@ export class ScanResult
 	{
 		//사용자 DB로부터 서버DB에 저장할 데이터를 객체 내부에 저장한다.
 		await this.#setNumOfRecords(); //현재 테이블의 전체 행 개수 세팅
-		await this.#setRepAttrJoinKey();
 		await this.#setNumeric(); //테이블 각 수치속성 scan
 		await this.#setCategory();//테이블 각 범주속성 scan
+		await this.#setRepAttrJoinKey();//서버
 		return ({
 			repAttrJoinKey : this.#repAttrJoinKey,
 			numericResult : this.#numericResult,
@@ -151,7 +151,6 @@ export class ScanResult
 				NULL
 				);
 			`);
-
 		}
 	}
 
