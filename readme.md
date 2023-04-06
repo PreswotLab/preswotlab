@@ -3,6 +3,8 @@
 
 - 상용 RDBMS 사용을 기반, 테이블 정보가 포함된 CSV파일과 RDBMS내 테이블 정보를 읽어 속성별 데이터 분석 및 결합, 그리고 결과를 저장한다.
 
+- 과제 명세서[2022_Project Spec_데이터 특성 스캔 및 결합 시스템_v1.3.pdf](https://github.com/PreswotLab/preswotlab/files/11172654/2022_Project.Spec_._v1.3.pdf)
+
 
 <img width="602" alt="스크린샷 2022-11-14 04 36 06" src="https://user-images.githubusercontent.com/76278794/201540731-4bbf099f-0a0d-4895-9716-50f3cdb81cea.png">
 
