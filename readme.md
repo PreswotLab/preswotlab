@@ -24,3 +24,9 @@
 # 개발 진행상황
 
 - [NOTION 페이지](https://glittery-mail-bd8.notion.site/PRESWOT-b15c5156e667424ab8a0b7f5008cf0af)
+
+<br><br>
+
+# 프로젝트 실행 영상
+
+[![Video Lable](https://user-images.githubusercontent.com/76278794/230441568-06d60b16-66f6-4e2c-80ff-7f726afbdd9c.png")](https://www.youtube.com/watch?v=DZMiSqOGie8)
