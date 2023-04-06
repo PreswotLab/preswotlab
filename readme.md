@@ -29,4 +29,4 @@
 
 # 프로젝트 실행 영상
 
-[![Video Lable](https://user-images.githubusercontent.com/76278794/230441568-06d60b16-66f6-4e2c-80ff-7f726afbdd9c.png")](https://www.youtube.com/watch?v=DZMiSqOGie8)
+[![Video Lable](https://user-images.githubusercontent.com/76278794/230441568-06d60b16-66f6-4e2c-80ff-7f726afbdd9c.png)](https://www.youtube.com/watch?v=DZMiSqOGie8)
