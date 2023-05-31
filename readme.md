@@ -16,7 +16,7 @@
 
 # ERD, 어플리케이션 설계
 
-- [ERD draw.io주소](https://app.diagrams.net/#G1LRr4lm1vPxAzDa0EtKj__dLdfWPjqceY)
+- [ERDCloud](https://www.erdcloud.com/d/LLidywdovSStdEnzK)
 - [어플리케이션 설계 FIGMA주소](https://www.figma.com/file/lG1cgOmjEUdG93dtsv0yUN/Preswot-Lab?node-id=0%3A1&t=adcsKAZWNKbubu0x-0)
 
 <br><br>
